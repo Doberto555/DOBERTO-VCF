@@ -91,7 +91,7 @@ const I18N = {
     footer_admin: "DOBERTO VCF — Zòn admin sèlman. Aksè restrenn.",
     th_actions: "Aksyon",
     btn_edit: "Modifye",
-    btn_delete: "Suprime",
+    btn_delete: "Efase",
     edit_modal_title: "Modifye moun sa a",
     label_icon: "Ikòn (ranplase emoji)",
     btn_cancel: "Anile",

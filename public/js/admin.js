@@ -81,7 +81,7 @@ function renderAdminList() {
   body.innerHTML = '';
   lastAdminData.list.forEach(row => {
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td><div class="name-cell"><span class="avatar">${initials(row.name)}</span>${escapeHtml(row.display_name || row.name)}${dobertoIconSvg(row.icon)}</div></td><td>${escapeHtml(row.email || '—')}</td><td>${escapeHtml(row.country_name || '—')}</td><td>+${row.full_number}</td><td><div class="row-actions"><button type="button" class="icon-btn edit-btn" data-edit="${row.id}" data-i18n="btn_edit">Modifye</button><button type="button" class="icon-btn delete-btn" data-delete="${row.id}" data-i18n="btn_delete">Suprime</button></div></td>`;
+    tr.innerHTML = `<td><div class="name-cell"><span class="avatar">${initials(row.name)}</span>${escapeHtml(row.display_name || row.name)}${dobertoIconSvg(row.icon)}</div></td><td>${escapeHtml(row.email || '—')}</td><td>${escapeHtml(row.country_name || '—')}</td><td>+${row.full_number}</td><td><div class="row-actions"><button type="button" class="icon-btn edit-btn" data-edit="${row.id}" title="Modifye nimewo ak enfòmasyon">✎ Modifye</button><button type="button" class="icon-btn delete-btn" data-delete="${row.id}" title="Efase enskripsyon sa a">× Efase</button></div></td>`;
     body.appendChild(tr);
   });
   document.getElementById('aPageInfo').textContent = t('page_info', { page: aPage, total: aTotalPages, count: lastAdminData.total });

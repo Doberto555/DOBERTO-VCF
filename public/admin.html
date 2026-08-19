@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="css/style.css?v=20260819-2" />
 </head>
 <body>
 
@@ -36,11 +36,14 @@
     <div class="msg" id="loginMsg"></div>
   </div>
 
-  <div id="adminPanel" class="panel" style="display:none">
+  <div id="adminPanel" class="panel admin-shell" style="display:none">
+    <div class="admin-kicker">DOBERTO VCF CONTROL CENTER</div>
     <div class="panel-header">
       <h3 data-i18n="admin_list_title">Tout moun ki enskri</h3>
       <button class="secondary btn-auto" id="logoutBtn" data-i18n="btn_logout">Dekonekte</button>
     </div>
+
+    <div class="admin-tools"><div class="admin-search-label">Jesyon enskripsyon yo</div></div>
 
     <input id="searchBox" data-i18n-placeholder="search_placeholder" placeholder="Chèche pa non..." style="margin-top:16px" />
 
@@ -106,6 +109,6 @@
 <script src="js/icons.js"></script>
 <script src="js/countries.js"></script>
 <script src="js/country-picker.js"></script>
-<script src="js/admin.js"></script>
+<script src="js/admin.js?v=20260819-2"></script>
 </body>
 </html>

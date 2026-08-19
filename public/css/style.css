@@ -1429,3 +1429,297 @@ tbody tr:hover { background: rgba(53,230,173,.025); }
     transition-duration: .01ms !important;
   }
 }
+
+/* ============================================================
+   DOBERTO VCF — ADMIN VISIBILITY + TYPOGRAPHY FIX
+   ============================================================ */
+
+/* Tipografi dwat/nòmal sou tout sit la */
+body,
+body * {
+  font-style: normal;
+}
+
+body,
+input,
+select,
+button,
+textarea,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.brand {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6, .brand {
+  letter-spacing: -0.02em;
+}
+
+/* Admin: plis espas pou tablo ak aksyon yo */
+body:has(#adminPanel) .container,
+body:has(#loginPanel) .container {
+  max-width: 1080px;
+}
+
+body:has(#adminPanel) .topbar,
+body:has(#loginPanel) .topbar {
+  max-width: 1080px;
+}
+
+#adminPanel {
+  overflow: visible;
+}
+
+#adminPanel .panel-header {
+  align-items: center;
+  gap: 16px;
+}
+
+#adminPanel .table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(53,230,173,.5) rgba(255,255,255,.04);
+}
+
+#adminPanel .table-scroll::-webkit-scrollbar {
+  height: 9px;
+}
+
+#adminPanel .table-scroll::-webkit-scrollbar-track {
+  background: rgba(255,255,255,.04);
+  border-radius: 999px;
+}
+
+#adminPanel .table-scroll::-webkit-scrollbar-thumb {
+  background: rgba(53,230,173,.48);
+  border-radius: 999px;
+}
+
+#adminPanel table {
+  width: 100%;
+  min-width: 900px;
+}
+
+#adminPanel th:last-child,
+#adminPanel td:last-child {
+  min-width: 190px;
+  position: sticky;
+  right: 0;
+  z-index: 3;
+}
+
+#adminPanel th:last-child {
+  background: #111722;
+  z-index: 5;
+}
+
+#adminPanel td:last-child {
+  background: #0b1018;
+  box-shadow: -12px 0 22px rgba(5,7,11,.38);
+}
+
+#adminPanel tbody tr:hover td:last-child {
+  background: #0d151d;
+}
+
+#adminPanel .row-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+#adminPanel .icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 82px;
+  min-height: 38px;
+  margin: 0;
+  padding: 9px 12px;
+  border-radius: 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: none;
+}
+
+#adminPanel .icon-btn.edit-btn {
+  color: #d9d2ff;
+  background: rgba(130,108,255,.16);
+  border: 1px solid rgba(130,108,255,.42);
+}
+
+#adminPanel .icon-btn.edit-btn:hover {
+  color: #fff;
+  background: rgba(130,108,255,.28);
+}
+
+#adminPanel .icon-btn.delete-btn {
+  color: #ffacba;
+  background: rgba(255,102,127,.12);
+  border: 1px solid rgba(255,102,127,.38);
+}
+
+#adminPanel .icon-btn.delete-btn:hover {
+  color: #fff;
+  background: rgba(255,102,127,.24);
+}
+
+/* Modal modifye nimewo a pi klè */
+#editOverlay .modal-box {
+  max-width: 500px;
+  border-color: rgba(255,255,255,.13);
+  box-shadow: 0 30px 90px rgba(0,0,0,.55);
+}
+
+#editOverlay .modal-box h3 {
+  margin-bottom: 20px;
+}
+
+#editOverlay .phone-row {
+  align-items: stretch;
+}
+
+#editOverlay #editPhone {
+  min-width: 0;
+}
+
+#editOverlay .modal-actions button {
+  min-height: 46px;
+}
+
+@media (max-width: 700px) {
+  body:has(#adminPanel) .container,
+  body:has(#loginPanel) .container {
+    max-width: 100%;
+  }
+
+  #adminPanel {
+    padding: 18px;
+  }
+
+  #adminPanel .panel-header {
+    align-items: flex-start;
+  }
+
+  #adminPanel .table-scroll {
+    margin-top: 4px;
+  }
+
+  #adminPanel th:last-child,
+  #adminPanel td:last-child {
+    min-width: 184px;
+  }
+
+  #adminPanel .icon-btn {
+    min-width: 78px;
+  }
+}
+
+
+/* ===== DOBERTO VCF ADMIN PRO V2 — visible redesign ===== */
+html, body { font-style: normal !important; }
+body, body *:not(svg):not(path) { font-style: normal !important; }
+body { font-family: Inter, Arial, Helvetica, sans-serif !important; }
+
+.admin-shell {
+  border: 1px solid rgba(82, 228, 184, .22) !important;
+  background: linear-gradient(180deg, rgba(15,22,31,.98), rgba(8,13,20,.98)) !important;
+  box-shadow: 0 24px 70px rgba(0,0,0,.38) !important;
+}
+.admin-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding: 7px 10px;
+  border: 1px solid rgba(53,230,173,.22);
+  border-radius: 999px;
+  background: rgba(53,230,173,.07);
+  color: #7ff3cf;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.admin-tools { display:flex; align-items:center; justify-content:space-between; margin-top:10px; }
+.admin-search-label { color:#eef3f8; font-size:14px; font-weight:700; }
+
+#adminPanel .table-scroll {
+  margin-top: 16px;
+  border: 1px solid rgba(255,255,255,.09) !important;
+  border-radius: 16px !important;
+  overflow-x: auto !important;
+  background: #091019 !important;
+}
+#adminPanel table { min-width: 940px !important; }
+#adminPanel th {
+  background:#121b27 !important;
+  color:#aeb9c7 !important;
+  font-size:11px !important;
+  font-weight:800 !important;
+}
+#adminPanel td { background:#0b121b; vertical-align:middle; }
+#adminPanel tbody tr:nth-child(even) td { background:#0d151f; }
+#adminPanel tbody tr:hover td { background:#101c26; }
+#adminPanel th:last-child, #adminPanel td:last-child {
+  position: sticky !important;
+  right: 0 !important;
+  min-width: 215px !important;
+  z-index: 4 !important;
+  box-shadow: -14px 0 24px rgba(0,0,0,.3) !important;
+}
+#adminPanel th:last-child { background:#162130 !important; }
+#adminPanel td:last-child { background:#101925 !important; }
+#adminPanel .row-actions { display:flex !important; gap:8px !important; }
+#adminPanel .icon-btn {
+  display:inline-flex !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  min-width:96px !important;
+  min-height:42px !important;
+  margin:0 !important;
+  padding:10px 13px !important;
+  font-size:13px !important;
+  font-weight:800 !important;
+  border-radius:11px !important;
+  cursor:pointer !important;
+}
+#adminPanel .edit-btn {
+  color:#0b1420 !important;
+  background:#73e9c6 !important;
+  border:1px solid #73e9c6 !important;
+}
+#adminPanel .delete-btn {
+  color:#fff !important;
+  background:#d94e68 !important;
+  border:1px solid #ee6b82 !important;
+}
+#adminPanel .edit-btn:hover, #adminPanel .delete-btn:hover { filter:brightness(1.08); transform:translateY(-1px); }
+
+#editOverlay { background:rgba(2,5,10,.78) !important; backdrop-filter:blur(8px); }
+#editOverlay .modal-box {
+  background:#0d1621 !important;
+  border:1px solid rgba(115,233,198,.24) !important;
+  border-radius:18px !important;
+}
+#editOverlay .modal-actions { gap:10px !important; }
+#editOverlay #editSaveBtn { background:#73e9c6 !important; color:#07130f !important; }
+
+@media (max-width: 700px) {
+  #adminPanel { padding:16px !important; }
+  #adminPanel .panel-header { display:flex; flex-direction:column; align-items:stretch !important; }
+  #adminPanel .panel-header #logoutBtn { width:100%; }
+  #adminPanel table { min-width: 760px !important; }
+  #adminPanel th:last-child, #adminPanel td:last-child { min-width: 188px !important; }
+  #adminPanel .icon-btn { min-width:84px !important; padding:9px 10px !important; }
+}
