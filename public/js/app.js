@@ -1,3 +1,18 @@
+(function loadDobertoBrand(){
+  if(!document.querySelector('link[data-doberto-brand]')){
+    const css=document.createElement('link');
+    css.rel='stylesheet';
+    css.href='css/brand-v7.css?v=20260825-7';
+    css.dataset.dobertoBrand='1';
+    document.head.appendChild(css);
+  }
+  const icon=document.createElement('link');
+  icon.rel='icon';
+  icon.type='image/svg+xml';
+  icon.href='icons/doberto-vcf-mark.svg?v=20260825-7';
+  document.head.appendChild(icon);
+})();
+
 const dialSelect = document.getElementById('dial');
 const phoneInput = document.getElementById('phone');
 const phoneHint = document.getElementById('phoneHint');
@@ -83,25 +98,25 @@ function currentHomeLang() {
 function homeUiText() {
   const l = currentHomeLang();
   if (l === 'fr') return {
-    email: 'Si vous ajoutez votre email, nous vous avertirons automatiquement lorsque le fichier VCF sera disponible.',
+    email: 'Ajoutez votre email si vous souhaitez être averti quand le fichier VCF sera disponible.',
     unlockedBadge: 'OBJECTIF ATTEINT',
     unlockedTitle: 'Le fichier VCF est disponible',
-    unlockedDesc: 'Vérifiez le même nom et le même numéro utilisés lors de votre inscription pour télécharger le fichier.',
-    unlockedBtn: 'Vérifier & télécharger le VCF'
+    unlockedDesc: 'Utilisez le même nom et le même numéro que lors de votre inscription pour récupérer le fichier.',
+    unlockedBtn: 'Vérifier et télécharger'
   };
   if (l === 'en') return {
-    email: 'If you add your email, we will automatically notify you when the VCF file becomes available.',
+    email: 'Add your email if you want to be notified when the VCF file is ready.',
     unlockedBadge: 'GOAL REACHED',
-    unlockedTitle: 'The VCF file is available',
-    unlockedDesc: 'Verify the same name and number you used when registering to download the file.',
-    unlockedBtn: 'Verify & download VCF'
+    unlockedTitle: 'The VCF file is ready',
+    unlockedDesc: 'Use the same name and number you registered with to get the file.',
+    unlockedBtn: 'Verify and download'
   };
   return {
-    email: 'Si ou mete email ou, n ap avèti w otomatikman lè fichye VCF la disponib.',
+    email: 'Mete email ou si ou vle resevwa yon avètisman lè fichye VCF la pare.',
     unlockedBadge: 'OBJEKTIF LA RIVE',
-    unlockedTitle: 'Fichye VCF la disponib',
-    unlockedDesc: 'Verifye menm non ak menm nimewo ou te itilize lè ou te enskri a pou telechaje fichye a.',
-    unlockedBtn: 'Verifye & Download VCF'
+    unlockedTitle: 'Fichye VCF la pare',
+    unlockedDesc: 'Sèvi ak menm non ak menm nimewo ou te enskri ak yo pou pran fichye a.',
+    unlockedBtn: 'Verifye epi telechaje'
   };
 }
 
