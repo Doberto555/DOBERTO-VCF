@@ -1,19 +1,16 @@
-// DOBERTO VCF — Premium install + notification experience
+// DOBERTO VCF — Persistent premium install + notification experience
 (function () {
   const INSTALL_DELAY_MS = 4600;
-  const INSTALL_COOLDOWN_MS = 1000 * 60 * 60 * 24 * 3;
-  const NOTIFY_DELAY_AFTER_INSTALL_MS = 9000;
-  const NOTIFY_DELAY_NO_INSTALL_MS = 7000;
-  const NOTIFY_COOLDOWN_MS = 1000 * 60 * 60 * 24 * 7;
-  const LS_INSTALL_DISMISSED = 'dv_install_dismissed_until';
+  const NOTIFY_DELAY_AFTER_INSTALL_MS = 2600;
+  const NOTIFY_DELAY_NO_INSTALL_MS = 6500;
   const LS_INSTALLED = 'dv_installed';
-  const LS_NOTIFY_DISMISSED = 'dv_notify_dismissed_until';
-  const LS_NOTIFY_ENABLED = 'dv_notify_enabled';
 
   let deferredPrompt = null;
   let installOverlay = null;
   let notifyOverlay = null;
   let notifyTimer = null;
+  let installDismissedThisPage = false;
+  let notifyDismissedThisPage = false;
 
   const COPY = {
     ht: {
@@ -24,72 +21,61 @@
       installF2: 'Eksperyans app', installF2d: 'Louvri an plen ekran, san dezòd.',
       installF3: 'Toujou ajou', installF3d: 'Nouvo vèsyon yo parèt otomatikman.',
       installTrust: 'Enstalasyon an fèt atravè navigatè a. Pa gen APK ekstèn ni dosye sispèk pou telechaje.',
-      installBtn: 'Enstale DOBERTO VCF',
-      later: 'Pita',
+      installBtn: 'Enstale DOBERTO VCF', later: 'Pita',
       ios: 'Sou iPhone: peze bouton Pataje a, epi chwazi “Ajoute sou ekran akèy”.',
       manual: 'Louvri meni navigatè a epi chwazi “Enstale app” oswa “Add to Home Screen”.',
-      notifyKicker: 'RETE ENFÒME',
-      notifyTitle: 'Aktive notifikasyon',
-      notifyDesc: 'Pèmèt DOBERTO VCF voye alèt sou aparèy sa a lè gen enfòmasyon enpòtan sou sèvis la.',
-      notifyP1: 'Konnen lè VCF la disponib',
-      notifyP2: 'Resevwa mizajou ki enpòtan',
-      notifyP3: 'Ou ka dezaktive yo nenpòt lè',
-      notifyBtn: 'Aktive notifikasyon',
-      notNow: 'Pa kounye a',
-      notifyPrivacy: 'Nou pa bezwen nimewo telefòn ou pou mande pèmisyon notifikasyon navigatè a.',
-      granted: 'Pèmisyon notifikasyon aktive avèk siksè.',
-      denied: 'Navigatè a bloke notifikasyon yo. Ou ka chanje sa pita nan paramèt sit la.',
-      unsupported: 'Navigatè sa a pa sipòte notifikasyon web.'
+      notifyKicker: 'RETE ENFÒME', notifyTitle: 'Aktive notifikasyon',
+      notifyDesc: 'Pèmèt DOBERTO VCF montre alèt sou aparèy sa a lè gen enfòmasyon enpòtan sou sèvis la.',
+      notifyP1: 'Konnen lè VCF la disponib', notifyP2: 'Resevwa mizajou ki enpòtan', notifyP3: 'Ou ka dezaktive yo nenpòt lè',
+      notifyBtn: 'Aktive notifikasyon', notNow: 'Pa kounye a',
+      notifyPrivacy: 'Pèmisyon an soti dirèkteman nan navigatè a. Nou pa bezwen nimewo telefòn ou pou aktive l.',
+      granted: 'Notifikasyon aktive avèk siksè.',
+      denied: 'Notifikasyon yo bloke nan navigatè a. Ale nan paramèt sit la epi mete Notifications sou Allow.',
+      unsupported: 'Navigatè sa a pa sipòte notifikasyon web.',
+      dockInstall: 'Enstale app', dockNotify: 'Notifikasyon',
+      testBody: 'Notifikasyon yo aktive. W ap ka wè alèt DOBERTO VCF sou aparèy sa a.'
     },
     fr: {
-      installKicker: 'APP DOBERTO VCF',
-      installTitle: 'Gardez DOBERTO VCF sur votre téléphone',
+      installKicker: 'APP DOBERTO VCF', installTitle: 'Gardez DOBERTO VCF sur votre téléphone',
       installDesc: 'Ajoutez l’application à votre écran d’accueil pour y accéder plus vite, sans rechercher le lien à chaque fois.',
       installF1: 'Accès rapide', installF1d: 'Une seule touche depuis l’écran d’accueil.',
       installF2: 'Expérience app', installF2d: 'Ouverture en plein écran, sans distraction.',
       installF3: 'Toujours à jour', installF3d: 'Les nouvelles versions arrivent automatiquement.',
       installTrust: 'L’installation passe par votre navigateur. Aucun APK externe ni fichier douteux à télécharger.',
-      installBtn: 'Installer DOBERTO VCF',
-      later: 'Plus tard',
+      installBtn: 'Installer DOBERTO VCF', later: 'Plus tard',
       ios: 'Sur iPhone : touchez Partager, puis choisissez “Sur l’écran d’accueil”.',
       manual: 'Ouvrez le menu du navigateur puis choisissez “Installer l’application” ou “Add to Home Screen”.',
-      notifyKicker: 'RESTEZ INFORMÉ',
-      notifyTitle: 'Activer les notifications',
+      notifyKicker: 'RESTEZ INFORMÉ', notifyTitle: 'Activer les notifications',
       notifyDesc: 'Autorisez DOBERTO VCF à afficher des alertes sur cet appareil lorsqu’une information importante concerne le service.',
-      notifyP1: 'Savoir quand le VCF est disponible',
-      notifyP2: 'Recevoir les mises à jour importantes',
-      notifyP3: 'Désactivation possible à tout moment',
-      notifyBtn: 'Activer les notifications',
-      notNow: 'Pas maintenant',
-      notifyPrivacy: 'Votre numéro de téléphone n’est pas nécessaire pour demander l’autorisation de notification du navigateur.',
-      granted: 'Les notifications sont maintenant autorisées.',
-      denied: 'Le navigateur a bloqué les notifications. Vous pourrez modifier ce choix dans les paramètres du site.',
-      unsupported: 'Ce navigateur ne prend pas en charge les notifications web.'
+      notifyP1: 'Savoir quand le VCF est disponible', notifyP2: 'Recevoir les mises à jour importantes', notifyP3: 'Désactivation possible à tout moment',
+      notifyBtn: 'Activer les notifications', notNow: 'Pas maintenant',
+      notifyPrivacy: 'L’autorisation vient directement du navigateur. Votre numéro de téléphone n’est pas nécessaire.',
+      granted: 'Les notifications sont maintenant activées.',
+      denied: 'Les notifications sont bloquées dans le navigateur. Ouvrez les paramètres du site et autorisez Notifications.',
+      unsupported: 'Ce navigateur ne prend pas en charge les notifications web.',
+      dockInstall: 'Installer l’app', dockNotify: 'Notifications',
+      testBody: 'Les notifications sont activées. Les alertes DOBERTO VCF peuvent maintenant apparaître sur cet appareil.'
     },
     en: {
-      installKicker: 'DOBERTO VCF APP',
-      installTitle: 'Keep DOBERTO VCF on your phone',
+      installKicker: 'DOBERTO VCF APP', installTitle: 'Keep DOBERTO VCF on your phone',
       installDesc: 'Add it to your home screen for faster access without looking for the link every time.',
       installF1: 'Quick access', installF1d: 'Open it in one tap from your home screen.',
       installF2: 'App experience', installF2d: 'Runs full-screen with less browser clutter.',
       installF3: 'Always current', installF3d: 'New versions appear automatically.',
       installTrust: 'Installation is handled by your browser. No external APK or suspicious file download is required.',
-      installBtn: 'Install DOBERTO VCF',
-      later: 'Later',
+      installBtn: 'Install DOBERTO VCF', later: 'Later',
       ios: 'On iPhone: tap Share, then choose “Add to Home Screen”.',
       manual: 'Open your browser menu and choose “Install app” or “Add to Home Screen”.',
-      notifyKicker: 'STAY INFORMED',
-      notifyTitle: 'Turn on notifications',
+      notifyKicker: 'STAY INFORMED', notifyTitle: 'Turn on notifications',
       notifyDesc: 'Allow DOBERTO VCF to show alerts on this device when important service information is available.',
-      notifyP1: 'Know when the VCF is available',
-      notifyP2: 'Receive important updates',
-      notifyP3: 'Turn them off anytime',
-      notifyBtn: 'Turn on notifications',
-      notNow: 'Not now',
-      notifyPrivacy: 'Your phone number is not needed to request browser notification permission.',
-      granted: 'Notification permission is now enabled.',
-      denied: 'Your browser blocked notifications. You can change this later in the site settings.',
-      unsupported: 'This browser does not support web notifications.'
+      notifyP1: 'Know when the VCF is available', notifyP2: 'Receive important updates', notifyP3: 'Turn them off anytime',
+      notifyBtn: 'Turn on notifications', notNow: 'Not now',
+      notifyPrivacy: 'Permission comes directly from your browser. Your phone number is not required.',
+      granted: 'Notifications are now enabled.',
+      denied: 'Notifications are blocked in your browser. Open site settings and set Notifications to Allow.',
+      unsupported: 'This browser does not support web notifications.',
+      dockInstall: 'Install app', dockNotify: 'Notifications',
+      testBody: 'Notifications are enabled. DOBERTO VCF alerts can now appear on this device.'
     }
   };
 
@@ -103,33 +89,24 @@
     if (document.querySelector('link[data-dv-prompts]')) return;
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = 'css/prompt-premium.css?v=20260825-1';
+    link.href = 'css/prompt-premium.css?v=20260825-2';
     link.dataset.dvPrompts = '1';
     document.head.appendChild(link);
   }
 
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js').catch(() => {});
-    });
+    window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
   }
 
   function isStandalone() {
     return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
   }
   function isIOS() { return /iphone|ipad|ipod/i.test(navigator.userAgent); }
-  function installHandled() {
-    if (isStandalone() || localStorage.getItem(LS_INSTALLED) === '1') return true;
-    const until = parseInt(localStorage.getItem(LS_INSTALL_DISMISSED) || '0', 10);
-    return Date.now() < until;
-  }
-  function notificationsHandled() {
-    if (!('Notification' in window)) return true;
-    if (Notification.permission !== 'default') return true;
-    if (localStorage.getItem(LS_NOTIFY_ENABLED) === '1') return true;
-    const until = parseInt(localStorage.getItem(LS_NOTIFY_DISMISSED) || '0', 10);
-    return Date.now() < until;
-  }
+  function installComplete() { return isStandalone() || localStorage.getItem(LS_INSTALLED) === '1'; }
+  function notificationComplete() { return ('Notification' in window) && Notification.permission === 'granted'; }
+  function shouldOfferInstall() { return !installComplete(); }
+  function shouldOfferNotification() { return ('Notification' in window) && !notificationComplete(); }
+
   function uiBusy(ignoreInstall) {
     const tourOpen = !!document.querySelector('.tour-scrim.show');
     const installOpen = !ignoreInstall && !!document.querySelector('.install-overlay.show');
@@ -177,7 +154,6 @@
           <button class="install-later" id="installLater" type="button"><span id="installLaterText">${x.later}</span></button>
         </div>
       </div>`;
-
     document.getElementById('installActionBtn').addEventListener('click', handleInstallClick);
     document.getElementById('installLater').addEventListener('click', dismissInstall);
     document.getElementById('installClose').addEventListener('click', dismissInstall);
@@ -187,45 +163,21 @@
   function refreshInstallCopy() {
     if (!installOverlay) return;
     const x = c();
-    const map = {
-      installKicker: x.installKicker, dvInstallTitle: x.installTitle, installDescription: x.installDesc,
-      if1: x.installF1, if1d: x.installF1d, if2: x.installF2, if2d: x.installF2d,
-      if3: x.installF3, if3d: x.installF3d, installTrust: x.installTrust,
-      installBtnText: x.installBtn, installLaterText: x.later
-    };
-    Object.entries(map).forEach(([id, text]) => { const el = document.getElementById(id); if (el) el.textContent = text; });
+    const map = { installKicker:x.installKicker, dvInstallTitle:x.installTitle, installDescription:x.installDesc, if1:x.installF1, if1d:x.installF1d, if2:x.installF2, if2d:x.installF2d, if3:x.installF3, if3d:x.installF3d, installTrust:x.installTrust, installBtnText:x.installBtn, installLaterText:x.later };
+    Object.entries(map).forEach(([id,text]) => { const el=document.getElementById(id); if(el) el.textContent=text; });
   }
 
-  function showInstallWhenCalm() {
-    if (!installOverlay || installHandled()) {
-      scheduleNotification(NOTIFY_DELAY_NO_INSTALL_MS);
-      return;
-    }
-    if (uiBusy(true)) {
-      setTimeout(showInstallWhenCalm, 1000);
-      return;
-    }
+  function showInstallWhenCalm(force) {
+    if (!installOverlay || !shouldOfferInstall()) { refreshDock(); scheduleNotification(NOTIFY_DELAY_NO_INSTALL_MS); return; }
+    if (!force && installDismissedThisPage) return;
+    if (uiBusy(true)) { setTimeout(() => showInstallWhenCalm(force), 900); return; }
     refreshInstallCopy();
     installOverlay.hidden = false;
     requestAnimationFrame(() => installOverlay.classList.add('show'));
   }
-  function hideInstall() {
-    if (!installOverlay) return;
-    installOverlay.classList.remove('show');
-    setTimeout(() => { installOverlay.hidden = true; }, 300);
-  }
-  function dismissInstall() {
-    localStorage.setItem(LS_INSTALL_DISMISSED, String(Date.now() + INSTALL_COOLDOWN_MS));
-    hideInstall();
-    scheduleNotification(NOTIFY_DELAY_AFTER_INSTALL_MS);
-  }
-
-  function setInstallStatus(text, warning) {
-    const el = document.getElementById('installStatus');
-    if (!el) return;
-    el.textContent = text;
-    el.className = 'prompt-status show' + (warning ? ' warn' : '');
-  }
+  function hideInstall() { if (!installOverlay) return; installOverlay.classList.remove('show'); setTimeout(() => { installOverlay.hidden = true; }, 280); }
+  function dismissInstall() { installDismissedThisPage = true; hideInstall(); refreshDock(); scheduleNotification(NOTIFY_DELAY_AFTER_INSTALL_MS); }
+  function setInstallStatus(text, warning) { const el=document.getElementById('installStatus'); if(!el) return; el.textContent=text; el.className='prompt-status show'+(warning?' warn':''); }
 
   async function handleInstallClick() {
     const x = c();
@@ -235,34 +187,26 @@
       deferredPrompt = null;
       if (choice && choice.outcome === 'accepted') {
         localStorage.setItem(LS_INSTALLED, '1');
-        hideInstall();
-        scheduleNotification(3000);
+        installDismissedThisPage = true;
+        hideInstall(); refreshDock(); scheduleNotification(NOTIFY_DELAY_AFTER_INSTALL_MS);
       } else {
-        localStorage.setItem(LS_INSTALL_DISMISSED, String(Date.now() + INSTALL_COOLDOWN_MS));
-        hideInstall();
-        scheduleNotification(NOTIFY_DELAY_AFTER_INSTALL_MS);
+        setInstallStatus(x.manual, false);
       }
       return;
     }
-    if (isIOS()) {
-      setInstallStatus(x.ios, false);
-      return;
-    }
-    setInstallStatus(x.manual, false);
+    setInstallStatus(isIOS() ? x.ios : x.manual, false);
   }
 
   function buildNotificationOverlay() {
     if (document.getElementById('notifyOverlay')) return document.getElementById('notifyOverlay');
     const x = c();
     const overlay = document.createElement('div');
-    overlay.className = 'notify-overlay';
-    overlay.id = 'notifyOverlay';
-    overlay.hidden = true;
+    overlay.className='notify-overlay'; overlay.id='notifyOverlay'; overlay.hidden=true;
     overlay.innerHTML = `
       <div class="notify-card" role="dialog" aria-modal="true" aria-labelledby="dvNotifyTitle">
         <button class="notify-close" id="notifyClose" type="button" aria-label="Close">✕</button>
         <div class="prompt-top">
-          <div class="notify-bell">${svg('bell')}</div>
+          <img class="prompt-brand" src="icons/brand-mark.svg" alt="DOBERTO VCF" width="64" height="64">
           <div class="prompt-meta"><div class="prompt-kicker" id="notifyKicker">${x.notifyKicker}</div><h2 id="dvNotifyTitle">${x.notifyTitle}</h2></div>
         </div>
         <p class="notify-desc" id="notifyDescription">${x.notifyDesc}</p>
@@ -279,7 +223,7 @@
         <div class="notify-privacy" id="notifyPrivacy">${x.notifyPrivacy}</div>
       </div>`;
     document.body.appendChild(overlay);
-    overlay.addEventListener('click', (e) => { if (e.target === overlay) dismissNotification(); });
+    overlay.addEventListener('click', (e) => { if (e.target===overlay) dismissNotification(); });
     document.getElementById('notifyClose').addEventListener('click', dismissNotification);
     document.getElementById('notifyLater').addEventListener('click', dismissNotification);
     document.getElementById('notifyEnable').addEventListener('click', enableNotifications);
@@ -288,102 +232,88 @@
 
   function refreshNotificationCopy() {
     if (!notifyOverlay) return;
-    const x = c();
-    const map = {
-      notifyKicker: x.notifyKicker, dvNotifyTitle: x.notifyTitle, notifyDescription: x.notifyDesc,
-      np1: x.notifyP1, np2: x.notifyP2, np3: x.notifyP3, notifyBtnText: x.notifyBtn,
-      notifyLaterText: x.notNow, notifyPrivacy: x.notifyPrivacy
-    };
-    Object.entries(map).forEach(([id, text]) => { const el = document.getElementById(id); if (el) el.textContent = text; });
+    const x=c();
+    const map={ notifyKicker:x.notifyKicker, dvNotifyTitle:x.notifyTitle, notifyDescription:x.notifyDesc, np1:x.notifyP1, np2:x.notifyP2, np3:x.notifyP3, notifyBtnText:x.notifyBtn, notifyLaterText:x.notNow, notifyPrivacy:x.notifyPrivacy };
+    Object.entries(map).forEach(([id,text])=>{const el=document.getElementById(id);if(el)el.textContent=text;});
   }
+  function scheduleNotification(delay) { clearTimeout(notifyTimer); if(!shouldOfferNotification() || notifyDismissedThisPage) { refreshDock(); return; } notifyTimer=setTimeout(()=>showNotificationWhenCalm(false),delay); }
+  function showNotificationWhenCalm(force) {
+    if(!shouldOfferNotification()) { refreshDock(); return; }
+    if(!force && notifyDismissedThisPage) return;
+    if(uiBusy(false)) { notifyTimer=setTimeout(()=>showNotificationWhenCalm(force),1000); return; }
+    notifyOverlay=buildNotificationOverlay(); refreshNotificationCopy(); notifyOverlay.hidden=false; requestAnimationFrame(()=>notifyOverlay.classList.add('show'));
+  }
+  function hideNotification(){ if(!notifyOverlay)return; notifyOverlay.classList.remove('show'); setTimeout(()=>{notifyOverlay.hidden=true;},280); }
+  function dismissNotification(){ notifyDismissedThisPage=true; hideNotification(); refreshDock(); }
+  function setNotifyStatus(text,warning){const el=document.getElementById('notifyStatus');if(!el)return;el.textContent=text;el.className='prompt-status show'+(warning?' warn':'');}
 
-  function scheduleNotification(delay) {
-    clearTimeout(notifyTimer);
-    if (notificationsHandled()) return;
-    notifyTimer = setTimeout(showNotificationWhenCalm, delay);
-  }
-  function showNotificationWhenCalm() {
-    if (notificationsHandled()) return;
-    if (uiBusy(false)) {
-      notifyTimer = setTimeout(showNotificationWhenCalm, 1200);
-      return;
-    }
-    notifyOverlay = buildNotificationOverlay();
-    refreshNotificationCopy();
-    notifyOverlay.hidden = false;
-    requestAnimationFrame(() => notifyOverlay.classList.add('show'));
-  }
-  function hideNotification() {
-    if (!notifyOverlay) return;
-    notifyOverlay.classList.remove('show');
-    setTimeout(() => { notifyOverlay.hidden = true; }, 300);
-  }
-  function dismissNotification() {
-    localStorage.setItem(LS_NOTIFY_DISMISSED, String(Date.now() + NOTIFY_COOLDOWN_MS));
-    hideNotification();
-  }
-  function setNotifyStatus(text, warning) {
-    const el = document.getElementById('notifyStatus');
-    if (!el) return;
-    el.textContent = text;
-    el.className = 'prompt-status show' + (warning ? ' warn' : '');
+  async function showBrandNotification() {
+    try {
+      if (!('serviceWorker' in navigator)) return;
+      const reg = await navigator.serviceWorker.ready;
+      await reg.showNotification('DOBERTO VCF', {
+        body: c().testBody,
+        icon: '/icons/brand-mark.svg',
+        badge: '/icons/brand-mark.svg',
+        tag: 'doberto-vcf-enabled',
+        renotify: false,
+        data: { url: '/' }
+      });
+    } catch (_) {}
   }
 
   async function enableNotifications() {
-    const x = c();
-    if (!('Notification' in window)) {
-      setNotifyStatus(x.unsupported, true);
-      return;
-    }
+    const x=c();
+    if(!('Notification' in window)){setNotifyStatus(x.unsupported,true);return;}
+    if(Notification.permission==='denied'){setNotifyStatus(x.denied,true);refreshDock();return;}
     try {
-      const permission = await Notification.requestPermission();
-      if (permission === 'granted') {
-        localStorage.setItem(LS_NOTIFY_ENABLED, '1');
-        setNotifyStatus(x.granted, false);
-        try {
-          if ('serviceWorker' in navigator) {
-            const reg = await navigator.serviceWorker.ready;
-            await reg.showNotification('DOBERTO VCF', {
-              body: x.granted,
-              icon: 'icons/icon-192.png',
-              badge: 'icons/icon-192.png',
-              tag: 'doberto-vcf-enabled',
-              renotify: false
-            });
-          }
-        } catch (_) { /* permission itself is the important result */ }
-        setTimeout(hideNotification, 1100);
+      const permission=await Notification.requestPermission();
+      if(permission==='granted'){
+        setNotifyStatus(x.granted,false);
+        await showBrandNotification();
+        setTimeout(()=>{ hideNotification(); notifyDismissedThisPage=true; refreshDock(); },1100);
       } else {
-        localStorage.setItem(LS_NOTIFY_DISMISSED, String(Date.now() + NOTIFY_COOLDOWN_MS));
-        setNotifyStatus(x.denied, true);
+        setNotifyStatus(x.denied,true); refreshDock();
       }
-    } catch (_) {
-      setNotifyStatus(x.denied, true);
-    }
+    } catch(_){setNotifyStatus(x.denied,true);}
   }
 
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-  });
-  window.addEventListener('appinstalled', () => {
-    localStorage.setItem(LS_INSTALLED, '1');
-    hideInstall();
-    scheduleNotification(3000);
-  });
-
-  function init() {
-    injectPremiumStyles();
-    buildInstallCard();
-    const select = document.getElementById('langSelect');
-    if (select) select.addEventListener('change', () => {
-      refreshInstallCopy();
-      refreshNotificationCopy();
-    });
-    setTimeout(showInstallWhenCalm, INSTALL_DELAY_MS);
-    if (installHandled()) scheduleNotification(NOTIFY_DELAY_NO_INSTALL_MS);
+  function buildDock() {
+    if (document.getElementById('dvActionDock')) return;
+    const dock=document.createElement('div');
+    dock.id='dvActionDock'; dock.className='dv-action-dock';
+    dock.innerHTML=`
+      <button type="button" class="dv-dock-btn" id="dvDockInstall"><img src="icons/brand-mark.svg" alt=""><span id="dvDockInstallText"></span></button>
+      <button type="button" class="dv-dock-btn" id="dvDockNotify">${svg('bell')}<span id="dvDockNotifyText"></span></button>`;
+    document.body.appendChild(dock);
+    document.getElementById('dvDockInstall').addEventListener('click',()=>{installDismissedThisPage=false;showInstallWhenCalm(true);});
+    document.getElementById('dvDockNotify').addEventListener('click',()=>{notifyDismissedThisPage=false;showNotificationWhenCalm(true);});
+  }
+  function refreshDock() {
+    buildDock();
+    const dock=document.getElementById('dvActionDock'); if(!dock)return;
+    const installBtn=document.getElementById('dvDockInstall');
+    const notifyBtn=document.getElementById('dvDockNotify');
+    const x=c();
+    document.getElementById('dvDockInstallText').textContent=x.dockInstall;
+    document.getElementById('dvDockNotifyText').textContent=x.dockNotify;
+    installBtn.hidden=!shouldOfferInstall();
+    notifyBtn.hidden=!shouldOfferNotification();
+    dock.hidden=installBtn.hidden && notifyBtn.hidden;
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
-  else init();
+  window.addEventListener('beforeinstallprompt',(e)=>{e.preventDefault();deferredPrompt=e;refreshDock();});
+  window.addEventListener('appinstalled',()=>{localStorage.setItem(LS_INSTALLED,'1');installDismissedThisPage=true;hideInstall();refreshDock();scheduleNotification(NOTIFY_DELAY_AFTER_INSTALL_MS);});
+
+  function init(){
+    injectPremiumStyles(); buildInstallCard(); buildDock(); refreshDock();
+    const select=document.getElementById('langSelect');
+    if(select)select.addEventListener('change',()=>{refreshInstallCopy();refreshNotificationCopy();refreshDock();});
+    setTimeout(()=>{
+      if(shouldOfferInstall()) showInstallWhenCalm(false);
+      else scheduleNotification(NOTIFY_DELAY_NO_INSTALL_MS);
+    },INSTALL_DELAY_MS);
+  }
+
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true}); else init();
 })();
