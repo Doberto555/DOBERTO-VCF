@@ -6,7 +6,6 @@
       step2: 'Kominote a grandi', step2d: 'Swiv pwogrè objektif la dirèkteman sou platfòm la.',
       step3: 'Pran VCF la', step3d: 'Lè objektif la rive, verifye enskripsyon ou epi telechaje fichye a.',
       privacyTitle: 'Konfidansyalite entegre', privacyDesc: 'Nimewo yo pa afiche piblikman nan lis moun ki enskri yo.',
-      consent: 'Mwen dakò ak Politik konfidansyalite a ak Kondisyon itilizasyon yo.',
       search: 'Chèche yon moun pa non...', allCountries: 'Tout peyi', filters: 'Rechèch ak filtre', noResults: 'Pa gen okenn moun ki koresponn ak rechèch sa a.',
       total: 'Total enskri', today: 'Jodi a', remaining: 'Rete pou objektif', status: 'Estati VCF', unlocked: 'Debloke', locked: 'Ap grandi',
       privacy: 'Konfidansyalite', terms: 'Kondisyon itilizasyon'
@@ -16,7 +15,6 @@
       step2: 'The community grows', step2d: 'Track the goal progress directly on the platform.',
       step3: 'Get the VCF', step3d: 'When the goal is reached, verify your registration and download the file.',
       privacyTitle: 'Privacy built in', privacyDesc: 'Phone numbers are never displayed publicly in the member list.',
-      consent: 'I agree to the Privacy Policy and Terms of Use.',
       search: 'Search people by name...', allCountries: 'All countries', filters: 'Search and filter', noResults: 'No members match this search.',
       total: 'Total members', today: 'Today', remaining: 'Left to goal', status: 'VCF status', unlocked: 'Unlocked', locked: 'Growing',
       privacy: 'Privacy', terms: 'Terms of Use'
@@ -26,7 +24,6 @@
       step2: 'La communauté grandit', step2d: 'Suis la progression de l’objectif directement sur la plateforme.',
       step3: 'Récupère le VCF', step3d: 'Quand l’objectif est atteint, vérifie ton inscription et télécharge le fichier.',
       privacyTitle: 'Confidentialité intégrée', privacyDesc: 'Les numéros ne sont jamais affichés publiquement dans la liste des inscrits.',
-      consent: 'J’accepte la Politique de confidentialité et les Conditions d’utilisation.',
       search: 'Rechercher une personne par nom...', allCountries: 'Tous les pays', filters: 'Recherche et filtre', noResults: 'Aucun inscrit ne correspond à cette recherche.',
       total: 'Total inscrits', today: 'Aujourd’hui', remaining: 'Reste à atteindre', status: 'Statut VCF', unlocked: 'Débloqué', locked: 'En progression',
       privacy: 'Confidentialité', terms: 'Conditions d’utilisation'
@@ -65,26 +62,22 @@
     hero.insertAdjacentElement('afterend', section);
   }
 
+  function consentHtml() {
+    const l = lang();
+    if (l === 'fr') return `J’accepte la <a href="privacy.html" target="_blank" rel="noopener">Politique de confidentialité</a> et les <a href="terms.html" target="_blank" rel="noopener">Conditions d’utilisation</a>.`;
+    if (l === 'en') return `I agree to the <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a> and <a href="terms.html" target="_blank" rel="noopener">Terms of Use</a>.`;
+    return `Mwen dakò ak <a href="privacy.html" target="_blank" rel="noopener">Politik konfidansyalite a</a> ak <a href="terms.html" target="_blank" rel="noopener">Kondisyon itilizasyon yo</a>.`;
+  }
+
   function addConsent() {
     const form = document.getElementById('regForm');
     const submit = document.getElementById('submitBtn');
     if (!form || !submit || document.getElementById('privacyConsent')) return;
     const wrap = document.createElement('label');
     wrap.className = 'pro-consent';
-    wrap.innerHTML = `<input id="privacyConsent" type="checkbox" required><span data-pro="consent"></span>`;
-    wrap.querySelector('span').addEventListener('click', (e) => {
-      if (e.target.closest('a')) e.preventDefault();
-    });
-    const text = wrap.querySelector('span');
-    text.innerHTML = consentHtml();
+    wrap.innerHTML = `<input id="privacyConsent" type="checkbox" required><span>${consentHtml()}</span>`;
     submit.insertAdjacentElement('beforebegin', wrap);
-  }
-
-  function consentHtml() {
-    const l = lang();
-    if (l === 'fr') return `J’accepte la <a href="privacy.html" target="_blank">Politique de confidentialité</a> et les <a href="terms.html" target="_blank">Conditions d’utilisation</a>.`;
-    if (l === 'en') return `I agree to the <a href="privacy.html" target="_blank">Privacy Policy</a> and <a href="terms.html" target="_blank">Terms of Use</a>.`;
-    return `Mwen dakò ak <a href="privacy.html" target="_blank">Politik konfidansyalite a</a> ak <a href="terms.html" target="_blank">Kondisyon itilizasyon yo</a>.`;
+    wrap.querySelectorAll('a').forEach((a) => a.addEventListener('click', (e) => e.stopPropagation()));
   }
 
   function addListFilters() {
@@ -176,7 +169,7 @@
       document.getElementById('kpiTotal').textContent = Number(data.total || 0).toLocaleString('fr-FR');
       document.getElementById('kpiToday').textContent = Number(data.today || 0).toLocaleString('fr-FR');
       document.getElementById('kpiRemaining').textContent = Number(data.remaining || 0).toLocaleString('fr-FR');
-      document.getElementById('kpiProgress').textContent = `${data.progress || 0}% de l’objectif`;
+      document.getElementById('kpiProgress').textContent = `${data.progress || 0}%`;
       const status = document.getElementById('kpiStatus');
       status.textContent = data.unlocked ? tx('unlocked') : tx('locked');
       grid.classList.toggle('is-unlocked', !!data.unlocked);
@@ -218,7 +211,6 @@
   function renderLanguage() {
     document.querySelectorAll('[data-pro]').forEach((el) => {
       const key = el.getAttribute('data-pro');
-      if (key === 'consent') return;
       el.textContent = tx(key);
     });
     const consent = document.querySelector('.pro-consent span');
