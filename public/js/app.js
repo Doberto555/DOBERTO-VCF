@@ -1,16 +1,54 @@
 (function loadDobertoBrand(){
+  const VERSION='20260825-9';
   if(!document.querySelector('link[data-doberto-brand]')){
     const css=document.createElement('link');
     css.rel='stylesheet';
-    css.href='css/brand-v7.css?v=20260825-7';
+    css.href=`css/brand-v7.css?v=${VERSION}`;
     css.dataset.dobertoBrand='1';
     document.head.appendChild(css);
   }
+
+  const manifest=document.querySelector('link[rel="manifest"]');
+  if(manifest) manifest.href=`manifest.webmanifest?v=${VERSION}`;
+
+  document.querySelectorAll('link[rel~="icon"]').forEach((el)=>el.remove());
   const icon=document.createElement('link');
   icon.rel='icon';
   icon.type='image/svg+xml';
-  icon.href='icons/doberto-vcf-mark.svg?v=20260825-7';
+  icon.href=`icons/doberto-vcf-mark.svg?v=${VERSION}`;
   document.head.appendChild(icon);
+
+  const apple=document.querySelector('link[rel="apple-touch-icon"]');
+  if(apple) apple.href=`icons/doberto-vcf-mark.svg?v=${VERSION}`;
+  const theme=document.querySelector('meta[name="theme-color"]');
+  if(theme) theme.content='#030806';
+
+  const brand=document.querySelector('.brand');
+  const dot=brand && brand.querySelector('.dot');
+  if(dot){
+    const img=document.createElement('img');
+    img.className='brand-logo';
+    img.src=`icons/doberto-vcf-mark.svg?v=${VERSION}`;
+    img.alt='';
+    img.width=38;
+    img.height=38;
+    dot.replaceWith(img);
+  }
+
+  // Nenpòt notification lokal ki soti nan paj la sèvi ak menm logo DOBERTO VCF la.
+  if('ServiceWorkerRegistration' in window && ServiceWorkerRegistration.prototype.showNotification){
+    const original=ServiceWorkerRegistration.prototype.showNotification;
+    if(!ServiceWorkerRegistration.prototype.__dvBrandPatched){
+      ServiceWorkerRegistration.prototype.showNotification=function(title,options){
+        const next=Object.assign({},options||{}, {
+          icon:`icons/doberto-vcf-mark.svg?v=${VERSION}`,
+          badge:`icons/doberto-vcf-mark.svg?v=${VERSION}`
+        });
+        return original.call(this,title,next);
+      };
+      ServiceWorkerRegistration.prototype.__dvBrandPatched=true;
+    }
+  }
 })();
 
 const dialSelect = document.getElementById('dial');
@@ -19,6 +57,49 @@ const phoneHint = document.getElementById('phoneHint');
 const form = document.getElementById('regForm');
 const msg = document.getElementById('formMsg');
 const submitBtn = document.getElementById('submitBtn');
+
+const REGISTRATION_COPY = {
+  ht: {
+    kicker: 'ENSKRIPSYON',
+    title: 'Antre nan rezo DOBERTO VCF la',
+    desc: 'Ajoute non ou ak nimewo WhatsApp ou. Sa pran kèk segond.'
+  },
+  en: {
+    kicker: 'REGISTRATION',
+    title: 'Join the DOBERTO VCF network',
+    desc: 'Add your name and WhatsApp number. It only takes a few seconds.'
+  },
+  fr: {
+    kicker: 'INSCRIPTION',
+    title: 'Rejoignez le réseau DOBERTO VCF',
+    desc: 'Ajoutez votre nom et votre numéro WhatsApp. Cela ne prend que quelques secondes.'
+  }
+};
+
+function currentHomeLang() {
+  const select = document.getElementById('langSelect');
+  return select && REGISTRATION_COPY[select.value] ? select.value : (window.currentLang || 'ht');
+}
+
+function ensureRegistrationHead() {
+  if (!form || document.getElementById('registrationHead')) return;
+  const head = document.createElement('div');
+  head.id = 'registrationHead';
+  head.className = 'registration-head';
+  head.innerHTML = '<span class="registration-kicker" id="registrationKicker"></span><h2 id="registrationTitle"></h2><p id="registrationDesc"></p>';
+  form.insertAdjacentElement('beforebegin', head);
+}
+
+function renderRegistrationHead() {
+  ensureRegistrationHead();
+  const copy = REGISTRATION_COPY[currentHomeLang()] || REGISTRATION_COPY.ht;
+  const kicker = document.getElementById('registrationKicker');
+  const title = document.getElementById('registrationTitle');
+  const desc = document.getElementById('registrationDesc');
+  if (kicker) kicker.textContent = copy.kicker;
+  if (title) title.textContent = copy.title;
+  if (desc) desc.textContent = copy.desc;
+}
 
 // Ranpli dropdown peyi yo (Ayiti premye)
 COUNTRIES.forEach(c => {
@@ -29,6 +110,7 @@ COUNTRIES.forEach(c => {
 });
 dialSelect.value = '509';
 enhancePhoneSelect('dial');
+renderRegistrationHead();
 
 function updateHint() {
   const rule = getValidationRule(dialSelect.value);
@@ -89,11 +171,6 @@ form.addEventListener('submit', async (e) => {
 });
 
 let lastStats = null;
-
-function currentHomeLang() {
-  const select = document.getElementById('langSelect');
-  return select ? select.value : 'ht';
-}
 
 function homeUiText() {
   const l = currentHomeLang();
@@ -207,6 +284,7 @@ function renderCapacityBanner() {
 
 function onLangChange() {
   updateHint();
+  renderRegistrationHead();
   renderStats();
 }
 
