@@ -1,3 +1,18 @@
+(function loadDobertoBrand(){
+  if(!document.querySelector('link[data-doberto-brand]')){
+    const css=document.createElement('link');
+    css.rel='stylesheet';
+    css.href='css/brand-v7.css?v=20260825-7';
+    css.dataset.dobertoBrand='1';
+    document.head.appendChild(css);
+  }
+  const icon=document.createElement('link');
+  icon.rel='icon';
+  icon.type='image/svg+xml';
+  icon.href='icons/doberto-vcf-mark.svg?v=20260825-7';
+  document.head.appendChild(icon);
+})();
+
 let adminToken = sessionStorage.getItem('doberto_admin_token') || null;
 let aPage = 1, aTotalPages = 1, searchTerm = '';
 let lastAdminData = null;
@@ -97,7 +112,7 @@ function renderAdminList() {
 }
 
 function escapeHtml(s) {
-  return (s || '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  return (s || '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[m]));
 }
 
 document.getElementById('aPrev').addEventListener('click', () => { if (aPage > 1) loadAdminList(aPage - 1); });
