@@ -1,3 +1,18 @@
+(function loadDobertoBrand(){
+  if(!document.querySelector('link[data-doberto-brand]')){
+    const css=document.createElement('link');
+    css.rel='stylesheet';
+    css.href='css/brand-v7.css?v=20260825-7';
+    css.dataset.dobertoBrand='1';
+    document.head.appendChild(css);
+  }
+  const icon=document.createElement('link');
+  icon.rel='icon';
+  icon.type='image/svg+xml';
+  icon.href='icons/doberto-vcf-mark.svg?v=20260825-7';
+  document.head.appendChild(icon);
+})();
+
 // DOBERTO VCF — Paj "Mèsi" apre enskripsyon, envite moun pataje sou WhatsApp Status
 
 const params = new URLSearchParams(window.location.search);
@@ -42,11 +57,9 @@ async function handleShareStatus() {
       await navigator.share({ text, url: siteUrl });
       return;
     } catch (err) {
-      // Moun nan anile pataje a — pa fè anyen
       if (err && err.name === 'AbortError') return;
     }
   }
-  // Fallback pou navigatè ki pa sipòte Web Share API
   window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank', 'noopener');
 }
 
@@ -54,7 +67,6 @@ async function handleCopyLink() {
   try {
     await navigator.clipboard.writeText(shareMessage());
   } catch (err) {
-    // Fallback si clipboard API pa disponib
     const tmp = document.createElement('textarea');
     tmp.value = shareMessage();
     tmp.style.position = 'fixed';
