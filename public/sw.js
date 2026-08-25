@@ -1,5 +1,5 @@
 // DOBERTO VCF — service worker
-const CACHE = 'doberto-vcf-v8-20260825';
+const CACHE = 'doberto-vcf-v9-20260825';
 
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (event) => {
