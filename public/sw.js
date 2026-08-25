@@ -1,10 +1,7 @@
 // DOBERTO VCF — service worker
-const CACHE = 'doberto-vcf-v7-20260825';
+const CACHE = 'doberto-vcf-v8-20260825';
 
-self.addEventListener('install', () => {
-  self.skipWaiting();
-});
-
+self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (event) => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
@@ -23,10 +20,8 @@ self.addEventListener('notificationclick', (event) => {
   event.waitUntil((async () => {
     const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
     for (const client of windows) {
-      if ('focus' in client) {
-        if ('navigate' in client) await client.navigate(target);
-        return client.focus();
-      }
+      if ('navigate' in client) await client.navigate(target);
+      if ('focus' in client) return client.focus();
     }
     if (self.clients.openWindow) return self.clients.openWindow(target);
   })());
