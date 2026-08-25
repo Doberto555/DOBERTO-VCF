@@ -1,23 +1,33 @@
-// DOBERTO VCF — service worker minimal
-// Sèl rezon li egziste: Chrome/Android mande yon service worker aktif
-// anvan l ka montre "beforeinstallprompt" (enstale kòm app).
-const CACHE = 'doberto-vcf-v3-20260825';
+// DOBERTO VCF — service worker
+const CACHE = 'doberto-vcf-v7-20260825';
 
-self.addEventListener('install', (e) => {
+self.addEventListener('install', () => {
   self.skipWaiting();
 });
 
-self.addEventListener('activate', (e) => {
-  e.waitUntil((async () => {
+self.addEventListener('activate', (event) => {
+  event.waitUntil((async () => {
     const keys = await caches.keys();
-    await Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)));
+    await Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key)));
     await self.clients.claim();
   })());
 });
 
-self.addEventListener('fetch', (e) => {
-  // Pass-through senp — pa gen cache agresif pou pa afekte done fòm yo.
-  e.respondWith(
-    fetch(e.request).catch(() => caches.match(e.request))
-  );
+self.addEventListener('fetch', (event) => {
+  event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const target = (event.notification.data && event.notification.data.url) || '/';
+  event.waitUntil((async () => {
+    const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+    for (const client of windows) {
+      if ('focus' in client) {
+        if ('navigate' in client) await client.navigate(target);
+        return client.focus();
+      }
+    }
+    if (self.clients.openWindow) return self.clients.openWindow(target);
+  })());
 });
