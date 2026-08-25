@@ -1,4 +1,5 @@
 {
+  "id": "/",
   "name": "DOBERTO VCF",
   "short_name": "DOBERTO VCF",
   "description": "Anrejistre kontak ou epi jwenn fichye VCF la lè objektif la rive.",
@@ -9,8 +10,29 @@
   "theme_color": "#030806",
   "orientation": "portrait-primary",
   "icons": [
-    { "src": "icons/doberto-vcf-mark.svg?v=20260825-7", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    {
+      "src": "icons/icon-192.png?v=20260825-8",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png?v=20260825-8",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-192.png?v=20260825-8",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/icon-512.png?v=20260825-8",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }
