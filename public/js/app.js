@@ -75,6 +75,79 @@ form.addEventListener('submit', async (e) => {
 
 let lastStats = null;
 
+function currentHomeLang() {
+  const select = document.getElementById('langSelect');
+  return select ? select.value : 'ht';
+}
+
+function homeUiText() {
+  const l = currentHomeLang();
+  if (l === 'fr') return {
+    email: 'Si vous ajoutez votre email, nous vous avertirons automatiquement lorsque le fichier VCF sera disponible.',
+    unlockedBadge: 'OBJECTIF ATTEINT',
+    unlockedTitle: 'Le fichier VCF est disponible',
+    unlockedDesc: 'Vérifiez le même nom et le même numéro utilisés lors de votre inscription pour télécharger le fichier.',
+    unlockedBtn: 'Vérifier & télécharger le VCF'
+  };
+  if (l === 'en') return {
+    email: 'If you add your email, we will automatically notify you when the VCF file becomes available.',
+    unlockedBadge: 'GOAL REACHED',
+    unlockedTitle: 'The VCF file is available',
+    unlockedDesc: 'Verify the same name and number you used when registering to download the file.',
+    unlockedBtn: 'Verify & download VCF'
+  };
+  return {
+    email: 'Si ou mete email ou, n ap avèti w otomatikman lè fichye VCF la disponib.',
+    unlockedBadge: 'OBJEKTIF LA RIVE',
+    unlockedTitle: 'Fichye VCF la disponib',
+    unlockedDesc: 'Verifye menm non ak menm nimewo ou te itilize lè ou te enskri a pou telechaje fichye a.',
+    unlockedBtn: 'Verifye & Download VCF'
+  };
+}
+
+function renderEmailNotificationNote() {
+  const emailInput = document.getElementById('email');
+  if (!emailInput) return;
+  let note = document.getElementById('emailNotifyNote');
+
+  if (!lastStats || !lastStats.emailNotificationsEnabled) {
+    if (note) note.remove();
+    return;
+  }
+
+  if (!note) {
+    note = document.createElement('div');
+    note.id = 'emailNotifyNote';
+    note.className = 'pro-email-notice';
+    emailInput.insertAdjacentElement('afterend', note);
+  }
+  note.innerHTML = `<span class="pro-email-notice-icon">✉</span><span>${homeUiText().email}</span>`;
+}
+
+function renderUnlockCard() {
+  const panel = document.querySelector('[data-tour="form"]');
+  if (!panel) return;
+  let card = document.getElementById('vcfUnlockCard');
+
+  if (!lastStats || !lastStats.unlocked) {
+    if (card) card.remove();
+    return;
+  }
+
+  const ui = homeUiText();
+  if (!card) {
+    card = document.createElement('div');
+    card.id = 'vcfUnlockCard';
+    card.className = 'pro-unlock-card';
+    panel.insertAdjacentElement('afterend', card);
+  }
+  card.innerHTML = `
+    <span class="pro-unlock-badge">✓ ${ui.unlockedBadge}</span>
+    <h2>${ui.unlockedTitle}</h2>
+    <p>${ui.unlockedDesc}</p>
+    <a href="list.html#download" class="pro-unlock-btn">${ui.unlockedBtn}</a>`;
+}
+
 async function loadStats() {
   try {
     const res = await fetch('/api/stats');
@@ -97,6 +170,8 @@ function renderStats() {
     : t('stat_locked', { total: lastStats.total, min: lastStats.minRequired });
 
   renderCapacityBanner();
+  renderEmailNotificationNote();
+  renderUnlockCard();
 }
 
 function renderCapacityBanner() {
