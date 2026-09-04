@@ -37,6 +37,25 @@ function onlyDigits(str) {
   return (str || '').replace(/\D/g, '');
 }
 
+// Normalize non pou verifikasyon: aksan, majiskil/miniskil, ponktiyasyon ak espas pa dwe kraze match la.
+function normalizeName(value) {
+  let name = String(value || '').trim();
+
+  // Si moun nan kopye non li jan li parèt nan lis la (egz. "D.M.L Jean"), retire prefiks vizyèl la.
+  if (NAME_PREFIX) {
+    const prefix = NAME_PREFIX.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    name = name.replace(new RegExp(`^${prefix}\\s+`, 'i'), '');
+  }
+
+  return name
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
+    .replace(/\s+/g, ' ');
+}
+
 // Ajoute prefiks la (egz: "D.M.L") devan non moun nan
 function withPrefix(name) {
   return NAME_PREFIX ? `${NAME_PREFIX} ${name}` : name;
@@ -174,16 +193,22 @@ app.post('/api/verify-download', downloadLimiter, async (req, res) => {
       });
     }
 
-    const { data: match } = await supabase
+    // Nimewo a se idantifyan inik la. Chèche li an premye, apre sa konpare non an
+    // lokalman ak yon normalizasyon ki tolere aksan/case/espas san nou pa febli verifikasyon an.
+    const { data: match, error: matchError } = await supabase
       .from('registrations')
-      .select('id')
+      .select('id, name')
       .eq('full_number', fullNumber)
-      .ilike('name', name)
       .maybeSingle();
 
-    if (!match) {
+    if (matchError) throw matchError;
+
+    const requestedName = normalizeName(name);
+    const registeredName = match ? normalizeName(match.name) : '';
+
+    if (!match || !requestedName || requestedName !== registeredName) {
       return res.status(403).json({
-        error: 'Nou pa jwenn okenn moun ki enskri ak non ak nimewo sa yo. Fòk ou te anrejistre deja pou w ka download.'
+        error: 'Nou pa jwenn okenn moun ki enskri ak non ak nimewo sa yo. Verifye non ak nimewo ou te itilize lè ou te enskri a.'
       });
     }
 
