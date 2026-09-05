@@ -1,9 +1,10 @@
 // DOBERTO VCF — PWA service worker: offline shell + fresh network data.
-const CACHE = 'doberto-vcf-v10-20260904';
+const CACHE = 'doberto-vcf-v11-20260905';
 const OFFLINE_URL = '/offline.html';
 const APP_SHELL = [
   '/',
   '/index.html',
+  '/register.html',
   '/list.html',
   '/privacy.html',
   '/terms.html',
@@ -11,7 +12,9 @@ const APP_SHELL = [
   '/css/style.css',
   '/css/pro-v3.css',
   '/css/brand-v7.css',
+  '/css/site-v10.css',
   '/css/prompt-premium.css',
+  '/js/home-v10.js',
   '/js/i18n.js',
   '/js/countries.js',
   '/js/country-picker.js',
@@ -47,11 +50,10 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const request = event.request;
   if (request.method !== 'GET') return;
-
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
-  if (url.pathname.startsWith('/api/')) return; // API data pa dwe soti nan cache.
-  if (url.pathname.startsWith('/push/onesignal/')) return; // OneSignal jere pwòp worker li.
+  if (url.pathname.startsWith('/api/')) return;
+  if (url.pathname.startsWith('/push/onesignal/')) return;
 
   if (request.mode === 'navigate') {
     event.respondWith((async () => {
@@ -79,7 +81,6 @@ self.addEventListener('fetch', (event) => {
       }
       return response;
     }).catch(() => null);
-
     return cached || (await networkPromise) || new Response('', { status: 503, statusText: 'Offline' });
   })());
 });
