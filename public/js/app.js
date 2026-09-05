@@ -1,9 +1,9 @@
 (function loadDobertoBrand(){
-  const VERSION='20260904-1';
+  const VERSION='20260905-2';
   if(!document.querySelector('link[data-doberto-brand]')){
     const css=document.createElement('link');
     css.rel='stylesheet';
-    css.href=`css/brand-v7.css?v=${VERSION}`;
+    css.href='css/brand-v7.css?v=20260904-1';
     css.dataset.dobertoBrand='1';
     document.head.appendChild(css);
   }
@@ -15,34 +15,33 @@
   const icon=document.createElement('link');
   icon.rel='icon';
   icon.type='image/png';
-  icon.href=`icons/doberto-vcf-192.png?v=${VERSION}`;
+  icon.href='icons/doberto-vcf-192.png?v=20260904-1';
   document.head.appendChild(icon);
 
   const apple=document.querySelector('link[rel="apple-touch-icon"]');
-  if(apple) apple.href=`icons/doberto-vcf-192.png?v=${VERSION}`;
+  if(apple) apple.href='icons/doberto-vcf-192.png?v=20260904-1';
   const theme=document.querySelector('meta[name="theme-color"]');
-  if(theme) theme.content='#030806';
+  if(theme) theme.content='#020705';
 
   const brand=document.querySelector('.brand');
   const dot=brand && brand.querySelector('.dot');
   if(dot){
     const img=document.createElement('img');
     img.className='brand-logo';
-    img.src=`icons/doberto-vcf-mark.svg?v=${VERSION}`;
+    img.src='icons/doberto-vcf-mark.svg?v=20260904-1';
     img.alt='';
     img.width=38;
     img.height=38;
     dot.replaceWith(img);
   }
 
-  // Nenpòt notification lokal ki soti nan paj la sèvi ak menm logo DOBERTO VCF la.
   if('ServiceWorkerRegistration' in window && ServiceWorkerRegistration.prototype.showNotification){
     const original=ServiceWorkerRegistration.prototype.showNotification;
     if(!ServiceWorkerRegistration.prototype.__dvBrandPatched){
       ServiceWorkerRegistration.prototype.showNotification=function(title,options){
         const next=Object.assign({},options||{}, {
-          icon:`icons/doberto-vcf-192.png?v=${VERSION}`,
-          badge:`icons/doberto-vcf-192.png?v=${VERSION}`
+          icon:'icons/doberto-vcf-192.png?v=20260904-1',
+          badge:'icons/doberto-vcf-192.png?v=20260904-1'
         });
         return original.call(this,title,next);
       };
@@ -101,33 +100,36 @@ function renderRegistrationHead() {
   if (desc) desc.textContent = copy.desc;
 }
 
-// Ranpli dropdown peyi yo (Ayiti premye)
-COUNTRIES.forEach(c => {
-  const opt = document.createElement('option');
-  opt.value = c.dial;
-  opt.textContent = `${c.name} (+${c.dial})`;
-  dialSelect.appendChild(opt);
-});
-dialSelect.value = '509';
-enhancePhoneSelect('dial');
+if (dialSelect && typeof COUNTRIES !== 'undefined') {
+  COUNTRIES.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c.dial;
+    opt.textContent = `${c.name} (+${c.dial})`;
+    dialSelect.appendChild(opt);
+  });
+  dialSelect.value = '509';
+  enhancePhoneSelect('dial');
+}
 renderRegistrationHead();
 
 function updateHint() {
+  if (!dialSelect || !phoneHint) return;
   const rule = getValidationRule(dialSelect.value);
   phoneHint.textContent = rule.exact
     ? t('hint_exact', { n: rule.exact })
     : t('hint_generic');
 }
-dialSelect.addEventListener('change', updateHint);
+if (dialSelect) dialSelect.addEventListener('change', updateHint);
 
 function showMsg(text, ok) {
+  if (!msg) return;
   msg.textContent = text;
   msg.className = 'msg show ' + (ok ? 'ok' : 'err');
 }
 
-form.addEventListener('submit', async (e) => {
+if (form) form.addEventListener('submit', async (e) => {
   e.preventDefault();
-  msg.className = 'msg';
+  if (msg) msg.className = 'msg';
 
   const name = document.getElementById('name').value.trim();
   const email = document.getElementById('email').value.trim();
@@ -159,7 +161,14 @@ form.addEventListener('submit', async (e) => {
       showMsg(errT(data), false);
     } else {
       showMsg(t('msg_register_success'), true);
-      window.location.href = 'mesi.html?name=' + encodeURIComponent(name);
+      try {
+        localStorage.setItem('dv_registered', '1');
+        localStorage.setItem('dv_member_name', name);
+        sessionStorage.setItem('dv_show_welcome', '1');
+      } catch (_) {}
+      window.setTimeout(() => {
+        window.location.replace('/?welcome=1');
+      }, 380);
       return;
     }
   } catch (err) {
@@ -246,7 +255,7 @@ async function loadStats() {
     const data = await res.json();
     lastStats = data;
     renderStats();
-  } catch (e) { /* silans */ }
+  } catch (e) {}
 }
 
 function renderStats() {
@@ -254,10 +263,10 @@ function renderStats() {
   const bar = document.getElementById('statBar');
   const text = document.getElementById('statText');
   const fill = document.getElementById('statFill');
-  bar.style.display = 'flex';
+  if (bar) bar.style.display = 'flex';
   const pct = Math.min(100, Math.round((lastStats.total / lastStats.minRequired) * 100));
-  fill.style.width = pct + '%';
-  text.textContent = lastStats.unlocked
+  if (fill) fill.style.width = pct + '%';
+  if (text) text.textContent = lastStats.unlocked
     ? t('stat_unlocked', { total: lastStats.total })
     : t('stat_locked', { total: lastStats.total, min: lastStats.minRequired });
 
