@@ -2,16 +2,17 @@
 <html lang="ht">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>Mèsi! — DOBERTO VCF</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="css/style.css?v=20260819-2" />
 <link rel="stylesheet" href="css/pro-v3.css?v=20260904-1" />
-<link rel="manifest" href="manifest.webmanifest" />
-<meta name="theme-color" content="#07080d" />
-<link rel="apple-touch-icon" href="icons/icon-192.png" />
+<link rel="stylesheet" href="css/brand-v7.css?v=20260904-1" />
+<link rel="stylesheet" href="css/site-v11.css?v=20260905-2" />
+<link rel="manifest" href="manifest.webmanifest?v=20260905-2" />
+<meta name="theme-color" content="#020705" />
 <link rel="icon" type="image/png" sizes="192x192" href="icons/doberto-vcf-192.png?v=20260904-1" />
 <link rel="apple-touch-icon" href="icons/doberto-vcf-192.png?v=20260904-1" />
 </head>
@@ -20,71 +21,36 @@
 <div class="topbar">
   <a href="/" class="brand"><img class="brand-logo" src="icons/doberto-vcf-mark.svg?v=20260904-1" alt="" width="38" height="38" /> DOBERTO VCF</a>
   <div class="topbar-right">
-    <div class="nav-links">
-      <a href="list.html" data-i18n="nav_list">Lis moun</a>
-    </div>
-    <select id="langSelect" class="lang-select">
-      <option value="ht">KR</option>
-      <option value="en">EN</option>
-      <option value="fr">FR</option>
-    </select>
+    <div class="nav-links"><a href="/">Akèy</a><a href="list.html" data-i18n="nav_list">Lis moun</a></div>
+    <select id="langSelect" class="lang-select"><option value="ht">KR</option><option value="en">EN</option><option value="fr">FR</option></select>
   </div>
 </div>
 
 <div class="container">
-
   <div class="mesi-hero">
-    <div class="mesi-check">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-    </div>
+    <div class="mesi-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
     <span class="mesi-badge" data-i18n="mesi_badge">Enskripsyon konplete</span>
-    <h1 id="mesiTitle" class="mesi-title">
-      <span id="mesiTitleText"></span>
-      <svg class="mesi-title-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8L12 2z"/><path d="M19.3 14l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/></svg>
-    </h1>
+    <h1 id="mesiTitle" class="mesi-title"><span id="mesiTitleText"></span><svg class="mesi-title-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8L12 2z"/><path d="M19.3 14l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/></svg></h1>
     <p data-i18n="mesi_desc">Kounye a, montre zanmi w ki jan yo ka fè menm bagay la — pataje lyen sa a sou Status WhatsApp ou pou plis moun wè l epi enskri tou.</p>
   </div>
 
   <div class="panel mesi-share-panel">
-    <button type="button" id="shareStatusBtn" class="mesi-share-btn">
-      <svg class="mesi-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v7a2 2 0 002 2h12a2 2 0 002-2v-7"/><path d="M16 6l-4-4-4 4"/><path d="M12 2v14"/></svg>
-      <span data-i18n="mesi_share_btn">Pataje sou Status WhatsApp</span>
-    </button>
+    <button type="button" id="shareStatusBtn" class="mesi-share-btn"><svg class="mesi-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v7a2 2 0 002 2h12a2 2 0 002-2v-7"/><path d="M16 6l-4-4-4 4"/><path d="M12 2v14"/></svg><span data-i18n="mesi_share_btn">Pataje sou Status WhatsApp</span></button>
     <div class="hint" style="text-align:center" data-i18n="mesi_share_hint">Ap louvri meni pataje telefòn ou. Chwazi "Status" oswa "Status/Storiz" nan lis la.</div>
-
-    <div class="mesi-secondary-row">
-      <button type="button" id="copyLinkBtn" class="secondary">
-        <svg class="mesi-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 007.07 0l2.83-2.83a5 5 0 00-7.07-7.07L11.5 4.5"/><path d="M14 11a5 5 0 00-7.07 0L4.1 13.83a5 5 0 007.07 7.07L12.5 19.5"/></svg>
-        <span data-i18n="mesi_copy_btn">Kopye lyen an</span>
-      </button>
-      <a id="whatsappSendBtn" class="secondary mesi-wa-link" href="#" target="_blank" rel="noopener" data-i18n="mesi_whatsapp_btn">Voye bay yon kontak sou WhatsApp</a>
-    </div>
+    <div class="mesi-secondary-row"><button type="button" id="copyLinkBtn" class="secondary"><span data-i18n="mesi_copy_btn">Kopye lyen an</span></button><a id="whatsappSendBtn" class="secondary mesi-wa-link" href="#" target="_blank" rel="noopener" data-i18n="mesi_whatsapp_btn">Voye bay yon kontak sou WhatsApp</a></div>
     <div class="msg" id="mesiMsg"></div>
   </div>
 
-  <div class="panel mesi-manual-panel">
-    <h3 class="section-title" data-i18n="mesi_manual_title">Pa gen opsyon pataje otomatik?</h3>
-    <p class="hint" data-i18n="mesi_manual_desc">Kopye lyen anwo a, louvri WhatsApp, ale nan "Status", chwazi tèks, epi kole lyen an.</p>
-    <div class="mesi-link-box" id="mesiLinkBox"></div>
-  </div>
+  <div class="panel mesi-manual-panel"><h3 class="section-title" data-i18n="mesi_manual_title">Pa gen opsyon pataje otomatik?</h3><p class="hint" data-i18n="mesi_manual_desc">Kopye lyen anwo a, louvri WhatsApp, ale nan "Status", chwazi tèks, epi kole lyen an.</p><div class="mesi-link-box" id="mesiLinkBox"></div></div>
 
-  <div class="mesi-links-row">
-    <a href="/" class="mesi-text-link" data-i18n="mesi_back_home">Retounen sou paj prensipal la</a>
-    <a href="list.html" class="mesi-text-link" data-i18n="mesi_view_list">Gade lis moun ki enskri</a>
-  </div>
-
+  <div class="mesi-links-row"><a href="/" class="mesi-text-link" data-i18n="mesi_back_home">Retounen sou Home Page</a><a href="list.html" class="mesi-text-link" data-i18n="mesi_view_list">Gade lis moun ki enskri</a></div>
   <p class="footer-note" data-i18n="footer_note">DOBERTO VCF — Fèt pa Doberto Mr Lit. Nimewo yo pa janm afiche piblikman.</p>
 </div>
 
 <script src="js/i18n.js"></script>
 <script src="js/mesi.js?v=20260904-1"></script>
 <script src="js/pro-v3.js?v=20260904-1"></script>
-<!-- DOBERTO VCF — Advertising integrations -->
-<!-- End advertising integrations -->
-
-<!-- DOBERTO VCF Ads -->
 <script src="https://glamournakedemployee.com/96/9c/2e/969c2e401fa168f84352ab34ae62ee5b.js"></script>
 <script src="https://glamournakedemployee.com/6a/bd/13/6abd13d15ce30dc4dcd5c757b85aa97f.js"></script>
-
 </body>
 </html>
