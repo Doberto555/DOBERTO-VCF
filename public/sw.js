@@ -1,7 +1,41 @@
-// DOBERTO VCF — service worker
-const CACHE = 'doberto-vcf-v9-20260825';
+// DOBERTO VCF — PWA service worker: offline shell + fresh network data.
+const CACHE = 'doberto-vcf-v10-20260904';
+const OFFLINE_URL = '/offline.html';
+const APP_SHELL = [
+  '/',
+  '/index.html',
+  '/list.html',
+  '/privacy.html',
+  '/terms.html',
+  '/offline.html',
+  '/css/style.css',
+  '/css/pro-v3.css',
+  '/css/brand-v7.css',
+  '/css/prompt-premium.css',
+  '/js/i18n.js',
+  '/js/countries.js',
+  '/js/country-picker.js',
+  '/js/icons.js',
+  '/js/app.js',
+  '/js/list.js',
+  '/js/push.js',
+  '/js/install-prompt.js',
+  '/js/tour.js',
+  '/js/pro-v3.js',
+  '/icons/doberto-vcf-192.png',
+  '/icons/doberto-vcf-512.png',
+  '/icons/doberto-vcf-maskable-512.png',
+  '/icons/doberto-vcf-mark.svg'
+];
 
-self.addEventListener('install', () => self.skipWaiting());
+self.addEventListener('install', (event) => {
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE);
+    await cache.addAll(APP_SHELL);
+    await self.skipWaiting();
+  })());
+});
+
 self.addEventListener('activate', (event) => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
@@ -11,18 +45,45 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
+  const request = event.request;
+  if (request.method !== 'GET') return;
+
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin) return;
+  if (url.pathname.startsWith('/api/')) return; // API data pa dwe soti nan cache.
+  if (url.pathname.startsWith('/push/onesignal/')) return; // OneSignal jere pwòp worker li.
+
+  if (request.mode === 'navigate') {
+    event.respondWith((async () => {
+      try {
+        const response = await fetch(request);
+        if (response && response.ok) {
+          const cache = await caches.open(CACHE);
+          cache.put(request, response.clone()).catch(() => {});
+        }
+        return response;
+      } catch (_) {
+        const fallbackPath = url.pathname === '/' ? '/index.html' : url.pathname;
+        return (await caches.match(request, { ignoreSearch: true })) || (await caches.match(fallbackPath, { ignoreSearch: true })) || (await caches.match(OFFLINE_URL));
+      }
+    })());
+    return;
+  }
+
+  event.respondWith((async () => {
+    const cached = await caches.match(request, { ignoreSearch: true });
+    const networkPromise = fetch(request).then(async (response) => {
+      if (response && response.ok) {
+        const cache = await caches.open(CACHE);
+        cache.put(request, response.clone()).catch(() => {});
+      }
+      return response;
+    }).catch(() => null);
+
+    return cached || (await networkPromise) || new Response('', { status: 503, statusText: 'Offline' });
+  })());
 });
 
-self.addEventListener('notificationclick', (event) => {
-  event.notification.close();
-  const target = (event.notification.data && event.notification.data.url) || '/';
-  event.waitUntil((async () => {
-    const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
-    for (const client of windows) {
-      if ('navigate' in client) await client.navigate(target);
-      if ('focus' in client) return client.focus();
-    }
-    if (self.clients.openWindow) return self.clients.openWindow(target);
-  })());
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
 });
