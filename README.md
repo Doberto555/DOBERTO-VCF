@@ -1,67 +1,77 @@
-# DOBERTO VCF
+# DOBERTO VCF — Production Build
 
-Sit pou moun anrejistre non ak nimewo WhatsApp yo pou gen plis vwè sou status yo.
+Version PRO ki gen:
 
-## Estrikti
-- `server.js` — backend Express (API + sèvi fichye piblik yo)
-- `public/` — frontend (HTML/CSS/JS senp, pa gen build step)
-- `schema.sql` — schema Supabase pou kreye tab `registrations`
-- `.env.example` — varyab anviwònman ou dwe konfigire
+- Enskripsyon + lis piblik + download VCF ak verifikasyon non/nimewo
+- 248 peyi/teritwa nan selector a, Gabon `+241` ladan
+- PWA install ak nouvo logo PNG 192/512 + maskable
+- Offline app shell ak paj offline
+- Push notifications reyèl via OneSignal Web SDK v16
+- Admin Push Center pou voye alèt bay tout abonnés
+- Email unlock via Resend
+- Kanpay unlock ak eta/retry nan Supabase
+- Security headers, rate limits, CORS restrenn, JWT admin sèlman nan Authorization header
+- CSV export san token nan URL
 
-## Etap enstalasyon
+## 1. Supabase
 
-### 1. Kreye pwojè Supabase
-1. Ale sou [supabase.com](https://supabase.com) → kreye yon pwojè.
-2. Nan **SQL Editor**, kole kontni `schema.sql` epi jwe l.
-3. Nan **Project Settings → API**, kopye:
-   - `Project URL` → `SUPABASE_URL`
-   - `service_role` key (SEKRÈ, pa `anon` key) → `SUPABASE_SERVICE_ROLE_KEY`
+Louvri SQL Editor Supabase epi kouri tout `schema.sql` la. Li pa efase enskripsyon ki deja la; li ajoute kolòn/index/tab kanpay ki manke yo.
 
-### 2. Konfigire varyab anviwònman
-Kopye `.env.example` → `.env` epi ranpli valè yo:
-```
-SUPABASE_URL=...
-SUPABASE_SERVICE_ROLE_KEY=...
-JWT_SECRET=yon-tèks-alazar-long
-ADMIN_PASSWORD=modpas-admin-ou
-MIN_TO_UNLOCK=500
-MAX_IN_FILE=50000
-```
+## 2. Vercel Environment Variables
 
-### 3. Teste an lokal
+Mete valè ki nan `.env.example` yo nan Vercel Project Settings > Environment Variables.
+
+Obligatwa pou production:
+
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `JWT_SECRET` (32+ karaktè random)
+- `ADMIN_PASSWORD`
+- `SITE_URL`
+
+Pou email:
+
+- `RESEND_API_KEY`
+- `RESEND_FROM`
+
+Pou push notifications:
+
+- `ONESIGNAL_APP_ID`
+- `ONESIGNAL_REST_API_KEY`
+
+Pa mete okenn secret reyèl nan GitHub.
+
+## 3. OneSignal Web Push
+
+Nan OneSignal kreye/configure Web Push pou menm origin sit la. Frontend la itilize Custom Code Setup ak worker sa a:
+
+`/push/onesignal/OneSignalSDKWorker.js`
+
+Worker a gen scope:
+
+`/push/onesignal/`
+
+PWA service worker prensipal la rete `/sw.js`, konsa 2 workers yo pa fè conflict.
+
+Lè env OneSignal yo configure:
+
+- popup notifikasyon DOBERTO VCF la kreye yon vrè OneSignal subscription;
+- admin ka voye push soti nan Admin > Push Center;
+- lè objektif VCF la rive, sistèm nan voye push unlock + email (si yo configure).
+
+## 4. Deploy
+
 ```bash
 npm install
 npm start
 ```
-Louvri `http://localhost:3000`.
 
-### 4. Deplwaye sou Render (backend + frontend ansanm)
-Paske `server.js` sèvi dosye `public/` yo dirèkteman (`express.static`), ou ka
-deplwaye **tout bagay an antye sou Render** san bezwen Netlify separe:
-1. Push kòd la sou GitHub.
-2. Sou Render → **New Web Service** → konekte repo a.
-3. Build command: `npm install`
-4. Start command: `npm start`
-5. Ajoute tout varyab `.env` yo nan **Environment** tab Render la.
-6. (Opsyonèl) Sèvi ak [UptimeRobot](https://uptimerobot.com) pou kenbe sèvè a "cho" si w sou plan gratis.
+Sou Vercel, push sou `main` oswa redeploy pwojè a apre environment variables yo fin mete.
 
-> Si ou prefere separe frontend/backend (tankou lòt pwojè w yo), ou ka mete `public/`
-> sou Netlify/Vercel epi chanje tout `fetch('/api/...')` nan fichye JS yo pou yo pwente
-> sou URL backend Render la (egzanp: `https://doberto-vcf.onrender.com/api/...`).
+## Security notes
 
-## Kijan sistèm nan mache
-- **Paj akèy (`/`)**: moun antre non, email (opsyonèl), ak nimewo WhatsApp yo (ak yon
-  lis TOUT kòd peyi nan mond lan). Pou Ayiti (509), nimewo a **dwe gen egzakteman 8 chif**.
-- **Lis moun (`/list.html`)**: tout moun ka wè NON yo sèlman — nimewo yo pa janm afiche.
-- **Download VCF**: disponib sèlman lè gen omwen `MIN_TO_UNLOCK` (500 pa default) moun
-  enskri. Pou download, moun nan dwe konfime non + nimewo li te itilize pou enskri a
-  (sa verifye se yon moun ki deja anrejistre k ap mande fichye a). Fichye a limite a
-  `MAX_IN_FILE` (50 000 pa default) kontak.
-- **Admin (`/admin.html`)**: konekte ak `ADMIN_PASSWORD` la pou wè lis konplè a (non +
-  nimewo konplè) ak fè yon ekspòtasyon CSV.
-
-## Sekirite
-- Sèl backend la gen aksè ak Supabase (`service_role` key pa janm ekspoze bay frontend).
-- RLS (Row Level Security) aktive sou tab la — pa gen okenn "policy" piblik.
-- Rate limiting aplike sou enskripsyon, download, ak login admin pou anpeche abi/spam.
-- Sesyon admin lan itilize yon JWT ki ekspire apre 12è.
+- Admin JWT pa pase nan URL ankò.
+- `JWT_SECRET` pa gen fallback insecure.
+- API yo limite request abuse.
+- Static + API responses gen security headers.
+- Supabase service-role key rete backend sèlman.
