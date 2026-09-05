@@ -1,5 +1,5 @@
 // DOBERTO VCF — PWA service worker: offline shell + fresh network data.
-const CACHE = 'doberto-vcf-v11-20260905';
+const CACHE = 'doberto-vcf-v12-20260905';
 const OFFLINE_URL = '/offline.html';
 const APP_SHELL = [
   '/',
@@ -8,11 +8,13 @@ const APP_SHELL = [
   '/list.html',
   '/privacy.html',
   '/terms.html',
+  '/mesi.html',
   '/offline.html',
   '/css/style.css',
   '/css/pro-v3.css',
   '/css/brand-v7.css',
   '/css/site-v10.css',
+  '/css/site-v11.css',
   '/css/prompt-premium.css',
   '/js/home-v10.js',
   '/js/i18n.js',
@@ -21,6 +23,7 @@ const APP_SHELL = [
   '/js/icons.js',
   '/js/app.js',
   '/js/list.js',
+  '/js/mesi.js',
   '/js/push.js',
   '/js/install-prompt.js',
   '/js/tour.js',
