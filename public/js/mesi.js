@@ -2,14 +2,14 @@
   if(!document.querySelector('link[data-doberto-brand]')){
     const css=document.createElement('link');
     css.rel='stylesheet';
-    css.href='css/brand-v7.css?v=20260825-7';
+    css.href='css/brand-v7.css?v=20260904-1';
     css.dataset.dobertoBrand='1';
     document.head.appendChild(css);
   }
   const icon=document.createElement('link');
   icon.rel='icon';
-  icon.type='image/svg+xml';
-  icon.href='icons/doberto-vcf-mark.svg?v=20260825-7';
+  icon.type='image/png';
+  icon.href='icons/doberto-vcf-192.png?v=20260904-1';
   document.head.appendChild(icon);
 })();
 

@@ -152,7 +152,7 @@
     grid.className = 'pro-kpi-grid';
     grid.innerHTML = `
       <article class="pro-kpi"><span class="pro-kpi-label" data-pro="total"></span><strong id="kpiTotal">—</strong><small>Database</small></article>
-      <article class="pro-kpi"><span class="pro-kpi-label" data-pro="today"></span><strong id="kpiToday">—</strong><small>24h / UTC</small></article>
+      <article class="pro-kpi"><span class="pro-kpi-label" data-pro="today"></span><strong id="kpiToday">—</strong><small>24h</small></article>
       <article class="pro-kpi"><span class="pro-kpi-label" data-pro="remaining"></span><strong id="kpiRemaining">—</strong><small id="kpiProgress">—</small></article>
       <article class="pro-kpi pro-kpi-status"><span class="pro-kpi-label" data-pro="status"></span><strong id="kpiStatus">—</strong><small>VCF</small></article>`;
     if (kicker) kicker.insertAdjacentElement('afterend', grid);

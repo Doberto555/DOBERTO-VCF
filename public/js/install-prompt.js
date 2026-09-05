@@ -32,6 +32,7 @@
       granted: 'Notifikasyon aktive avèk siksè.',
       denied: 'Notifikasyon yo bloke nan navigatè a. Ale nan paramèt sit la epi mete Notifications sou Allow.',
       unsupported: 'Navigatè sa a pa sipòte notifikasyon web.',
+      notConfigured: 'Sistèm push la poko aktive sou sèvè a. Admin dwe configure OneSignal avan.',
       dockInstall: 'Enstale app', dockNotify: 'Notifikasyon',
       testBody: 'Notifikasyon yo aktive. W ap ka wè alèt DOBERTO VCF sou aparèy sa a.'
     },
@@ -53,6 +54,7 @@
       granted: 'Les notifications sont maintenant activées.',
       denied: 'Les notifications sont bloquées dans le navigateur. Ouvrez les paramètres du site et autorisez Notifications.',
       unsupported: 'Ce navigateur ne prend pas en charge les notifications web.',
+      notConfigured: 'Le service push n’est pas encore configuré sur le serveur. OneSignal doit être activé par l’administrateur.',
       dockInstall: 'Installer l’app', dockNotify: 'Notifications',
       testBody: 'Les notifications sont activées. Les alertes DOBERTO VCF peuvent maintenant apparaître sur cet appareil.'
     },
@@ -74,6 +76,7 @@
       granted: 'Notifications are now enabled.',
       denied: 'Notifications are blocked in your browser. Open site settings and set Notifications to Allow.',
       unsupported: 'This browser does not support web notifications.',
+      notConfigured: 'Server push is not configured yet. The administrator must enable OneSignal first.',
       dockInstall: 'Install app', dockNotify: 'Notifications',
       testBody: 'Notifications are enabled. DOBERTO VCF alerts can now appear on this device.'
     }
@@ -103,9 +106,19 @@
   }
   function isIOS() { return /iphone|ipad|ipod/i.test(navigator.userAgent); }
   function installComplete() { return isStandalone() || localStorage.getItem(LS_INSTALLED) === '1'; }
-  function notificationComplete() { return ('Notification' in window) && Notification.permission === 'granted'; }
+  function notificationComplete() {
+    if (window.DobertoPush && window.DobertoPush.state.configured === true) {
+      return window.DobertoPush.isSubscribed();
+    }
+    return false;
+  }
   function shouldOfferInstall() { return !installComplete(); }
-  function shouldOfferNotification() { return ('Notification' in window) && !notificationComplete(); }
+  function shouldOfferNotification() {
+    if (!('Notification' in window)) return false;
+    if (!window.DobertoPush) return true;
+    if (window.DobertoPush.state.configured === false) return false;
+    return !notificationComplete();
+  }
 
   function uiBusy(ignoreInstall) {
     const tourOpen = !!document.querySelector('.tour-scrim.show');
@@ -138,7 +151,7 @@
         <div class="install-handle"></div>
         <button class="install-close" id="installClose" type="button" aria-label="Close">✕</button>
         <div class="prompt-top">
-          <img class="prompt-brand" src="icons/brand-mark.svg" alt="DOBERTO VCF" width="64" height="64">
+          <img class="prompt-brand" src="icons/doberto-vcf-192.png" alt="DOBERTO VCF" width="64" height="64">
           <div class="prompt-meta"><div class="prompt-kicker" id="installKicker">${x.installKicker}</div><h2 id="dvInstallTitle">${x.installTitle}</h2></div>
         </div>
         <p class="install-desc" id="installDescription">${x.installDesc}</p>
@@ -206,7 +219,7 @@
       <div class="notify-card" role="dialog" aria-modal="true" aria-labelledby="dvNotifyTitle">
         <button class="notify-close" id="notifyClose" type="button" aria-label="Close">✕</button>
         <div class="prompt-top">
-          <img class="prompt-brand" src="icons/brand-mark.svg" alt="DOBERTO VCF" width="64" height="64">
+          <img class="prompt-brand" src="icons/doberto-vcf-192.png" alt="DOBERTO VCF" width="64" height="64">
           <div class="prompt-meta"><div class="prompt-kicker" id="notifyKicker">${x.notifyKicker}</div><h2 id="dvNotifyTitle">${x.notifyTitle}</h2></div>
         </div>
         <p class="notify-desc" id="notifyDescription">${x.notifyDesc}</p>
@@ -253,8 +266,8 @@
       const reg = await navigator.serviceWorker.ready;
       await reg.showNotification('DOBERTO VCF', {
         body: c().testBody,
-        icon: '/icons/brand-mark.svg',
-        badge: '/icons/brand-mark.svg',
+        icon: '/icons/doberto-vcf-192.png',
+        badge: '/icons/doberto-vcf-192.png',
         tag: 'doberto-vcf-enabled',
         renotify: false,
         data: { url: '/' }
@@ -266,12 +279,17 @@
     const x=c();
     if(!('Notification' in window)){setNotifyStatus(x.unsupported,true);return;}
     if(Notification.permission==='denied'){setNotifyStatus(x.denied,true);refreshDock();return;}
+    if(!window.DobertoPush){setNotifyStatus(x.notConfigured,true);return;}
     try {
-      const permission=await Notification.requestPermission();
-      if(permission==='granted'){
+      const result=await window.DobertoPush.requestPermission();
+      if(result && result.ok){
         setNotifyStatus(x.granted,false);
         await showBrandNotification();
         setTimeout(()=>{ hideNotification(); notifyDismissedThisPage=true; refreshDock(); },1100);
+      } else if(result && result.reason==='not_configured'){
+        setNotifyStatus(x.notConfigured,true); refreshDock();
+      } else if(result && result.reason==='unsupported'){
+        setNotifyStatus(x.unsupported,true); refreshDock();
       } else {
         setNotifyStatus(x.denied,true); refreshDock();
       }
@@ -283,7 +301,7 @@
     const dock=document.createElement('div');
     dock.id='dvActionDock'; dock.className='dv-action-dock';
     dock.innerHTML=`
-      <button type="button" class="dv-dock-btn" id="dvDockInstall"><img src="icons/brand-mark.svg" alt=""><span id="dvDockInstallText"></span></button>
+      <button type="button" class="dv-dock-btn" id="dvDockInstall"><img src="icons/doberto-vcf-192.png" alt=""><span id="dvDockInstallText"></span></button>
       <button type="button" class="dv-dock-btn" id="dvDockNotify">${svg('bell')}<span id="dvDockNotifyText"></span></button>`;
     document.body.appendChild(dock);
     document.getElementById('dvDockInstall').addEventListener('click',()=>{installDismissedThisPage=false;showInstallWhenCalm(true);});
@@ -302,7 +320,8 @@
     dock.hidden=installBtn.hidden && notifyBtn.hidden;
   }
 
-  window.addEventListener('beforeinstallprompt',(e)=>{e.preventDefault();deferredPrompt=e;refreshDock();});
+  window.addEventListener('doberto:pushchange',()=>{refreshDock();});
+    window.addEventListener('beforeinstallprompt',(e)=>{e.preventDefault();deferredPrompt=e;refreshDock();});
   window.addEventListener('appinstalled',()=>{localStorage.setItem(LS_INSTALLED,'1');installDismissedThisPage=true;hideInstall();refreshDock();scheduleNotification(NOTIFY_DELAY_AFTER_INSTALL_MS);});
 
   function init(){

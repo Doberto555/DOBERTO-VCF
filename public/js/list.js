@@ -1,5 +1,5 @@
 (function loadDobertoBrand(){
-  const VERSION='20260825-9';
+  const VERSION='20260904-1';
   if(!document.querySelector('link[data-doberto-brand]')){
     const css=document.createElement('link');
     css.rel='stylesheet';
@@ -10,8 +10,8 @@
   document.querySelectorAll('link[rel~="icon"]').forEach((el)=>el.remove());
   const icon=document.createElement('link');
   icon.rel='icon';
-  icon.type='image/svg+xml';
-  icon.href=`icons/doberto-vcf-mark.svg?v=${VERSION}`;
+  icon.type='image/png';
+  icon.href=`icons/doberto-vcf-192.png?v=${VERSION}`;
   document.head.appendChild(icon);
 })();
 

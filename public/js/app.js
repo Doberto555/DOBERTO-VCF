@@ -1,5 +1,5 @@
 (function loadDobertoBrand(){
-  const VERSION='20260825-9';
+  const VERSION='20260904-1';
   if(!document.querySelector('link[data-doberto-brand]')){
     const css=document.createElement('link');
     css.rel='stylesheet';
@@ -14,12 +14,12 @@
   document.querySelectorAll('link[rel~="icon"]').forEach((el)=>el.remove());
   const icon=document.createElement('link');
   icon.rel='icon';
-  icon.type='image/svg+xml';
-  icon.href=`icons/doberto-vcf-mark.svg?v=${VERSION}`;
+  icon.type='image/png';
+  icon.href=`icons/doberto-vcf-192.png?v=${VERSION}`;
   document.head.appendChild(icon);
 
   const apple=document.querySelector('link[rel="apple-touch-icon"]');
-  if(apple) apple.href=`icons/doberto-vcf-mark.svg?v=${VERSION}`;
+  if(apple) apple.href=`icons/doberto-vcf-192.png?v=${VERSION}`;
   const theme=document.querySelector('meta[name="theme-color"]');
   if(theme) theme.content='#030806';
 
@@ -41,8 +41,8 @@
     if(!ServiceWorkerRegistration.prototype.__dvBrandPatched){
       ServiceWorkerRegistration.prototype.showNotification=function(title,options){
         const next=Object.assign({},options||{}, {
-          icon:`icons/doberto-vcf-mark.svg?v=${VERSION}`,
-          badge:`icons/doberto-vcf-mark.svg?v=${VERSION}`
+          icon:`icons/doberto-vcf-192.png?v=${VERSION}`,
+          badge:`icons/doberto-vcf-192.png?v=${VERSION}`
         });
         return original.call(this,title,next);
       };
