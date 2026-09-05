@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root{
+  --v11-bg:#020705;
+  --v11-panel:#07110e;
+  --v11-panel-2:#0a1712;
+  --v11-line:rgba(130,255,201,.13);
+  --v11-line-strong:rgba(91,244,181,.24);
+  --v11-text:#f4fbf8;
+  --v11-muted:#8ba096;
+  --v11-green:#21e39b;
+  --v11-green-2:#00b977;
+  --v11-shadow:0 24px 80px rgba(0,0,0,.38);
+}
+
+html,body,button,input,select,textarea,a,label,table,th,td,h1,h2,h3,h4,h5,h6,.brand,.home-title,.live-number,.welcome-title,.section-title,.registration-head h2,.member-directory-head h2{
+  font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif!important;
+  font-style:normal!important;
+}
+body *{font-style:normal!important}
+body{font-weight:400;letter-spacing:0}
+h1,h2,h3,h4,h5,h6,.brand{font-weight:700!important}
+
+/* global premium consistency */
+.topbar{
+  border:1px solid var(--v11-line)!important;
+  background:rgba(4,13,10,.82)!important;
+  backdrop-filter:blur(22px) saturate(135%)!important;
+  -webkit-backdrop-filter:blur(22px) saturate(135%)!important;
+  box-shadow:0 14px 48px rgba(0,0,0,.24)!important;
+}
+.brand{letter-spacing:-.01em!important}
+.nav-links a{font-weight:600!important;letter-spacing:0!important}
+.panel{
+  border:1px solid var(--v11-line)!important;
+  background:linear-gradient(180deg,rgba(10,24,18,.92),rgba(5,14,10,.95))!important;
+  box-shadow:var(--v11-shadow)!important;
+}
+input,select,textarea,.country-trigger{
+  font-weight:500!important;
+  border-color:var(--v11-line)!important;
+  background:rgba(2,9,7,.88)!important;
+}
+input:focus,select:focus,textarea:focus,.country-trigger.open{
+  border-color:rgba(33,227,155,.62)!important;
+  box-shadow:0 0 0 3px rgba(33,227,155,.08)!important;
+}
+button,.dv-btn,.pro-unlock-btn,.icon-btn{font-weight:700!important;letter-spacing:0!important}
+
+/* registration first experience */
+.register-page .page-shell{padding-top:34px!important}
+.register-page .page-hero{
+  max-width:800px!important;
+  padding:30px 26px 28px;
+  border:1px solid var(--v11-line);
+  border-radius:24px;
+  background:radial-gradient(430px 220px at 50% 0,rgba(33,227,155,.09),transparent 70%),rgba(5,16,12,.72);
+  box-shadow:0 18px 58px rgba(0,0,0,.22);
+}
+.register-page .page-hero h1{letter-spacing:-.035em!important}
+.register-page .register-wrap>.panel{border-radius:24px!important}
+.register-page .registration-head{padding-bottom:18px;margin-bottom:18px;border-bottom:1px solid rgba(123,255,199,.09)}
+.register-page .registration-kicker,.member-directory-kicker,.page-kicker,.section-kicker,.home-kicker{letter-spacing:.11em!important;font-weight:700!important}
+.register-side .side-card{transition:transform .2s ease,border-color .2s ease,background .2s ease}
+.register-side .side-card:hover{transform:translateY(-2px);border-color:var(--v11-line-strong);background:rgba(10,27,20,.85)}
+.register-flow-note{
+  display:flex;align-items:flex-start;gap:11px;margin:0 0 18px;padding:14px 15px;
+  border:1px solid rgba(33,227,155,.15);border-radius:14px;background:rgba(33,227,155,.045);color:#94aaa0;font-size:12.5px;line-height:1.55
+}
+.register-flow-note strong{display:block;color:#e7f6ef;margin-bottom:3px;font-size:13px}
+.already-member{display:flex;justify-content:center;margin-top:14px}
+.already-member a{color:#94aaa0;text-decoration:none;font-size:12px;font-weight:600}
+.already-member a:hover{color:#61e8b2}
+
+/* home polish */
+.home-title{letter-spacing:-.045em!important}
+.live-number{letter-spacing:-.045em!important}
+.info-card,.step-card,.live-card,.home-cta{transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
+.info-card:hover,.step-card:hover{transform:translateY(-3px);border-color:var(--v11-line-strong)!important;box-shadow:0 24px 64px rgba(0,0,0,.24)!important}
+
+/* premium welcome animation */
+.welcome-scene{
+  position:fixed;inset:0;z-index:9999;display:grid;place-items:center;overflow:hidden;
+  background:
+    radial-gradient(700px 420px at 50% 48%,rgba(29,225,154,.13),transparent 68%),
+    linear-gradient(180deg,#020705 0%,#010403 100%);
+  opacity:1;visibility:visible;transition:opacity .7s cubic-bezier(.4,0,.2,1),visibility .7s ease;
+}
+.welcome-scene.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
+.welcome-grid{
+  position:absolute;inset:-15%;opacity:.23;transform:perspective(900px) rotateX(62deg) translateY(32%);
+  background-image:linear-gradient(rgba(83,238,177,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(83,238,177,.05) 1px,transparent 1px);
+  background-size:42px 42px;mask-image:radial-gradient(circle at 50% 45%,#000 0,transparent 65%);
+  animation:v11Grid 3.2s ease-out both;
+}
+.welcome-glow{position:absolute;width:min(74vw,620px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(28,230,157,.12),rgba(28,230,157,.025) 46%,transparent 70%);filter:blur(4px);animation:v11Glow 2.6s ease-in-out infinite}
+.welcome-core{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;text-align:center;padding:34px 26px;min-width:min(90vw,460px)}
+.welcome-mark-wrap{position:relative;width:156px;height:156px;display:grid;place-items:center;margin-bottom:30px}
+.welcome-ring{position:absolute;border-radius:50%;border:1px solid rgba(95,244,184,.14);inset:0}
+.welcome-ring.ring-one{inset:8px;animation:v11Spin 8s linear infinite}
+.welcome-ring.ring-one:before,.welcome-ring.ring-two:before{content:"";position:absolute;width:7px;height:7px;border-radius:50%;background:#35eca8;box-shadow:0 0 18px rgba(53,236,168,.7)}
+.welcome-ring.ring-one:before{top:-4px;left:50%}.welcome-ring.ring-two{inset:25px;border-style:dashed;opacity:.75;animation:v11SpinReverse 6s linear infinite}.welcome-ring.ring-two:before{right:-4px;top:50%}
+.welcome-logo-shell{position:relative;display:grid;place-items:center;width:88px;height:88px;border-radius:25px;border:1px solid rgba(107,255,195,.24);background:linear-gradient(145deg,rgba(19,65,47,.74),rgba(4,17,12,.96));box-shadow:0 20px 65px rgba(0,0,0,.45),0 0 45px rgba(33,227,155,.15),inset 0 1px 0 rgba(255,255,255,.05);animation:v11LogoIn .85s cubic-bezier(.2,.8,.2,1) both}
+.welcome-logo-shell:after{content:"";position:absolute;inset:8px;border-radius:19px;border:1px solid rgba(102,248,190,.08)}
+.welcome-logo{width:58px!important;height:58px!important;position:relative;z-index:2;filter:drop-shadow(0 0 22px rgba(33,227,155,.24));animation:none!important}
+.welcome-eyebrow{margin:0 0 10px;color:#67eab5;font-size:10px;font-weight:700!important;letter-spacing:.18em!important;text-transform:uppercase;animation:v11TextIn .62s .25s both}
+.welcome-title{margin:0;color:#f5fcf9;font-size:clamp(34px,8vw,48px);line-height:1;font-weight:800!important;letter-spacing:-.045em!important;animation:v11TextIn .62s .34s both}
+.welcome-sub{margin-top:10px;color:#7f958b;font-size:12px;line-height:1.5;animation:v11TextIn .62s .43s both}
+.welcome-progress{width:min(260px,72vw);height:3px;margin-top:26px;border-radius:999px;background:rgba(119,255,201,.08);overflow:hidden;animation:v11TextIn .5s .5s both}
+.welcome-progress span{display:block;height:100%;width:100%;transform:translateX(-101%);border-radius:inherit;background:linear-gradient(90deg,transparent,#24e49d 34%,#7af4c4);box-shadow:0 0 18px rgba(36,228,157,.5);animation:v11Load 2.25s .45s cubic-bezier(.2,.7,.2,1) forwards}
+.welcome-ready{display:flex;align-items:center;gap:8px;margin-top:12px;color:#61766d;font-size:9px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;animation:v11TextIn .55s .68s both}
+.welcome-ready i{width:6px;height:6px;border-radius:50%;background:#2ce7a2;box-shadow:0 0 0 5px rgba(44,231,162,.06),0 0 16px rgba(44,231,162,.45);animation:v11Ready 1.2s ease-in-out infinite}
+
+/* list page */
+.directory-page .list-page-hero{border-radius:26px!important;background:radial-gradient(520px 240px at 90% 0,rgba(33,227,155,.12),transparent 68%),linear-gradient(145deg,rgba(9,25,18,.93),rgba(4,12,9,.96))!important}
+.directory-page .member-directory-panel{border-radius:24px!important}
+.directory-page .pro-list-toolbar{border:1px solid rgba(126,255,203,.09);border-radius:16px;background:rgba(2,10,7,.42);padding:14px!important}
+.directory-page table thead th{color:#7d948a!important;font-size:11px!important;font-weight:700!important;letter-spacing:.08em!important;text-transform:uppercase}
+.directory-page table tbody tr{transition:background .15s ease}
+.directory-page table tbody tr:hover{background:rgba(33,227,155,.025)}
+.directory-page #download{border-radius:24px!important}
+
+/* admin */
+body.admin-v11 .container{max-width:1120px!important}
+body.admin-v11 #loginPanel{max-width:520px;margin:44px auto!important;padding:30px!important}
+body.admin-v11 #loginPanel h3{font-size:28px;margin-bottom:22px!important;letter-spacing:-.03em}
+body.admin-v11 .admin-shell{padding:28px!important;border-radius:24px!important}
+body.admin-v11 .admin-kicker{color:#5de7ae!important;letter-spacing:.11em!important;font-weight:700!important}
+body.admin-v11 .table-scroll{border:1px solid rgba(124,255,201,.09);border-radius:16px;overflow:auto;background:rgba(2,9,6,.34)}
+body.admin-v11 table th{font-size:10px!important;letter-spacing:.07em!important;text-transform:uppercase;color:#799086!important}
+
+/* legal / thanks */
+.legal-page{max-width:850px!important;padding-top:50px!important}
+.legal-page>.brand{display:inline-flex;margin-bottom:24px}
+.legal-page>.panel{padding:38px!important;border-radius:26px!important}
+.legal-page h1{margin:0 0 22px;font-size:clamp(34px,6vw,48px);letter-spacing:-.04em}
+.legal-page h2{margin:28px 0 8px;font-size:19px;letter-spacing:-.02em}
+.legal-page p{color:#91a69d;line-height:1.78}
+.legal-back{display:inline-flex!important;margin-top:18px!important;text-decoration:none!important;padding:12px 16px!important;border-radius:12px!important}
+.mesi-hero,.mesi-share-panel,.mesi-manual-panel{border-radius:24px!important}
+
+@keyframes v11Grid{from{opacity:0;transform:perspective(900px) rotateX(68deg) translateY(44%) scale(1.08)}to{opacity:.23;transform:perspective(900px) rotateX(62deg) translateY(32%) scale(1)}}
+@keyframes v11Glow{0%,100%{transform:scale(.94);opacity:.65}50%{transform:scale(1.04);opacity:1}}
+@keyframes v11Spin{to{transform:rotate(360deg)}}
+@keyframes v11SpinReverse{to{transform:rotate(-360deg)}}
+@keyframes v11LogoIn{0%{opacity:0;transform:scale(.62) rotate(-9deg);filter:blur(5px)}65%{opacity:1;transform:scale(1.05) rotate(1deg);filter:blur(0)}100%{transform:scale(1) rotate(0)}}
+@keyframes v11TextIn{from{opacity:0;transform:translateY(12px);filter:blur(3px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}
+@keyframes v11Load{to{transform:translateX(0)}}
+@keyframes v11Ready{0%,100%{opacity:.55;transform:scale(.9)}50%{opacity:1;transform:scale(1)}}
+
+@media(max-width:760px){
+  .topbar{top:7px!important;margin:7px 8px 0!important;border-radius:15px!important}
+  .register-page .page-hero{padding:24px 18px 22px;border-radius:20px}
+  .welcome-mark-wrap{width:140px;height:140px}.welcome-logo-shell{width:82px;height:82px}.welcome-logo{width:54px!important;height:54px!important}
+  .legal-page>.panel{padding:24px 20px!important}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .welcome-grid,.welcome-glow,.welcome-ring,.welcome-logo-shell,.welcome-eyebrow,.welcome-title,.welcome-sub,.welcome-progress,.welcome-progress span,.welcome-ready,.welcome-ready i{animation:none!important}
+}
