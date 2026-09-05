@@ -25,6 +25,7 @@ const RESEND_API_KEY = String(process.env.RESEND_API_KEY || '').trim();
 const RESEND_FROM = String(process.env.RESEND_FROM || '').trim();
 const ONESIGNAL_APP_ID = String(process.env.ONESIGNAL_APP_ID || '').trim();
 const ONESIGNAL_REST_API_KEY = String(process.env.ONESIGNAL_REST_API_KEY || '').trim();
+const DOWNLOAD_METRIC_PREFIX = 'vcf_download_user_';
 
 const ALLOWED_ICONS = ['', 'star', 'crown', 'check', 'fire', 'heart', 'ninja', 'vip', 'flag'];
 
@@ -38,7 +39,6 @@ const securityConfigured = Boolean(
   !JWT_SECRET.includes('REPLACE_WITH') && !ADMIN_PASSWORD.includes('REPLACE_WITH')
 );
 
-// Kreye client la menm an dev san env pou app static la ka louvri; API yo retounen 503 si DB pa configure.
 const supabase = createClient(
   databaseConfigured ? SUPABASE_URL : 'https://example.supabase.co',
   databaseConfigured ? SUPABASE_SERVICE_ROLE_KEY : 'missing-service-role-key'
@@ -192,6 +192,71 @@ function cleanUrl(value, fallback = '/') {
   }
 }
 
+async function getUniqueDownloadCount() {
+  try {
+    const { count, error } = await supabase
+      .from('notification_campaigns')
+      .select('campaign_key', { count: 'exact', head: true })
+      .like('campaign_key', `${DOWNLOAD_METRIC_PREFIX}%`);
+    if (error) {
+      console.warn('[DOBERTO VCF] download metric count unavailable:', error.message);
+      return 0;
+    }
+    return count || 0;
+  } catch (err) {
+    console.warn('[DOBERTO VCF] download metric count failed:', err && err.message || err);
+    return 0;
+  }
+}
+
+async function recordVcfDownload(registrationId) {
+  const id = String(registrationId || '').trim();
+  if (!/^[0-9a-f-]{36}$/i.test(id)) return false;
+  const campaignKey = `${DOWNLOAD_METRIC_PREFIX}${id}`;
+  const nowIso = new Date().toISOString();
+
+  try {
+    const existingResult = await supabase
+      .from('notification_campaigns')
+      .select('campaign_key,attempts')
+      .eq('campaign_key', campaignKey)
+      .maybeSingle();
+
+    if (existingResult.error) {
+      console.warn('[DOBERTO VCF] download metric table unavailable:', existingResult.error.message);
+      return false;
+    }
+
+    const attempts = Number(existingResult.data && existingResult.data.attempts || 0) + 1;
+    const payload = {
+      campaign_key: campaignKey,
+      status: 'downloaded',
+      attempts,
+      updated_at: nowIso,
+      details: { registrationId: id, lastDownloadAt: nowIso }
+    };
+
+    let result;
+    if (existingResult.data) {
+      result = await supabase.from('notification_campaigns').update(payload).eq('campaign_key', campaignKey);
+    } else {
+      result = await supabase.from('notification_campaigns').insert(payload);
+      if (result.error && String(result.error.code || '') === '23505') {
+        result = await supabase.from('notification_campaigns').update(payload).eq('campaign_key', campaignKey);
+      }
+    }
+
+    if (result.error) {
+      console.warn('[DOBERTO VCF] download metric write failed:', result.error.message);
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.warn('[DOBERTO VCF] download metric write failed:', err && err.message || err);
+    return false;
+  }
+}
+
 // ---------- Email unlock ----------
 function unlockEmailHtml(name) {
   const safeName = escapeHtml(name || '');
@@ -317,7 +382,6 @@ async function runUnlockCampaign(force = false) {
     .eq('campaign_key', campaignKey)
     .maybeSingle();
 
-  // Si schema nouvo a poko aplike, pa kraze registration lan.
   if (existingResult.error) {
     console.warn('[DOBERTO VCF] notification_campaigns unavailable:', existingResult.error.message);
     if (!force && total !== MIN_TO_UNLOCK) return { ok: false, skipped: 'campaign_table_missing' };
@@ -337,7 +401,6 @@ async function runUnlockCampaign(force = false) {
       campaign_key: campaignKey, status: 'sending', attempts, updated_at: nowIso, details: { total }
     });
     if (claim.error) {
-      // Yon lòt request ka deja pran kanpay la nan menm moman an.
       if (!force && String(claim.error.code || '') === '23505') return { ok: true, skipped: 'claimed_by_other_request', total };
       throw claim.error;
     }
@@ -384,18 +447,18 @@ app.post('/api/register', registerLimiter, requireDatabase, async (req, res) => 
     phone = onlyDigits(phone).slice(0, 14);
     countryName = String(countryName || '').trim().slice(0, 120);
 
-    if (!name || name.length < 2) return res.status(400).json({ error: 'Tanpri antre yon non valid.' });
-    if (!dialCode) return res.status(400).json({ error: 'Chwazi peyi/kòd peyi a.' });
-    if (!phone) return res.status(400).json({ error: 'Tanpri antre nimewo a.' });
-    if (email && !validEmail(email)) return res.status(400).json({ error: 'Email lan pa valid.' });
-    if (dialCode === '509' && phone.length !== 8) return res.status(400).json({ error: 'Nimewo Ayisyen an dwe gen egzakteman 8 chif (san 509).' });
-    if (dialCode !== '509' && (phone.length < 4 || phone.length > 14)) return res.status(400).json({ error: 'Nimewo a pa gen yon fòma valid.' });
+    if (!name || name.length < 2) return res.status(400).json({ code: 'name_invalid', error: 'Tanpri antre yon non valid.' });
+    if (!dialCode) return res.status(400).json({ code: 'country_required', error: 'Chwazi peyi/kòd peyi a.' });
+    if (!phone) return res.status(400).json({ code: 'phone_required', error: 'Tanpri antre nimewo a.' });
+    if (email && !validEmail(email)) return res.status(400).json({ code: 'email_invalid', error: 'Email lan pa valid.' });
+    if (dialCode === '509' && phone.length !== 8) return res.status(400).json({ code: 'ht_phone_length', error: 'Nimewo Ayisyen an dwe gen egzakteman 8 chif (san 509).' });
+    if (dialCode !== '509' && (phone.length < 4 || phone.length > 14)) return res.status(400).json({ code: 'phone_format', error: 'Nimewo a pa gen yon fòma valid.' });
 
     const fullNumber = dialCode + phone;
     const { data: existing, error: existingError } = await supabase
       .from('registrations').select('id').eq('full_number', fullNumber).maybeSingle();
     if (existingError) throw existingError;
-    if (existing) return res.status(409).json({ error: 'Nimewo sa a deja anrejistre.' });
+    if (existing) return res.status(409).json({ code: 'already_registered', error: 'Nimewo sa a deja anrejistre.' });
 
     const { error } = await supabase.from('registrations').insert({
       name,
@@ -407,7 +470,6 @@ app.post('/api/register', registerLimiter, requireDatabase, async (req, res) => 
     });
     if (error) throw error;
 
-    // Kouri unlock campaign nan menm request la pou serverless pa koupe travay la apre response.
     try {
       await runUnlockCampaign(false);
     } catch (notifyErr) {
@@ -417,17 +479,21 @@ app.post('/api/register', registerLimiter, requireDatabase, async (req, res) => 
     res.json({ ok: true, message: 'Enskripsyon ou reyisi!' });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Yon erè sèvè rive. Eseye ankò.' });
+    res.status(500).json({ code: 'server_error', error: 'Yon erè sèvè rive. Eseye ankò.' });
   }
 });
 
 // ---------- GET /api/stats ----------
 app.get('/api/stats', publicReadLimiter, requireDatabase, async (req, res) => {
-  const { count, error } = await supabase.from('registrations').select('*', { count: 'exact', head: true });
-  if (error) return res.status(500).json({ error: 'Erè sèvè.' });
+  const [{ count, error }, downloadCount] = await Promise.all([
+    supabase.from('registrations').select('*', { count: 'exact', head: true }),
+    getUniqueDownloadCount()
+  ]);
+  if (error) return res.status(500).json({ code: 'server_error', error: 'Erè sèvè.' });
   const total = count || 0;
   res.json({
     total,
+    downloadCount,
     minRequired: MIN_TO_UNLOCK,
     maxInFile: MAX_IN_FILE,
     unlocked: total >= MIN_TO_UNLOCK,
@@ -465,7 +531,7 @@ app.get('/api/public-list', publicReadLimiter, requireDatabase, async (req, res)
   if (country) q = q.eq('country_name', country);
 
   const { data, error, count } = await q.range(from, to);
-  if (error) return res.status(500).json({ error: 'Erè sèvè.' });
+  if (error) return res.status(500).json({ code: 'server_error', error: 'Erè sèvè.' });
   const list = (data || []).map((r) => ({ ...r, display_name: withPrefix(r.name) }));
   res.json({ page, pageSize, total: count || 0, list, namePrefix: NAME_PREFIX, filters: { search, country } });
 });
@@ -483,7 +549,11 @@ app.post('/api/verify-download', downloadLimiter, requireDatabase, async (req, r
     const { count, error: countError } = await supabase.from('registrations').select('*', { count: 'exact', head: true });
     if (countError) throw countError;
     if ((count || 0) < MIN_TO_UNLOCK) {
-      return res.status(403).json({ error: `Download lan bloke toujou. Fòk gen omwen ${MIN_TO_UNLOCK} moun enskri (${count || 0}/${MIN_TO_UNLOCK} kounye a).` });
+      return res.status(403).json({
+        code: 'download_locked',
+        vars: { min: MIN_TO_UNLOCK, count: count || 0 },
+        error: `Download lan bloke toujou. Fòk gen omwen ${MIN_TO_UNLOCK} moun enskri (${count || 0}/${MIN_TO_UNLOCK} kounye a).`
+      });
     }
 
     const { data: match, error: matchError } = await supabase
@@ -493,10 +563,13 @@ app.post('/api/verify-download', downloadLimiter, requireDatabase, async (req, r
     const requestedName = normalizeName(name);
     const registeredName = match ? normalizeName(match.name) : '';
     if (!match || !requestedName || requestedName !== registeredName) {
-      return res.status(403).json({ error: 'Nou pa jwenn okenn moun ki enskri ak non ak nimewo sa yo. Verifye non ak nimewo ou te itilize lè ou te enskri a.' });
+      return res.status(403).json({
+        code: 'no_match',
+        error: 'Nou pa jwenn okenn moun ki enskri ak non ak nimewo sa yo. Verifye non ak nimewo ou te itilize lè ou te enskri a.'
+      });
     }
 
-    const dlToken = jwt.sign({ purpose: 'download' }, JWT_SECRET, {
+    const dlToken = jwt.sign({ purpose: 'download', registrationId: match.id }, JWT_SECRET, {
       algorithm: 'HS256',
       expiresIn: '5m',
       issuer: 'doberto-vcf',
@@ -505,7 +578,7 @@ app.post('/api/verify-download', downloadLimiter, requireDatabase, async (req, r
     res.json({ ok: true, downloadToken: dlToken });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Erè sèvè.' });
+    res.status(500).json({ code: 'server_error', error: 'Erè sèvè.' });
   }
 });
 
@@ -514,19 +587,21 @@ app.get('/api/download-vcf', downloadLimiter, requireDatabase, async (req, res) 
   try {
     if (!requireSecurity(res)) return;
     const token = String(req.query.token || '');
-    if (!token) return res.status(401).json({ error: 'Manke token download.' });
+    if (!token) return res.status(401).json({ code: 'missing_token', error: 'Manke token download.' });
+
+    let downloadPayload;
     try {
-      const payload = jwt.verify(token, JWT_SECRET, {
+      downloadPayload = jwt.verify(token, JWT_SECRET, {
         algorithms: ['HS256'], issuer: 'doberto-vcf', audience: 'doberto-vcf-download'
       });
-      if (payload.purpose !== 'download') throw new Error('bad token');
+      if (downloadPayload.purpose !== 'download') throw new Error('bad token');
     } catch (_) {
-      return res.status(401).json({ error: 'Token download lan pa valid oswa li ekspire.' });
+      return res.status(401).json({ code: 'invalid_token', error: 'Token download lan pa valid oswa li ekspire.' });
     }
 
     const { count, error: countError } = await supabase.from('registrations').select('*', { count: 'exact', head: true });
     if (countError) throw countError;
-    if ((count || 0) < MIN_TO_UNLOCK) return res.status(403).json({ error: 'Download lan bloke toujou.' });
+    if ((count || 0) < MIN_TO_UNLOCK) return res.status(403).json({ code: 'download_locked', vars: { min: MIN_TO_UNLOCK, count: count || 0 }, error: 'Download lan bloke toujou.' });
 
     const { data, error } = await supabase.from('registrations')
       .select('name, full_number').order('created_at', { ascending: true }).limit(MAX_IN_FILE);
@@ -536,13 +611,15 @@ app.get('/api/download-vcf', downloadLimiter, requireDatabase, async (req, res) 
       'BEGIN:VCARD', 'VERSION:3.0', `FN:${withPrefix(row.name)}`, `TEL;TYPE=CELL:+${row.full_number}`, 'END:VCARD', ''
     ].join('\r\n')).join('');
 
+    await recordVcfDownload(downloadPayload.registrationId);
+
     res.setHeader('Content-Type', 'text/vcard; charset=utf-8');
     res.setHeader('Content-Disposition', 'attachment; filename="DOBERTO-VCF.vcf"');
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.send(vcf);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Erè sèvè.' });
+    res.status(500).json({ code: 'server_error', error: 'Erè sèvè.' });
   }
 });
 
@@ -551,7 +628,7 @@ app.post('/api/admin/login', adminLoginLimiter, (req, res) => {
   if (!requireSecurity(res)) return;
   const password = String(req.body && req.body.password || '');
   if (!password || !secureEqual(password, ADMIN_PASSWORD)) {
-    return res.status(401).json({ error: 'Modpas admin lan pa kòrèk.' });
+    return res.status(401).json({ code: 'admin_password_incorrect', error: 'Modpas admin lan pa kòrèk.' });
   }
   const token = jwt.sign({ role: 'admin' }, JWT_SECRET, {
     algorithm: 'HS256', expiresIn: '12h', issuer: 'doberto-vcf', audience: 'doberto-vcf-admin'
@@ -562,15 +639,17 @@ app.post('/api/admin/login', adminLoginLimiter, (req, res) => {
 app.get('/api/admin/stats', adminActionLimiter, verifyAdmin, requireDatabase, async (req, res) => {
   try {
     const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-    const [allResult, dayResult] = await Promise.all([
+    const [allResult, dayResult, downloadCount] = await Promise.all([
       supabase.from('registrations').select('*', { count: 'exact', head: true }),
-      supabase.from('registrations').select('*', { count: 'exact', head: true }).gte('created_at', since)
+      supabase.from('registrations').select('*', { count: 'exact', head: true }).gte('created_at', since),
+      getUniqueDownloadCount()
     ]);
-    if (allResult.error || dayResult.error) return res.status(500).json({ error: 'Erè sèvè.' });
+    if (allResult.error || dayResult.error) return res.status(500).json({ code: 'server_error', error: 'Erè sèvè.' });
     const total = allResult.count || 0;
     res.json({
       total,
       today: dayResult.count || 0,
+      downloadCount,
       remaining: Math.max(0, MIN_TO_UNLOCK - total),
       unlocked: total >= MIN_TO_UNLOCK,
       minRequired: MIN_TO_UNLOCK,
@@ -580,7 +659,7 @@ app.get('/api/admin/stats', adminActionLimiter, verifyAdmin, requireDatabase, as
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Erè sèvè.' });
+    res.status(500).json({ code: 'server_error', error: 'Erè sèvè.' });
   }
 });
 
@@ -596,7 +675,7 @@ app.get('/api/admin/list', adminActionLimiter, verifyAdmin, requireDatabase, asy
     .order('created_at', { ascending: false }).range(from, to);
   if (search) q = q.ilike('name', `%${search}%`);
   const { data, error, count } = await q;
-  if (error) return res.status(500).json({ error: 'Erè sèvè.' });
+  if (error) return res.status(500).json({ code: 'server_error', error: 'Erè sèvè.' });
   res.json({ page, pageSize, total: count || 0, list: (data || []).map((r) => ({ ...r, display_name: withPrefix(r.name) })), namePrefix: NAME_PREFIX });
 });
 
@@ -610,27 +689,27 @@ app.put('/api/admin/update/:id', adminActionLimiter, verifyAdmin, requireDatabas
     phone = onlyDigits(phone).slice(0, 14);
     icon = String(icon || '').trim();
 
-    if (!name || name.length < 2) return res.status(400).json({ error: 'Tanpri antre yon non valid.' });
+    if (!name || name.length < 2) return res.status(400).json({ code: 'name_invalid', error: 'Tanpri antre yon non valid.' });
     if (!dialCode || !phone) return res.status(400).json({ error: 'Kòd peyi ak nimewo obligatwa.' });
-    if (dialCode === '509' && phone.length !== 8) return res.status(400).json({ error: 'Nimewo Ayisyen an dwe gen egzakteman 8 chif (san 509).' });
-    if (dialCode !== '509' && (phone.length < 4 || phone.length > 14)) return res.status(400).json({ error: 'Nimewo a pa gen yon fòma valid.' });
+    if (dialCode === '509' && phone.length !== 8) return res.status(400).json({ code: 'ht_phone_length', error: 'Nimewo Ayisyen an dwe gen egzakteman 8 chif (san 509).' });
+    if (dialCode !== '509' && (phone.length < 4 || phone.length > 14)) return res.status(400).json({ code: 'phone_format', error: 'Nimewo a pa gen yon fòma valid.' });
     if (!ALLOWED_ICONS.includes(icon)) icon = '';
 
     const fullNumber = dialCode + phone;
     const { data: dupe, error: dupeError } = await supabase.from('registrations')
       .select('id').eq('full_number', fullNumber).neq('id', id).maybeSingle();
     if (dupeError) throw dupeError;
-    if (dupe) return res.status(409).json({ error: 'Yon lòt moun deja gen nimewo sa a.' });
+    if (dupe) return res.status(409).json({ code: 'duplicate_number', error: 'Yon lòt moun deja gen nimewo sa a.' });
 
     const { data, error } = await supabase.from('registrations').update({
       name, dial_code: dialCode, phone, full_number: fullNumber, icon: icon || null
     }).eq('id', id).select('id, name, email, dial_code, phone, country_name, full_number, icon, created_at').maybeSingle();
     if (error) throw error;
-    if (!data) return res.status(404).json({ error: 'Nou pa jwenn moun sa a.' });
+    if (!data) return res.status(404).json({ code: 'not_found', error: 'Nou pa jwenn moun sa a.' });
     res.json({ ok: true, row: { ...data, display_name: withPrefix(data.name) } });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Erè sèvè.' });
+    res.status(500).json({ code: 'server_error', error: 'Erè sèvè.' });
   }
 });
 
@@ -643,7 +722,7 @@ app.delete('/api/admin/delete/:id', adminActionLimiter, verifyAdmin, requireData
     res.json({ ok: true });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Erè sèvè.' });
+    res.status(500).json({ code: 'server_error', error: 'Erè sèvè.' });
   }
 });
 
@@ -651,7 +730,7 @@ app.get('/api/admin/export-csv', adminActionLimiter, verifyAdmin, requireDatabas
   const { data, error } = await supabase.from('registrations')
     .select('name, email, country_name, full_number, icon, created_at')
     .order('created_at', { ascending: true }).limit(MAX_IN_FILE);
-  if (error) return res.status(500).json({ error: 'Erè sèvè.' });
+  if (error) return res.status(500).json({ code: 'server_error', error: 'Erè sèvè.' });
 
   const cleanCsv = (value) => `"${String(value || '').replace(/"/g, '""').replace(/^[=+\-@]/, (m) => "'" + m)}"`;
   let csv = 'Non,Non ak Prefiks,Email,Peyi,Nimewo,Ikòn,Dat\n';
