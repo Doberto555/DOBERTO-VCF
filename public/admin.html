@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="css/style.css?v=20260819-2" />
 <link rel="stylesheet" href="css/pro-v3.css?v=20260904-1" />
 <link rel="stylesheet" href="css/brand-v7.css?v=20260904-1" />
-<link rel="stylesheet" href="css/site-v11.css?v=20260905-2" />
+<link rel="stylesheet" href="css/site-v11.css?v=20260905-3" />
 <link rel="icon" type="image/png" sizes="192x192" href="icons/doberto-vcf-192.png?v=20260904-1" />
 <link rel="apple-touch-icon" href="icons/doberto-vcf-192.png?v=20260904-1" />
 <meta name="theme-color" content="#020705" />
@@ -21,7 +21,7 @@
   <a href="/" class="brand"><img class="brand-logo" src="icons/doberto-vcf-mark.svg?v=20260904-1" alt="" width="38" height="38" /> DOBERTO VCF</a>
   <div class="topbar-right">
     <div class="nav-links">
-      <a href="/">Akèy</a>
+      <a href="/" data-i18n="nav_home">Akèy</a>
       <a href="register.html" data-i18n="nav_register">Anrejistre</a>
       <a href="list.html" data-i18n="nav_list">Lis moun</a>
     </div>
@@ -38,7 +38,7 @@
   <div id="loginPanel" class="panel">
     <div class="admin-kicker">DOBERTO VCF · SECURE ADMIN</div>
     <h3 style="margin-top:8px" data-i18n="admin_login_title">Koneksyon Admin</h3>
-    <p class="hint" style="margin-top:-8px;margin-bottom:20px">Aksè sa a rezève pou administrasyon DOBERTO VCF.</p>
+    <p class="hint" style="margin-top:-8px;margin-bottom:20px" data-i18n="admin_secure_desc">Aksè sa a rezève pou administrasyon DOBERTO VCF.</p>
     <label for="pw" data-i18n="label_password">Modpas admin</label>
     <input id="pw" type="password" autocomplete="current-password" required />
     <button id="loginBtn" data-i18n="btn_login">Konekte</button>
@@ -52,7 +52,7 @@
       <button class="secondary btn-auto" id="logoutBtn" data-i18n="btn_logout">Dekonekte</button>
     </div>
 
-    <div class="admin-tools"><div class="admin-search-label">Jesyon enskripsyon yo</div></div>
+    <div class="admin-tools"><div class="admin-search-label" data-i18n="admin_manage">Jesyon enskripsyon yo</div></div>
 
     <input id="searchBox" data-i18n-placeholder="search_placeholder" placeholder="Chèche pa non..." style="margin-top:16px" />
 
@@ -86,19 +86,12 @@
     <h3 data-i18n="edit_modal_title">Modifye moun sa a</h3>
     <form id="editForm">
       <input type="hidden" id="editId" />
-
       <label for="editName" data-i18n="label_name">Non konplè</label>
       <input id="editName" type="text" required />
-
       <label data-i18n="label_phone">Nimewo WhatsApp</label>
-      <div class="phone-row">
-        <select id="editDial"></select>
-        <input id="editPhone" type="tel" inputmode="numeric" required />
-      </div>
-
+      <div class="phone-row"><select id="editDial"></select><input id="editPhone" type="tel" inputmode="numeric" required /></div>
       <label for="editIcon" data-i18n="label_icon">Ikòn (ranplase emoji)</label>
       <select id="editIcon"></select>
-
       <div class="modal-actions">
         <button type="button" class="secondary" id="editCancelBtn" data-i18n="btn_cancel">Anile</button>
         <button type="submit" id="editSaveBtn" data-i18n="btn_save">Sove chanjman</button>
@@ -108,7 +101,8 @@
   </div>
 </div>
 
-<script src="js/i18n.js"></script>
+<script src="js/i18n.js?v=20260905-3"></script>
+<script src="js/i18n-v12.js?v=20260905-3"></script>
 <script src="js/icons.js"></script>
 <script src="js/countries.js"></script>
 <script src="js/country-picker.js"></script>
