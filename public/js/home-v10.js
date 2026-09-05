@@ -1,4 +1,12 @@
 (() => {
+  const params = new URLSearchParams(location.search);
+  let registered = false;
+  try { registered = localStorage.getItem('dv_registered') === '1'; } catch (_) {}
+  if (!registered) {
+    location.replace('/register.html');
+    return;
+  }
+
   const COPY = {
     ht: {
       navHome:'Akèy', navRegister:'Enskri', navList:'Lis moun',
@@ -78,13 +86,20 @@
   loadStats();
 
   const scene = document.getElementById('welcomeScene');
+  const shouldWelcome = params.get('welcome') === '1' || sessionStorage.getItem('dv_show_welcome') === '1';
   if (scene) {
-    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const delay = reduce ? 250 : 2550;
-    window.setTimeout(() => {
-      scene.classList.add('is-leaving');
-      window.setTimeout(() => scene.remove(), reduce ? 50 : 600);
-    }, delay);
+    if (!shouldWelcome) {
+      scene.remove();
+    } else {
+      sessionStorage.removeItem('dv_show_welcome');
+      if (params.get('welcome') === '1') history.replaceState({}, '', '/');
+      const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const delay = reduce ? 550 : 3000;
+      window.setTimeout(() => {
+        scene.classList.add('is-leaving');
+        window.setTimeout(() => scene.remove(), reduce ? 80 : 760);
+      }, delay);
+    }
   }
 
   if ('serviceWorker' in navigator) {
