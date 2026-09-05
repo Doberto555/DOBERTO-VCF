@@ -21,7 +21,6 @@ body *{font-style:normal!important}
 body{font-weight:400;letter-spacing:0}
 h1,h2,h3,h4,h5,h6,.brand{font-weight:700!important}
 
-/* global premium consistency */
 .topbar{
   border:1px solid var(--v11-line)!important;
   background:rgba(4,13,10,.82)!important;
@@ -47,7 +46,6 @@ input:focus,select:focus,textarea:focus,.country-trigger.open{
 }
 button,.dv-btn,.pro-unlock-btn,.icon-btn{font-weight:700!important;letter-spacing:0!important}
 
-/* registration first experience */
 .register-page .page-shell{padding-top:34px!important}
 .register-page .page-hero{
   max-width:800px!important;
@@ -72,18 +70,21 @@ button,.dv-btn,.pro-unlock-btn,.icon-btn{font-weight:700!important;letter-spacin
 .already-member a{color:#94aaa0;text-decoration:none;font-size:12px;font-weight:600}
 .already-member a:hover{color:#61e8b2}
 
-/* home polish */
 .home-title{letter-spacing:-.045em!important}
 .live-number{letter-spacing:-.045em!important}
 .info-card,.step-card,.live-card,.home-cta{transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
 .info-card:hover,.step-card:hover{transform:translateY(-3px);border-color:var(--v11-line-strong)!important;box-shadow:0 24px 64px rgba(0,0,0,.24)!important}
+.download-stat-card{display:flex;align-items:center;gap:14px;margin-top:24px;padding:16px 17px;border:1px solid rgba(99,247,188,.13);border-radius:18px;background:linear-gradient(135deg,rgba(28,229,156,.075),rgba(3,12,8,.5));box-shadow:inset 0 1px 0 rgba(255,255,255,.02)}
+.download-stat-icon{display:grid;place-items:center;flex:0 0 48px;width:48px;height:48px;border-radius:15px;border:1px solid rgba(91,244,181,.16);background:rgba(33,227,155,.075);color:#59eab1}
+.download-stat-icon svg{width:24px;height:24px}
+.download-stat-copy{min-width:0;display:grid;grid-template-columns:1fr auto;grid-template-areas:'label number' 'sub number';align-items:center;column-gap:16px;flex:1}
+.download-stat-label{grid-area:label;color:#8fa69c;font-size:9.5px;font-weight:700;letter-spacing:.08em;line-height:1.35;text-transform:uppercase}
+.download-stat-copy strong{grid-area:number;color:#effbf6;font-size:30px;line-height:1;font-weight:800;letter-spacing:-.045em}
+.download-stat-copy small{grid-area:sub;color:#647a70;font-size:10px;margin-top:4px}
 
-/* premium welcome animation */
 .welcome-scene{
   position:fixed;inset:0;z-index:9999;display:grid;place-items:center;overflow:hidden;
-  background:
-    radial-gradient(700px 420px at 50% 48%,rgba(29,225,154,.13),transparent 68%),
-    linear-gradient(180deg,#020705 0%,#010403 100%);
+  background:radial-gradient(700px 420px at 50% 48%,rgba(29,225,154,.13),transparent 68%),linear-gradient(180deg,#020705 0%,#010403 100%);
   opacity:1;visibility:visible;transition:opacity .7s cubic-bezier(.4,0,.2,1),visibility .7s ease;
 }
 .welcome-scene.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
@@ -111,7 +112,6 @@ button,.dv-btn,.pro-unlock-btn,.icon-btn{font-weight:700!important;letter-spacin
 .welcome-ready{display:flex;align-items:center;gap:8px;margin-top:12px;color:#61766d;font-size:9px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;animation:v11TextIn .55s .68s both}
 .welcome-ready i{width:6px;height:6px;border-radius:50%;background:#2ce7a2;box-shadow:0 0 0 5px rgba(44,231,162,.06),0 0 16px rgba(44,231,162,.45);animation:v11Ready 1.2s ease-in-out infinite}
 
-/* list page */
 .directory-page .list-page-hero{border-radius:26px!important;background:radial-gradient(520px 240px at 90% 0,rgba(33,227,155,.12),transparent 68%),linear-gradient(145deg,rgba(9,25,18,.93),rgba(4,12,9,.96))!important}
 .directory-page .member-directory-panel{border-radius:24px!important}
 .directory-page .pro-list-toolbar{border:1px solid rgba(126,255,203,.09);border-radius:16px;background:rgba(2,10,7,.42);padding:14px!important}
@@ -120,7 +120,6 @@ button,.dv-btn,.pro-unlock-btn,.icon-btn{font-weight:700!important;letter-spacin
 .directory-page table tbody tr:hover{background:rgba(33,227,155,.025)}
 .directory-page #download{border-radius:24px!important}
 
-/* admin */
 body.admin-v11 .container{max-width:1120px!important}
 body.admin-v11 #loginPanel{max-width:520px;margin:44px auto!important;padding:30px!important}
 body.admin-v11 #loginPanel h3{font-size:28px;margin-bottom:22px!important;letter-spacing:-.03em}
@@ -129,7 +128,6 @@ body.admin-v11 .admin-kicker{color:#5de7ae!important;letter-spacing:.11em!import
 body.admin-v11 .table-scroll{border:1px solid rgba(124,255,201,.09);border-radius:16px;overflow:auto;background:rgba(2,9,6,.34)}
 body.admin-v11 table th{font-size:10px!important;letter-spacing:.07em!important;text-transform:uppercase;color:#799086!important}
 
-/* legal / thanks */
 .legal-page{max-width:850px!important;padding-top:50px!important}
 .legal-page>.brand{display:inline-flex;margin-bottom:24px}
 .legal-page>.panel{padding:38px!important;border-radius:26px!important}
@@ -153,6 +151,7 @@ body.admin-v11 table th{font-size:10px!important;letter-spacing:.07em!important;
   .register-page .page-hero{padding:24px 18px 22px;border-radius:20px}
   .welcome-mark-wrap{width:140px;height:140px}.welcome-logo-shell{width:82px;height:82px}.welcome-logo{width:54px!important;height:54px!important}
   .legal-page>.panel{padding:24px 20px!important}
+  .download-stat-card{padding:14px}.download-stat-copy strong{font-size:27px}.download-stat-label{font-size:8.5px}
 }
 
 @media(prefers-reduced-motion:reduce){
