@@ -1,38 +1,44 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="ht">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>Politique de confidentialité — DOBERTO VCF</title>
+<title>Privacy — DOBERTO VCF</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="css/style.css?v=20260904-1-pro" />
 <link rel="stylesheet" href="css/pro-v3.css?v=20260904-1" />
 <link rel="stylesheet" href="css/brand-v7.css?v=20260904-1" />
-<link rel="stylesheet" href="css/site-v11.css?v=20260905-2" />
+<link rel="stylesheet" href="css/site-v11.css?v=20260905-3" />
 <link rel="icon" type="image/png" sizes="192x192" href="icons/doberto-vcf-192.png?v=20260904-1" />
 <link rel="apple-touch-icon" href="icons/doberto-vcf-192.png?v=20260904-1" />
 <meta name="theme-color" content="#020705" />
+<style>.legal-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px}.legal-head .brand{margin:0!important}.legal-head .lang-select{flex:0 0 auto}@media(max-width:520px){.legal-head{align-items:flex-start}.legal-head .brand{font-size:14px!important}}</style>
 </head>
 <body>
 <div class="container legal-page">
-  <a href="/" class="brand"><img class="brand-logo" src="icons/doberto-vcf-mark.svg?v=20260904-1" alt="" width="38" height="38" /> DOBERTO VCF</a>
+  <div class="legal-head">
+    <a href="/" class="brand"><img class="brand-logo" src="icons/doberto-vcf-mark.svg?v=20260904-1" alt="" width="38" height="38" /> DOBERTO VCF</a>
+    <select id="langSelect" class="lang-select" aria-label="Lang"><option value="ht">KR</option><option value="fr">FR</option><option value="en">EN</option></select>
+  </div>
   <div class="panel">
     <span class="member-directory-kicker">LEGAL · PRIVACY</span>
-    <h1>Politique de confidentialité</h1>
-    <p>DOBERTO VCF collecte les informations que vous fournissez lors de votre inscription, notamment votre nom, votre numéro WhatsApp et, si vous choisissez de le fournir, votre email, afin de fournir le service VCF.</p>
-    <h2>Utilisation des données</h2>
-    <p>Les données servent au fonctionnement du service, à la génération de la liste de contacts et à la prévention des abus. Les numéros ne sont pas affichés publiquement sur la liste du site.</p>
-    <h2>Notifications de service</h2>
-    <p>Si vous fournissez une adresse email, DOBERTO VCF peut l’utiliser pour vous avertir lorsque l’objectif d’inscriptions est atteint et que le fichier VCF devient disponible au téléchargement. Si vous activez les notifications dans votre navigateur, le service utilise OneSignal pour gérer votre abonnement push et livrer les alertes. Vous pouvez retirer cette autorisation à tout moment depuis les paramètres de votre navigateur.</p>
-    <h2>Vos choix</h2>
-    <p>Vous pouvez demander la correction ou la suppression de vos informations en contactant l’administrateur du service.</p>
-    <h2>Publicité</h2>
-    <p>Le site peut charger des services publicitaires tiers. Ces fournisseurs peuvent appliquer leurs propres technologies et politiques de confidentialité.</p>
-    <p class="hint">Dernière mise à jour : 5 septembre 2026.</p>
-    <a class="secondary legal-back" href="/">Retour à l’accueil</a>
+    <h1 data-i18n="privacy_title">Politik konfidansyalite</h1>
+    <p data-i18n="privacy_intro">DOBERTO VCF kolekte enfòmasyon ou bay pandan enskripsyon an, tankou non ou, nimewo WhatsApp ou ak email ou si ou chwazi bay li, pou nou ka bay sèvis VCF la.</p>
+    <h2 data-i18n="privacy_use_title">Itilizasyon done yo</h2>
+    <p data-i18n="privacy_use_desc">Done yo sèvi pou fonksyònman sèvis la, pou jenere lis kontak la ak pou anpeche abi. Nimewo telefòn yo pa afiche piblikman nan lis sit la.</p>
+    <h2 data-i18n="privacy_notifications_title">Notifikasyon sèvis</h2>
+    <p data-i18n="privacy_notifications_desc">Si ou bay yon adrès email, DOBERTO VCF ka itilize li pou avèti ou lè objektif enskripsyon an rive epi fichye VCF la disponib. Si ou aktive notifikasyon navigatè a, sèvis la itilize OneSignal pou jere abònman push la ak voye alèt yo.</p>
+    <h2 data-i18n="privacy_choices_title">Chwa ou yo</h2>
+    <p data-i18n="privacy_choices_desc">Ou ka mande koreksyon oswa efasman enfòmasyon ou lè ou kontakte administratè sèvis la.</p>
+    <h2 data-i18n="privacy_ads_title">Piblisite</h2>
+    <p data-i18n="privacy_ads_desc">Sit la ka chaje sèvis piblisite twazyèm pati. Founisè sa yo ka aplike pwòp teknoloji ak règleman konfidansyalite pa yo.</p>
+    <p class="hint" data-i18n="legal_updated">Dènye mizajou: 5 septanm 2026.</p>
+    <a class="secondary legal-back" href="/" data-i18n="legal_back">Retounen sou Akèy</a>
   </div>
 </div>
+<script src="js/i18n.js?v=20260905-3"></script>
+<script src="js/i18n-v12.js?v=20260905-3"></script>
 </body>
 </html>
