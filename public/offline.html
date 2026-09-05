@@ -16,10 +16,25 @@
 <body>
 <main class="card">
   <div class="logo-shell"><img class="logo" src="icons/doberto-vcf-mark.svg" alt="DOBERTO VCF" /></div>
-  <h1>Ou offline kounye a</h1>
-  <p>DOBERTO VCF ka toujou louvri, men enskripsyon, lis aktyèl la ak download VCF bezwen yon koneksyon entènèt.</p>
-  <button type="button" onclick="location.reload()">Eseye konekte ankò</button>
+  <h1 id="offlineTitle">Ou offline kounye a</h1>
+  <p id="offlineDesc">DOBERTO VCF ka toujou louvri, men enskripsyon, lis aktyèl la ak download VCF bezwen yon koneksyon entènèt.</p>
+  <button id="offlineBtn" type="button" onclick="location.reload()">Eseye konekte ankò</button>
   <div class="small">Offline mode · DOBERTO VCF</div>
 </main>
+<script>
+(function(){
+  const copy={
+    ht:{title:'Ou offline kounye a',desc:'DOBERTO VCF ka toujou louvri, men enskripsyon, lis aktyèl la ak download VCF bezwen yon koneksyon entènèt.',btn:'Eseye konekte ankò'},
+    fr:{title:'Vous êtes hors ligne',desc:'DOBERTO VCF peut toujours s’ouvrir, mais l’inscription, la liste actuelle et le téléchargement VCF nécessitent une connexion Internet.',btn:'Réessayer la connexion'},
+    en:{title:'You are offline',desc:'DOBERTO VCF can still open, but registration, the current member list and VCF downloads require an Internet connection.',btn:'Try connecting again'}
+  };
+  let lang='ht';
+  try{const saved=localStorage.getItem('doberto_lang');if(copy[saved])lang=saved;}catch(_){}
+  document.documentElement.lang=lang;
+  document.getElementById('offlineTitle').textContent=copy[lang].title;
+  document.getElementById('offlineDesc').textContent=copy[lang].desc;
+  document.getElementById('offlineBtn').textContent=copy[lang].btn;
+})();
+</script>
 </body>
 </html>
