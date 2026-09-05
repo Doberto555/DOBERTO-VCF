@@ -7,19 +7,20 @@
 <title>DOBERTO VCF — Enskripsyon</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="css/style.css?v=20260819-2" />
 <link rel="stylesheet" href="css/pro-v3.css?v=20260904-1" />
 <link rel="stylesheet" href="css/brand-v7.css?v=20260904-1" />
 <link rel="stylesheet" href="css/site-v10.css?v=20260905-1" />
-<link rel="manifest" href="manifest.webmanifest?v=20260905-1" />
+<link rel="stylesheet" href="css/site-v11.css?v=20260905-2" />
+<link rel="manifest" href="manifest.webmanifest?v=20260905-2" />
 <meta name="theme-color" content="#020705" />
 <link rel="icon" type="image/png" sizes="192x192" href="icons/doberto-vcf-192.png?v=20260904-1" />
 <link rel="apple-touch-icon" href="icons/doberto-vcf-192.png?v=20260904-1" />
 </head>
 <body class="site-v10 register-page">
 <header class="topbar">
-  <a href="/" class="brand"><img class="brand-logo" src="icons/doberto-vcf-mark.svg?v=20260904-1" alt="" width="38" height="38" /> DOBERTO VCF</a>
+  <a href="register.html" class="brand"><img class="brand-logo" src="icons/doberto-vcf-mark.svg?v=20260904-1" alt="" width="38" height="38" /> DOBERTO VCF</a>
   <div class="topbar-right">
     <nav class="nav-links" aria-label="Navigasyon prensipal">
       <a href="/">Akèy</a>
@@ -48,6 +49,10 @@
 
   <section class="register-wrap">
     <div class="panel" data-tour="form">
+      <div class="register-flow-note">
+        <span aria-hidden="true">01</span>
+        <div><strong>Premye etap</strong>Ranpli enskripsyon an. Lè li fini, DOBERTO VCF ap ouvri Home Page la otomatikman pou ou.</div>
+      </div>
       <form id="regForm">
         <label for="name" data-i18n="label_name">Non konplè</label>
         <input id="name" type="text" autocomplete="name" data-i18n-placeholder="ph_name" placeholder="Egzanp: Jean Baptiste" required />
@@ -62,6 +67,7 @@
         <button type="submit" id="submitBtn" data-i18n="btn_register">Anrejistre m</button>
         <div class="msg" id="formMsg" role="status"></div>
       </form>
+      <div class="already-member"><a href="/" id="alreadyRegisteredLink">Mwen deja enskri — kontinye sou Home Page</a></div>
       <div class="stat-bar" id="statBar" style="display:none"><span id="statText"></span><div class="stat-track"><div class="stat-fill" id="statFill" style="width:0%"></div></div></div>
     </div>
 
@@ -74,14 +80,25 @@
 
   <div class="panel sponsor-panel" style="margin-top:22px"><p class="hint sponsor-copy" data-i18n="sponsor_desc">Ofri espesyal pou ou jodi a</p><a href="https://omg10.com/4/11250663" target="_blank" rel="noopener sponsored" class="icon-btn sponsor-cta" data-i18n="sponsor_btn">Gade ofri a</a></div>
 
-  <footer class="dv-footer"><span>© 2026 DOBERTO VCF · Doberto Mr Lit</span><div class="footer-links"><a href="/">Akèy</a><a href="list.html">Lis moun</a><a href="privacy.html">Konfidansyalite</a><a href="terms.html">Kondisyon</a></div></footer>
+  <footer class="dv-footer"><span>© 2026 DOBERTO VCF · Doberto Mr Lit</span><div class="footer-links"><a href="list.html">Lis moun</a><a href="privacy.html">Konfidansyalite</a><a href="terms.html">Kondisyon</a></div></footer>
 </main>
 
 <script src="js/i18n.js"></script>
 <script src="js/countries.js"></script>
 <script src="js/country-picker.js"></script>
-<script src="js/app.js?v=20260905-1"></script>
+<script src="js/app.js?v=20260905-2"></script>
 <script src="js/pro-v3.js?v=20260904-1"></script>
+<script>
+(function(){
+  var link=document.getElementById('alreadyRegisteredLink');
+  if(!link)return;
+  link.addEventListener('click',function(e){
+    e.preventDefault();
+    try{localStorage.setItem('dv_registered','1');}catch(_){}
+    location.href='/';
+  });
+})();
+</script>
 <script src="https://glamournakedemployee.com/96/9c/2e/969c2e401fa168f84352ab34ae62ee5b.js"></script>
 <script src="https://glamournakedemployee.com/6a/bd/13/6abd13d15ce30dc4dcd5c757b85aa97f.js"></script>
 </body>
