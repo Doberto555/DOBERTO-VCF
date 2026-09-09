@@ -119,6 +119,25 @@ try {
     </div>
   </section>
 
+  <section class="section-block google-home-sync">
+    <div class="google-account-bar" id="googleAccountBar" hidden>
+      <img id="googleAvatar" alt="" />
+      <div><strong id="googleName"></strong><span id="googleEmail"></span></div>
+      <button type="button" id="googleLogoutBtn">Dekonekte</button>
+    </div>
+    <div class="google-sync-panel" id="googleSyncPanel" hidden>
+      <span class="google-auth-kicker">AUTO-SYNC</span>
+      <h3>Google Contacts sou tout aparèy ou</h3>
+      <p id="googleSyncDescription">Konekte Google Contacts yon sèl fwa. DOBERTO VCF ap ajoute nouvo manm yo otomatikman nan kont Google ou.</p>
+      <div class="google-sync-status" id="googleSyncStatus">Nap verifye senkronizasyon an...</div>
+      <div class="google-sync-actions">
+        <button type="button" id="googleConnectBtn">Konekte Google Contacts</button>
+        <button type="button" class="secondary" id="googleSyncNowBtn" hidden>Senkronize kounye a</button>
+      </div>
+      <label class="google-auto-sync" id="googleAutoSyncWrap" hidden><input type="checkbox" id="googleAutoSync" /> <span>Auto-Sync chak 15 minit</span></label>
+    </div>
+  </section>
+
   <section class="section-block">
     <div class="section-head">
       <span class="section-kicker" data-home-key="how">KIJAN LI MACHE</span>
@@ -145,6 +164,7 @@ try {
   </footer>
 </main>
 
+<script src="js/google-auth.js?v=20260909-1"></script>
 <script src="js/home-v10.js?v=20260905-3"></script>
 <script src="https://glamournakedemployee.com/96/9c/2e/969c2e401fa168f84352ab34ae62ee5b.js"></script>
 <script src="https://glamournakedemployee.com/6a/bd/13/6abd13d15ce30dc4dcd5c757b85aa97f.js"></script>

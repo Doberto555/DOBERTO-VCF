@@ -68,6 +68,26 @@ npm start
 
 Sou Vercel, push sou `main` oswa redeploy pwojè a apre environment variables yo fin mete.
 
+## 5. Google Login + Google Contacts Auto-Sync
+
+Nouvo vèsyon an sèvi ak de otorizasyon separe:
+
+1. Google Login mande sèlman `openid email profile` pou kreye kont itilizatè a.
+2. Google Contacts mande `https://www.googleapis.com/auth/contacts` sèlman lè itilizatè a aktive sync la.
+
+Nan Google Cloud Console, kreye yon OAuth Client ki gen kalite **Web application**, aktive **Google People API**, epi ajoute URI sa a nan Authorized redirect URIs:
+
+`https://doberto-vcf-509.vercel.app/register.html`
+
+Ajoute `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI`, `GOOGLE_TOKEN_ENCRYPTION_KEY` ak `CRON_SECRET` nan Vercel. Pa mete valè reyèl yo nan GitHub.
+
+Pou Auto-Sync chak 15 minit, ajoute de GitHub Actions secrets:
+
+- `SITE_URL`: `https://doberto-vcf-509.vercel.app`
+- `CRON_SECRET`: egzakteman menm valè ak `CRON_SECRET` ki nan Vercel
+
+Kouri `schema.sql` nan Supabase SQL Editor yon sèl fwa anvan premye deplwaman v1.2.0 lan.
+
 ## Security notes
 
 - Admin JWT pa pase nan URL ankò.

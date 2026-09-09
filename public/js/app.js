@@ -153,7 +153,9 @@ if (form) form.addEventListener('submit', async (e) => {
   try {
     const res = await fetch('/api/register', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: window.DobertoGoogle
+        ? window.DobertoGoogle.authHeaders(true)
+        : { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, dialCode, countryName, phone })
     });
     const data = await res.json();
@@ -166,9 +168,12 @@ if (form) form.addEventListener('submit', async (e) => {
         localStorage.setItem('dv_member_name', name);
         sessionStorage.setItem('dv_show_welcome', '1');
       } catch (_) {}
+      if (window.DobertoGoogle) {
+        window.DobertoGoogle.registrationCompleted({ name, email, dial_code: dialCode, phone });
+      }
       window.setTimeout(() => {
         window.location.replace('/?welcome=1');
-      }, 380);
+      }, 280);
       return;
     }
   } catch (err) {

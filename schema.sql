@@ -13,6 +13,39 @@ create table if not exists registrations (
   created_at timestamptz not null default now()
 );
 
+-- Kont Google itilize pou koneksyon sou tout aparèy.
+create table if not exists app_users (
+  id uuid primary key default gen_random_uuid(),
+  google_sub text not null unique,
+  email text not null,
+  display_name text not null,
+  avatar_url text,
+  created_at timestamptz not null default now(),
+  last_login_at timestamptz not null default now()
+);
+
+create unique index if not exists app_users_email_lower_key
+  on app_users (lower(email));
+
+alter table registrations add column if not exists user_id uuid references app_users(id) on delete set null;
+create unique index if not exists registrations_user_id_key
+  on registrations (user_id) where user_id is not null;
+
+-- Jeton Google Contacts yo toujou chifre anvan backend lan ekri yo isit.
+create table if not exists google_connections (
+  user_id uuid primary key references app_users(id) on delete cascade,
+  refresh_token_enc text not null,
+  access_token_enc text,
+  access_token_expires_at timestamptz,
+  granted_scope text,
+  auto_sync boolean not null default true,
+  sync_cursor_created_at timestamptz,
+  last_synced_at timestamptz,
+  last_error text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 -- Si tab la te deja egziste sou yon ansyen vèsyon, sa ajoute kolòn yo san li pa efase done.
 alter table registrations add column if not exists email text;
 alter table registrations add column if not exists icon text;
@@ -38,5 +71,7 @@ create table if not exists notification_campaigns (
 
 alter table registrations enable row level security;
 alter table notification_campaigns enable row level security;
+alter table app_users enable row level security;
+alter table google_connections enable row level security;
 
 -- Pa ajoute public policies: backend service-role la sèlman dwe gen aksè dirèk.

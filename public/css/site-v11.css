@@ -13,6 +13,31 @@
   --v11-shadow:0 24px 80px rgba(0,0,0,.38);
 }
 
+/* Google account + Contacts sync */
+.google-auth-gate,.google-sync-panel{margin:22px 0;padding:24px;border:1px solid rgba(255,255,255,.1);border-radius:20px;background:linear-gradient(145deg,rgba(13,29,23,.96),rgba(3,9,7,.98));box-shadow:0 18px 55px rgba(0,0,0,.28)}
+.google-auth-gate[hidden],.google-sync-panel[hidden],.google-account-bar[hidden]{display:none!important}
+.google-auth-kicker{display:inline-flex;margin-bottom:10px;color:var(--signal,#5dffad);font-size:.72rem;font-weight:800;letter-spacing:.14em}
+.google-auth-gate h2,.google-sync-panel h3{margin:0 0 8px;font-style:normal;letter-spacing:-.025em}
+.google-auth-gate p,.google-sync-panel p{margin:0 0 18px;color:var(--muted,#a6b5ad);line-height:1.65}
+.google-auth-gate small{display:block;margin-top:12px;color:var(--muted,#91a098);text-align:center}
+.google-auth-button{display:flex;width:100%;min-height:52px;align-items:center;justify-content:center;gap:12px;border:1px solid rgba(255,255,255,.16);border-radius:14px;background:#fff!important;color:#111!important;font-weight:750!important;box-shadow:0 10px 26px rgba(0,0,0,.2)}
+.google-auth-button svg{width:21px;height:21px;flex:0 0 auto}
+.google-account-bar{display:flex;align-items:center;gap:12px;margin:0 0 20px;padding:12px 14px;border:1px solid rgba(255,255,255,.09);border-radius:16px;background:rgba(255,255,255,.035)}
+.google-account-bar img{width:42px;height:42px;border-radius:50%;object-fit:cover;background:#10251c}
+.google-account-bar div{display:flex;min-width:0;flex:1;flex-direction:column}
+.google-account-bar strong,.google-account-bar span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-style:normal}
+.google-account-bar span{margin-top:3px;color:var(--muted,#9bad9f);font-size:.78rem}
+.google-account-bar button{width:auto!important;min-height:38px!important;padding:8px 12px!important;border:1px solid rgba(255,255,255,.12)!important;background:transparent!important;color:#d9e8df!important;font-size:.75rem!important}
+.google-sync-status{margin:14px 0;padding:12px 14px;border-left:3px solid var(--signal,#5dffad);border-radius:8px;background:rgba(93,255,173,.07);color:#d8eee2;font-size:.86rem}
+.google-sync-actions{display:flex;flex-wrap:wrap;gap:10px}
+.google-sync-actions button{width:auto;min-height:44px;padding:10px 16px}
+.google-sync-actions .secondary{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:#fff}
+.google-auto-sync{display:flex;align-items:center;gap:9px;margin-top:16px;color:#dce9e1;font-weight:650}
+.google-auto-sync input{width:18px;height:18px;accent-color:var(--signal,#5dffad)}
+.google-home-sync{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+.google-home-sync .google-account-bar,.google-home-sync .google-sync-panel{margin:0}
+@media (max-width:640px){.google-auth-gate,.google-sync-panel{padding:19px 16px;border-radius:17px}.google-account-bar{align-items:flex-start}.google-account-bar button{margin-left:auto}.google-sync-actions{display:grid}.google-sync-actions button{width:100%}}
+
 html,body,button,input,select,textarea,a,label,table,th,td,h1,h2,h3,h4,h5,h6,.brand,.home-title,.live-number,.welcome-title,.section-title,.registration-head h2,.member-directory-head h2{
   font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif!important;
   font-style:normal!important;

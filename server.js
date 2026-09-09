@@ -6,6 +6,7 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const rateLimit = require('express-rate-limit');
 const { createClient } = require('@supabase/supabase-js');
+const { createGoogleSync } = require('./lib/google-sync');
 
 const app = express();
 app.disable('x-powered-by');
@@ -25,6 +26,7 @@ const RESEND_API_KEY = String(process.env.RESEND_API_KEY || '').trim();
 const RESEND_FROM = String(process.env.RESEND_FROM || '').trim();
 const ONESIGNAL_APP_ID = String(process.env.ONESIGNAL_APP_ID || '').trim();
 const ONESIGNAL_REST_API_KEY = String(process.env.ONESIGNAL_REST_API_KEY || '').trim();
+const CRON_SECRET = String(process.env.CRON_SECRET || '').trim();
 const DOWNLOAD_METRIC_PREFIX = 'vcf_download_user_';
 
 const ALLOWED_ICONS = ['', 'star', 'crown', 'check', 'fire', 'heart', 'ninja', 'vip', 'flag'];
@@ -43,6 +45,14 @@ const supabase = createClient(
   databaseConfigured ? SUPABASE_URL : 'https://example.supabase.co',
   databaseConfigured ? SUPABASE_SERVICE_ROLE_KEY : 'missing-service-role-key'
 );
+
+const googleSync = createGoogleSync({
+  supabase,
+  siteUrl: SITE_URL,
+  jwtSecret: JWT_SECRET,
+  serviceRoleKey: SUPABASE_SERVICE_ROLE_KEY,
+  namePrefix: NAME_PREFIX
+});
 
 // ---------- Sekirite HTTP ----------
 const allowedOrigins = new Set([
@@ -167,6 +177,34 @@ function verifyAdmin(req, res, next) {
     next();
   } catch (_) {
     return res.status(401).json({ error: 'Sesyon admin ekspire, konekte ankò.' });
+  }
+}
+
+function signUserSession(user) {
+  return jwt.sign({
+    purpose: 'user_session',
+    userId: user.id,
+    googleSub: user.google_sub,
+    email: user.email
+  }, JWT_SECRET, {
+    algorithm: 'HS256', expiresIn: '7d', issuer: 'doberto-vcf', audience: 'doberto-vcf-user'
+  });
+}
+
+function verifyUser(req, res, next) {
+  if (!requireSecurity(res)) return;
+  const auth = String(req.headers.authorization || '');
+  const token = auth.startsWith('Bearer ') ? auth.slice(7).trim() : '';
+  if (!token) return res.status(401).json({ code: 'auth_required', error: 'Konekte ak Google anvan.' });
+  try {
+    const payload = jwt.verify(token, JWT_SECRET, {
+      algorithms: ['HS256'], issuer: 'doberto-vcf', audience: 'doberto-vcf-user'
+    });
+    if (payload.purpose !== 'user_session' || !payload.userId) throw new Error('bad session');
+    req.user = payload;
+    next();
+  } catch (_) {
+    return res.status(401).json({ code: 'session_expired', error: 'Sesyon ou ekspire. Konekte ak Google ankò.' });
   }
 }
 
@@ -437,12 +475,121 @@ async function runUnlockCampaign(force = false) {
   return { ok: status === 'sent', status, total, email: emailValue, push: pushValue };
 }
 
+// ---------- Google account + Google Contacts ----------
+app.get('/api/auth/google/url', publicReadLimiter, (req, res) => {
+  try {
+    if (!requireSecurity(res)) return;
+    const flow = req.query.flow === 'contacts' ? 'contacts' : 'login';
+    if (flow === 'contacts') return verifyUser(req, res, () => {
+      res.json({ ok: true, url: googleSync.authUrl('contacts', req.user) });
+    });
+    res.json({ ok: true, url: googleSync.authUrl('login') });
+  } catch (err) {
+    res.status(503).json({ code: err.code || 'google_oauth_error', error: err.message });
+  }
+});
+
+app.post('/api/auth/google/callback', registerLimiter, requireDatabase, async (req, res) => {
+  try {
+    if (!requireSecurity(res)) return;
+    const { code, state } = req.body || {};
+    if (!code || !state) return res.status(400).json({ error: 'Google authorization code/state manke.' });
+
+    let statePayload;
+    try {
+      const decoded = jwt.decode(String(state || '')) || {};
+      statePayload = googleSync.verifyState(state, decoded.flow);
+    } catch (_) {
+      return res.status(400).json({ code: 'oauth_state_invalid', error: 'Google authorization lan ekspire oswa li pa valid.' });
+    }
+
+    if (statePayload.flow === 'contacts') {
+      return verifyUser(req, res, async () => {
+        try {
+          if (statePayload.userId !== req.user.userId) return res.status(403).json({ error: 'Kont Google la pa koresponn ak sesyon sa a.' });
+          const tokens = await googleSync.exchangeCode(code);
+          await googleSync.saveConnection(req.user.userId, tokens);
+          const sync = await googleSync.syncUser(req.user.userId);
+          res.json({ ok: true, flow: 'contacts', sync });
+        } catch (err) {
+          res.status(400).json({ code: err.code || 'google_contacts_error', error: err.message });
+        }
+      });
+    }
+
+    const tokens = await googleSync.exchangeCode(code);
+    const profile = await googleSync.getGoogleProfile(tokens.access_token);
+    const user = await googleSync.upsertUser(profile);
+    const { data: registration, error: registrationError } = await supabase.from('registrations')
+      .select('id, name, email, dial_code, country_name, phone, full_number')
+      .eq('user_id', user.id).maybeSingle();
+    if (registrationError) throw registrationError;
+    res.json({
+      ok: true,
+      flow: 'login',
+      token: signUserSession(user),
+      user: { id: user.id, email: user.email, name: user.display_name, avatarUrl: user.avatar_url },
+      registered: Boolean(registration),
+      registration: registration || null
+    });
+  } catch (err) {
+    console.error('[DOBERTO VCF] Google callback:', err);
+    res.status(400).json({ code: err.code || 'google_oauth_error', error: 'Koneksyon Google la pa t fini. Eseye ankò.' });
+  }
+});
+
+app.get('/api/auth/session', publicReadLimiter, requireDatabase, verifyUser, async (req, res) => {
+  const { data: user, error: userError } = await supabase.from('app_users')
+    .select('id, email, display_name, avatar_url').eq('id', req.user.userId).maybeSingle();
+  if (userError || !user) return res.status(401).json({ code: 'session_expired', error: 'Sesyon an pa valid ankò.' });
+  const { data: registration, error: registrationError } = await supabase.from('registrations')
+    .select('id, name, email, dial_code, country_name, phone, full_number').eq('user_id', user.id).maybeSingle();
+  if (registrationError) return res.status(500).json({ error: 'Nou pa ka chaje pwofil la.' });
+  res.json({
+    ok: true,
+    user: { id: user.id, email: user.email, name: user.display_name, avatarUrl: user.avatar_url },
+    registered: Boolean(registration),
+    registration: registration || null
+  });
+});
+
+app.get('/api/google/status', publicReadLimiter, requireDatabase, verifyUser, async (req, res) => {
+  try { res.json({ ok: true, ...(await googleSync.connectionStatus(req.user.userId)) }); }
+  catch (err) { res.status(500).json({ error: 'Nou pa ka chaje eta senkronizasyon an.' }); }
+});
+
+app.post('/api/google/sync', downloadLimiter, requireDatabase, verifyUser, async (req, res) => {
+  try { res.json({ ok: true, sync: await googleSync.syncUser(req.user.userId) }); }
+  catch (err) {
+    const status = err.code === 'google_contacts_required' ? 409 : 400;
+    res.status(status).json({ code: err.code || 'google_sync_error', error: err.message });
+  }
+});
+
+app.post('/api/google/auto-sync', downloadLimiter, requireDatabase, verifyUser, async (req, res) => {
+  const enabled = req.body && req.body.enabled === true;
+  const { data, error } = await supabase.from('google_connections')
+    .update({ auto_sync: enabled, updated_at: new Date().toISOString() })
+    .eq('user_id', req.user.userId).select('user_id').maybeSingle();
+  if (error) return res.status(500).json({ error: 'Nou pa ka modifye Auto-Sync la.' });
+  if (!data) return res.status(409).json({ code: 'google_contacts_required', error: 'Konekte Google Contacts anvan.' });
+  res.json({ ok: true, autoSync: enabled });
+});
+
+app.get('/api/cron/google-sync', requireDatabase, async (req, res) => {
+  if (!CRON_SECRET || !secureEqual(req.headers.authorization, `Bearer ${CRON_SECRET}`)) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  try { res.json({ ok: true, results: await googleSync.runAutoSync(5) }); }
+  catch (err) { res.status(500).json({ error: 'Auto-Sync cycle failed.' }); }
+});
+
 // ---------- POST /api/register ----------
-app.post('/api/register', registerLimiter, requireDatabase, async (req, res) => {
+app.post('/api/register', registerLimiter, requireDatabase, verifyUser, async (req, res) => {
   try {
     let { name, email, dialCode, countryName, phone } = req.body || {};
     name = String(name || '').trim().replace(/\s+/g, ' ').slice(0, 100);
-    email = String(email || '').trim().slice(0, 254);
+    email = String(req.user.email || email || '').trim().slice(0, 254);
     dialCode = onlyDigits(dialCode).slice(0, 5);
     phone = onlyDigits(phone).slice(0, 14);
     countryName = String(countryName || '').trim().slice(0, 120);
@@ -458,11 +605,30 @@ app.post('/api/register', registerLimiter, requireDatabase, async (req, res) => 
     const { data: existing, error: existingError } = await supabase
       .from('registrations').select('id').eq('full_number', fullNumber).maybeSingle();
     if (existingError) throw existingError;
-    if (existing) return res.status(409).json({ code: 'already_registered', error: 'Nimewo sa a deja anrejistre.' });
+    if (existing) {
+      const { data: existingFull, error: existingFullError } = await supabase.from('registrations')
+        .select('id, user_id, email').eq('id', existing.id).single();
+      if (existingFullError) throw existingFullError;
+      const canClaim = !existingFull.user_id && (!existingFull.email || existingFull.email.toLowerCase() === email.toLowerCase());
+      if (!canClaim && existingFull.user_id !== req.user.userId) {
+        return res.status(409).json({ code: 'already_registered', error: 'Nimewo sa a deja sou yon lòt kont.' });
+      }
+      const { error: claimError } = await supabase.from('registrations').update({
+        user_id: req.user.userId, name, email, dial_code: dialCode, country_name: countryName || null, phone, full_number: fullNumber
+      }).eq('id', existingFull.id);
+      if (claimError) throw claimError;
+      return res.json({ ok: true, claimed: true, message: 'Kont Google ou konekte ak ansyen enskripsyon an.' });
+    }
+
+    const { data: ownRegistration, error: ownError } = await supabase.from('registrations')
+      .select('id').eq('user_id', req.user.userId).maybeSingle();
+    if (ownError) throw ownError;
+    if (ownRegistration) return res.status(409).json({ code: 'account_registered', error: 'Kont Google sa a deja gen yon nimewo anrejistre.' });
 
     const { error } = await supabase.from('registrations').insert({
       name,
       email: email || null,
+      user_id: req.user.userId,
       dial_code: dialCode,
       country_name: countryName || null,
       phone,
