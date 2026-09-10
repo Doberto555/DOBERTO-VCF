@@ -12,6 +12,12 @@ let lastStats=null;
 let publicSearch='';
 let publicCountry='';
 
+const PAGE_COPY={
+  ht:{kicker:'Manm DOBERTO VCF',title1:'Gade moun ki deja',title2:'nan rezo a',desc:'Pou pwoteje vi prive manm yo, sèlman non ak peyi parèt isit la.',navList:'Manm',vcfLabel:'VCF otomatik',vcfHeading:'Aksè ak VCF ou'},
+  fr:{kicker:'Membres DOBERTO VCF',title1:'Découvrez les personnes déjà',title2:'dans le réseau',desc:'Pour protéger la vie privée des membres, seuls le nom et le pays sont affichés ici.',navList:'Membres',vcfLabel:'VCF automatique',vcfHeading:'Accès à votre VCF'},
+  en:{kicker:'DOBERTO VCF members',title1:'See who is already',title2:'in the network',desc:'To protect member privacy, only names and countries are shown here.',navList:'Members',vcfLabel:'Automatic VCF',vcfHeading:'Access your VCF'}
+};
+
 const LIST_COPY={
   ht:{filters:'Chèche manm',search:'Chèche yon moun pa non...',allCountries:'Tout peyi',empty:'Nou pa jwenn okenn manm pou rechèch sa a.',prev:'Anvan',next:'Apre',page:'Paj {page}/{total} · {count} manm'},
   fr:{filters:'Rechercher un membre',search:'Rechercher une personne par nom...',allCountries:'Tous les pays',empty:'Aucun membre ne correspond à cette recherche.',prev:'Précédent',next:'Suivant',page:'Page {page}/{total} · {count} membres'},
@@ -30,6 +36,7 @@ function listLang(){
 }
 function listText(){return LIST_COPY[listLang()]||LIST_COPY.ht;}
 function vcfText(){return VCF_COPY[listLang()]||VCF_COPY.ht;}
+function pageText(){return PAGE_COPY[listLang()]||PAGE_COPY.ht;}
 function fmt(str,vars){let out=str;Object.keys(vars||{}).forEach(k=>out=out.replace(`{${k}}`,vars[k]));return out;}
 
 const dlDial=document.getElementById('dlDial');
@@ -94,6 +101,24 @@ function renderList(){
   document.getElementById('nextBtn').disabled=currentPage>=totalPages;
 }
 
+function applyPageLanguage(){
+  const c=pageText();
+  const kicker=document.querySelector('.list-page-hero .list-kicker');
+  const t1=document.querySelector('.list-page-hero [data-i18n="list_title_1"]');
+  const t2=document.querySelector('.list-page-hero [data-i18n="list_title_2"]');
+  const desc=document.querySelector('.list-page-hero [data-i18n="list_desc"]');
+  const active=document.querySelector('.nav-links a.active');
+  const vcfLabel=document.querySelector('#download .member-directory-kicker');
+  const vcfHeading=document.querySelector('#download h3');
+  if(kicker) kicker.textContent=c.kicker;
+  if(t1) t1.textContent=c.title1;
+  if(t2) t2.textContent=c.title2;
+  if(desc) desc.textContent=c.desc;
+  if(active) active.textContent=c.navList;
+  if(vcfLabel) vcfLabel.textContent=c.vcfLabel;
+  if(vcfHeading) vcfHeading.textContent=c.vcfHeading;
+}
+
 function applyDirectoryLanguage(){
   const c=listText();
   const filter=document.getElementById('filterTitle'); if(filter) filter.textContent=c.filters;
@@ -145,10 +170,19 @@ async function loadStatsForDesc(){
 
 setupDirectoryFilters();
 applyDirectoryLanguage();
+applyPageLanguage();
 loadList(1);
 loadStatsForDesc();
 
-function onLangChange(){applyDirectoryLanguage();renderList();renderVcfState();}
+function onLangChange(){applyDirectoryLanguage();applyPageLanguage();renderList();renderVcfState();}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  applyDirectoryLanguage();
+  applyPageLanguage();
+  renderVcfState();
+  const select=document.getElementById('langSelect');
+  if(select) select.addEventListener('change',()=>setTimeout(()=>{applyDirectoryLanguage();applyPageLanguage();renderVcfState();renderList();},0));
+});
 
 const dlForm=document.getElementById('dlForm');
 const dlMsg=document.getElementById('dlMsg');
