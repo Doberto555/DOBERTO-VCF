@@ -1,5 +1,5 @@
 // DOBERTO VCF — PWA service worker: offline shell + fresh network data.
-const CACHE = 'doberto-vcf-v14-20260905';
+const CACHE = 'doberto-vcf-v15-20260910';
 const OFFLINE_URL = '/offline.html';
 const APP_SHELL = [
   '/',
@@ -29,6 +29,7 @@ const APP_SHELL = [
   '/js/install-prompt.js',
   '/js/tour.js',
   '/js/pro-v3.js',
+  '/js/google-auth.js',
   '/icons/doberto-vcf-192.png',
   '/icons/doberto-vcf-512.png',
   '/icons/doberto-vcf-maskable-512.png',
@@ -71,6 +72,24 @@ self.addEventListener('fetch', (event) => {
       } catch (_) {
         const fallbackPath = url.pathname === '/' ? '/index.html' : url.pathname;
         return (await caches.match(request, { ignoreSearch: true })) || (await caches.match(fallbackPath, { ignoreSearch: true })) || (await caches.match(OFFLINE_URL));
+      }
+    })());
+    return;
+  }
+
+  // CSS/JS itilize network-first pou nouvo update yo parèt touswit; lòt assets rete cache-first.
+  const isCodeAsset = url.pathname.endsWith('.css') || url.pathname.endsWith('.js');
+  if (isCodeAsset) {
+    event.respondWith((async () => {
+      try {
+        const response = await fetch(request, { cache: 'no-store' });
+        if (response && response.ok) {
+          const cache = await caches.open(CACHE);
+          cache.put(request, response.clone()).catch(() => {});
+        }
+        return response;
+      } catch (_) {
+        return (await caches.match(request, { ignoreSearch: true })) || new Response('', { status: 503, statusText: 'Offline' });
       }
     })());
     return;
