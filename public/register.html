@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover" />
-<meta name="description" content="Enskri gratis sou DOBERTO VCF epi konekte Google Contacts sèlman si ou vle." />
+<meta name="description" content="Enskri sou DOBERTO VCF epi konekte Google Contacts sèlman si ou vle." />
 <meta name="robots" content="index,follow" />
 <link rel="canonical" href="https://dobertovcf.online/register.html" />
 <title>DOBERTO VCF — Enskripsyon</title>
@@ -16,8 +16,9 @@
 <link rel="stylesheet" href="css/site-v10.css?v=20260905-1" />
 <link rel="stylesheet" href="css/site-v11.css?v=20260910-1" />
 <link rel="stylesheet" href="css/site-v13.css?v=20260910-1" />
-<link rel="manifest" href="manifest.webmanifest?v=20260905-3" />
-<meta name="theme-color" content="#07100c" />
+<link rel="stylesheet" href="css/site-v14.css?v=20260910-1" />
+<link rel="manifest" href="manifest.webmanifest?v=20260910-4" />
+<meta name="theme-color" content="#05070a" />
 <link rel="icon" type="image/png" sizes="192x192" href="icons/doberto-vcf-192.png?v=20260904-1" />
 <link rel="apple-touch-icon" href="icons/doberto-vcf-192.png?v=20260904-1" />
 </head>
@@ -35,10 +36,13 @@
 </header>
 
 <main class="page-shell">
-  <section class="page-hero">
-    <span class="page-kicker">Enskripsyon</span>
-    <h1><span data-i18n="hero_title_1">Antre nan rezo DOBERTO VCF la</span></h1>
-    <p data-i18n="hero_desc">Konekte ak Google, ajoute nimewo WhatsApp ou epi chwazi apa si ou vle aktive Google Contacts.</p>
+  <section class="register-hero-v14">
+    <div>
+      <span class="page-kicker">Enskripsyon</span>
+      <h1><span data-i18n="hero_title_1">Kreye aksè ou epi antre nan rezo a.</span></h1>
+      <p data-i18n="hero_desc">Konekte ak Google, ajoute nimewo WhatsApp ou epi aktive Google Contacts sèlman si ou vle senkronizasyon otomatik.</p>
+    </div>
+    <div class="hero-note-card"><strong>Rapid. Klè. Sekirize.</strong><span>Login Google ak Google Contacts se de otorizasyon diferan. Ou chwazi sa ou vle aktive.</span></div>
   </section>
 
   <div class="capacity-banner" id="capacityBanner">
@@ -52,15 +56,21 @@
 
   <section class="register-wrap">
     <div class="panel" data-tour="form">
+      <div class="auth-stepbar" aria-hidden="true">
+        <div class="auth-step active"><b>1</b><span>Google</span></div><div class="auth-step-line"></div>
+        <div class="auth-step"><b>2</b><span>Profil</span></div><div class="auth-step-line"></div>
+        <div class="auth-step"><b>3</b><span>Sync</span></div>
+      </div>
+
       <div class="google-auth-gate" id="googleAuthGate">
         <span class="google-auth-kicker">Kont Google</span>
         <h2 data-google-copy="title">Konekte pou kontinye</h2>
-        <p data-google-copy="desc">Google sèvi sèlman pou idantifye kont ou. Aksè Google Contacts mande yon otorizasyon apa epi li rete opsyonèl.</p>
+        <p data-google-copy="desc">Nou itilize Google pou idantifye kont ou. Sa pa bay aksè ak Google Contacts otomatikman.</p>
         <button type="button" class="google-auth-button" id="googleLoginBtn">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M21.6 12.23c0-.71-.06-1.4-.18-2.07H12v3.92h5.38a4.6 4.6 0 0 1-2 3.02v2.54h3.24c1.9-1.75 2.98-4.33 2.98-7.41Z"/><path fill="#34A853" d="M12 22c2.7 0 4.97-.9 6.62-2.36l-3.24-2.54c-.9.6-2.05.96-3.38.96-2.61 0-4.82-1.76-5.61-4.13H3.04v2.62A10 10 0 0 0 12 22Z"/><path fill="#FBBC05" d="M6.39 13.93A6 6 0 0 1 6.08 12c0-.67.11-1.32.31-1.93V7.45H3.04A10 10 0 0 0 2 12c0 1.64.39 3.19 1.04 4.55l3.35-2.62Z"/><path fill="#EA4335" d="M12 5.94c1.47 0 2.79.51 3.83 1.5l2.87-2.88A9.62 9.62 0 0 0 12 2a10 10 0 0 0-8.96 5.45l3.35 2.62C7.18 7.7 9.39 5.94 12 5.94Z"/></svg>
           <span data-google-copy="login">Kontinye ak Google</span>
         </button>
-        <small>Google login ak Google Contacts se de otorizasyon diferan.</small>
+        <small>Google sign-in sèlman. Google Contacts mande yon dezyèm konsantman.</small>
       </div>
 
       <div class="google-account-bar" id="googleAccountBar" hidden>
@@ -84,7 +94,7 @@
       <div class="google-sync-panel" id="googleSyncPanel" hidden>
         <span class="google-auth-kicker">Google Contacts</span>
         <h3>Senkronizasyon otomatik</h3>
-        <p id="googleSyncDescription">Si ou aktive li, nouvo manm yo ka ajoute otomatikman nan Google Contacts ou. Ou ka dezaktive Auto-Sync nenpòt lè.</p>
+        <p id="googleSyncDescription">Konekte Google Contacts si ou vle nouvo manm yo ajoute otomatikman. Ou ka dezaktive Auto-Sync nenpòt lè.</p>
         <div class="google-sync-status" id="googleSyncStatus">Google Contacts poko konekte.</div>
         <div class="google-sync-actions"><button type="button" id="googleConnectBtn">Konekte Google Contacts</button><button type="button" class="secondary" id="googleSyncNowBtn" hidden>Senkronize kounye a</button></div>
         <label class="google-auto-sync" id="googleAutoSyncWrap" hidden><input type="checkbox" id="googleAutoSync" /> <span>Auto-Sync chak 15 minit</span></label>
@@ -95,9 +105,9 @@
     </div>
 
     <aside class="register-side">
-      <div class="side-card"><div class="side-icon">01</div><h3>Rapid</h3><p>Yon sèl koneksyon Google epi kèk enfòmasyon debaz pou antre nan rezo a.</p></div>
-      <div class="side-card"><div class="side-icon">02</div><h3>Prive</h3><p>Nimewo telefòn ou pa parèt piblikman sou paj manm yo.</p></div>
-      <div class="side-card"><div class="side-icon">03</div><h3>Otomatik</h3><p>Google Contacts ka kenbe nouvo kontak yo ajou otomatikman si ou aktive li.</p></div>
+      <div class="side-card"><div class="side-icon">01</div><h3>Yon sèl kont</h3><p>Google idantifye kont ou san ou pa bezwen kreye yon lòt modpas.</p></div>
+      <div class="side-card"><div class="side-icon">02</div><h3>Vi prive pa default</h3><p>Nimewo WhatsApp ou pa parèt piblikman sou paj manm yo.</p></div>
+      <div class="side-card"><div class="side-icon">03</div><h3>Sync opsyonèl</h3><p>Google Contacts aktive sèlman apre ou bay otorizasyon espesyal pou li.</p></div>
     </aside>
   </section>
 
