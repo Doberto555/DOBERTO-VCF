@@ -1,0 +1,33 @@
+.vip-method-mark.payment-brand-logo{
+  overflow:hidden!important;
+  display:grid!important;
+  place-items:center!important;
+  width:38px!important;
+  height:38px!important;
+  min-width:38px!important;
+  padding:0!important;
+  border:1px solid rgba(255,255,255,.12)!important;
+  border-radius:11px!important;
+  background:#fff!important;
+  box-shadow:0 8px 18px rgba(0,0,0,.18)!important;
+  color:#111!important;
+}
+.vip-method-mark.payment-brand-logo img{
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  margin:0!important;
+  object-fit:contain!important;
+  border-radius:10px!important;
+}
+.vip-method-mark.payment-brand-moncash{background:#ed1834!important;padding:2px!important}
+.vip-method-mark.payment-brand-moncash img{padding:0!important;border-radius:9px!important}
+.vip-method-mark.payment-brand-natcash{background:#f68935!important;padding:2px!important}
+.vip-method-mark.payment-brand-natcash img{padding:0!important;border-radius:9px!important}
+.vip-method-mark.payment-brand-binance{background:#fff9e6!important}
+.vip-method-mark.payment-brand-binance img{padding:6px!important}
+.vip-method-mark.payment-brand-logo.brand-fallback{background:#111923!important;color:#fff!important;font-weight:800!important}
+.vip-method.selected .vip-method-mark.payment-brand-logo{box-shadow:0 0 0 2px rgba(94,230,184,.14),0 10px 22px rgba(0,0,0,.2)!important}
+@media(max-width:520px){
+  .vip-method-mark.payment-brand-logo{width:36px!important;height:36px!important;min-width:36px!important;border-radius:10px!important}
+}
