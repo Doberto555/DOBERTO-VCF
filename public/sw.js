@@ -1,5 +1,5 @@
 // DOBERTO VCF — stable PWA service worker: fresh code, safe offline fallback.
-const CACHE = 'doberto-vcf-v16-20260910';
+const CACHE = 'doberto-vcf-v17-20260910';
 const OFFLINE_URL = '/offline.html';
 const APP_SHELL = [
   '/',
@@ -16,6 +16,7 @@ const APP_SHELL = [
   '/css/site-v10.css',
   '/css/site-v11.css',
   '/css/site-v13.css',
+  '/css/site-v14.css',
   '/css/prompt-premium.css',
   '/js/stability.js',
   '/js/home-v10.js',
