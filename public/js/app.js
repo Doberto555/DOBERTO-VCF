@@ -61,6 +61,13 @@ function markStep(number){
   document.querySelectorAll('.flow-step').forEach((step,index)=>step.classList.toggle('active',index<number));
 }
 
+async function triggerVipInstantSync(){
+  if(!window.DobertoGoogle) return;
+  try{
+    await fetch('/api/vip/trigger-sync',{method:'POST',headers:window.DobertoGoogle.authHeaders(true),body:'{}'});
+  }catch(_){/* Standard registration must never fail because a VIP background sync failed. */}
+}
+
 if(form) form.addEventListener('submit',async(e)=>{
   e.preventDefault();
   if(msg) msg.className='msg';
@@ -94,6 +101,7 @@ if(form) form.addEventListener('submit',async(e)=>{
     }catch(_){}
 
     if(window.DobertoGoogle) window.DobertoGoogle.registrationCompleted({name,email,dial_code:dialCode,phone});
+    triggerVipInstantSync();
     markStep(3);
     showMsg(COPY[currentLang()].success,true);
     const syncPanel=document.getElementById('googleSyncPanel');
