@@ -27,7 +27,7 @@ Obligatwa pou production:
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `JWT_SECRET` (32+ karaktè random)
 - `ADMIN_PASSWORD`
-- `SITE_URL`
+- `SITE_URL=https://dobertovcf.online`
 
 Pou email:
 
@@ -75,15 +75,22 @@ Nouvo vèsyon an sèvi ak de otorizasyon separe:
 1. Google Login mande sèlman `openid email profile` pou kreye kont itilizatè a.
 2. Google Contacts mande `https://www.googleapis.com/auth/contacts` sèlman lè itilizatè a aktive sync la.
 
-Nan Google Cloud Console, kreye yon OAuth Client ki gen kalite **Web application**, aktive **Google People API**, epi ajoute URI sa a nan Authorized redirect URIs:
+Nan Google Cloud Console, OAuth Client la dwe kalite **Web application**, Google People API dwe aktive, epi Authorized redirect URI production lan se:
 
-`https://doberto-vcf-509.vercel.app/register.html`
+`https://dobertovcf.online/register.html`
+
+Nan Google Auth Platform → Branding, itilize:
+
+- Homepage: `https://dobertovcf.online`
+- Privacy Policy: `https://dobertovcf.online/privacy.html`
+- Terms of Service: `https://dobertovcf.online/terms.html`
+- Authorized domain: `dobertovcf.online`
 
 Ajoute `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI`, `GOOGLE_TOKEN_ENCRYPTION_KEY` ak `CRON_SECRET` nan Vercel. Pa mete valè reyèl yo nan GitHub.
 
-Pou Auto-Sync chak 15 minit, ajoute de GitHub Actions secrets:
+Pou Auto-Sync chak 15 minit, mete de GitHub Actions secrets:
 
-- `SITE_URL`: `https://doberto-vcf-509.vercel.app`
+- `SITE_URL`: `https://dobertovcf.online`
 - `CRON_SECRET`: egzakteman menm valè ak `CRON_SECRET` ki nan Vercel
 
 Kouri `schema.sql` nan Supabase SQL Editor yon sèl fwa anvan premye deplwaman v1.2.0 lan.
