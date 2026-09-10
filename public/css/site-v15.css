@@ -174,16 +174,145 @@ html.is-offline .dv-network-state{opacity:1;transform:translate(-50%,0)}
 .msg.show{animation:dvMsgIn .2s ease both}
 @keyframes dvMsgIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 
+/* v16 visual cleanup — compact, quieter and more human */
+body.site-v10{
+  background:
+    radial-gradient(760px 420px at 16% -8%,rgba(94,230,184,.065),transparent 64%),
+    radial-gradient(760px 460px at 88% -4%,rgba(102,168,255,.05),transparent 66%),
+    #06080b!important;
+}
+body.site-v10::before{display:none!important}
+
+.topbar{min-height:66px!important;padding-top:9px!important;padding-bottom:9px!important;background:rgba(6,8,11,.88)!important}
+.nav-links{border-radius:11px!important;padding:3px!important}
+.nav-links a{min-height:34px!important;padding:0 12px!important;border-radius:8px!important;font-size:11px!important}
+.lang-select{height:40px!important;border-radius:10px!important}
+
+.panel,.network-console,.dashboard-mock,.info-card,.step-card,.feature-card,.side-card,.privacy-chip,.vcf-access-panel{
+  border-radius:16px!important;
+}
+
+.home-hero{min-height:520px!important;padding:58px 0 52px!important;gap:44px!important}
+.home-title{font-size:clamp(44px,5vw,64px)!important;line-height:1.01!important;letter-spacing:-.045em!important;margin-bottom:18px!important}
+.home-copy{font-size:14px!important;line-height:1.68!important;max-width:620px!important}
+.network-console{border-radius:20px!important;padding:16px!important;box-shadow:0 22px 60px rgba(0,0,0,.32)!important}
+.console-number{font-size:50px!important}
+
+.section-block{padding:56px 0!important}
+.section-head h2,.control-copy h2,.faq-intro h2{font-size:clamp(28px,3.3vw,40px)!important;letter-spacing:-.035em!important}
+.section-head p,.control-copy p,.faq-intro p{font-size:13px!important;line-height:1.65!important}
+
+/* Home: replace oversized 3-column step block with a compact editorial layout */
+#how{
+  display:grid!important;
+  grid-template-columns:minmax(250px,.72fr) minmax(0,1.28fr)!important;
+  gap:48px!important;
+  align-items:start!important;
+}
+#how .section-head.center{
+  position:sticky;
+  top:92px;
+  margin:0!important;
+  text-align:left!important;
+}
+#how .section-head h2{margin-top:9px!important;margin-bottom:10px!important}
+#how .steps-grid{display:grid!important;grid-template-columns:1fr!important;gap:10px!important}
+#how .step-card{
+  min-height:0!important;
+  display:grid!important;
+  grid-template-columns:42px 1fr!important;
+  grid-template-areas:"num title" "num copy"!important;
+  column-gap:15px!important;
+  row-gap:4px!important;
+  padding:18px 20px!important;
+  background:rgba(255,255,255,.018)!important;
+}
+#how .step-card:hover{border-color:rgba(94,230,184,.18)!important;background:rgba(94,230,184,.025)!important}
+#how .step-index{grid-area:num!important;width:38px!important;height:38px!important;margin:0!important;border-radius:10px!important}
+#how .step-card h3{grid-area:title!important;margin:1px 0 2px!important;font-size:15px!important;letter-spacing:-.02em!important}
+#how .step-card p{grid-area:copy!important;font-size:11.5px!important;line-height:1.58!important;max-width:620px!important}
+
+.control-center{gap:38px!important}
+.control-list{margin-top:16px!important}
+.control-item{padding:10px 0!important}
+.dashboard-mock{border-radius:18px!important;box-shadow:0 20px 55px rgba(0,0,0,.26)!important}
+.home-grid{gap:10px!important}
+.info-card{min-height:158px!important;padding:20px!important}
+.info-icon{margin-bottom:15px!important}
+.faq-grid{gap:38px!important}
+.faq-list details{border-radius:12px!important}
+.home-cta{margin:52px 0 24px!important;padding:28px 30px!important;border-radius:18px!important}
+.home-cta h2{font-size:24px!important}
+
+/* Registration: less vertical noise and a clearer onboarding hierarchy */
+.register-hero-v14{padding:46px 0 24px!important;gap:28px!important}
+.register-hero-v14 h1{font-size:clamp(36px,4.2vw,52px)!important;margin:8px 0 11px!important}
+.register-hero-v14 p{font-size:13px!important}
+.register-wrap{gap:14px!important;grid-template-columns:minmax(0,1fr) 280px!important}
+.register-wrap>.panel{padding:22px!important;border-radius:18px!important}
+.google-auth-gate,.google-sync-panel{padding:20px!important;border-radius:14px!important}
+.google-auth-gate h2,.google-sync-panel h3{font-size:21px!important}
+.side-card{padding:17px!important}
+.side-card h3{margin-top:10px!important}
+
+/* Members: remove the empty VCF column, duplicate footer and floating social buttons */
+.members-hero-v14{padding:44px 0 22px!important;gap:28px!important}
+.members-hero-v14 h1{font-size:clamp(34px,4vw,48px)!important;margin:8px 0 10px!important}
+.members-hero-v14 p{font-size:13px!important;line-height:1.62!important}
+.privacy-chip{padding:13px!important}
+.member-directory-panel{padding:18px!important;border-radius:18px!important}
+.table-scroll{border-radius:12px!important}
+.list-page th{padding:11px 14px!important}
+.list-page td{padding:12px 14px!important}
+.pager{margin-top:12px!important}
+
+.vcf-card-v14{grid-template-columns:1fr!important;gap:0!important;margin-top:14px!important;padding:20px!important;border-radius:18px!important}
+.vcf-intro{max-width:760px!important}
+.vcf-intro h3{font-size:22px!important;margin-top:7px!important}
+.vcf-auto-state{max-width:700px!important;margin-top:13px!important;padding:12px!important}
+.vcf-access-panel{display:none!important;margin-top:14px!important}
+.vcf-card-v14:has(#dlForm[style*="display: block"]) {
+  grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr)!important;
+  gap:18px!important;
+}
+.vcf-card-v14:has(#dlForm[style*="display: block"]) .vcf-access-panel{display:block!important}
+.social-row{display:none!important}
+.pro-footer{display:none!important}
+.dv-footer{margin-top:20px!important;padding:18px 0 26px!important;font-size:9.5px!important}
+
+/* Prevent stale legacy blocks from visually duplicating new sections */
+.pro-how{display:none!important}
+
 /* Small-screen typography and spacing corrections */
+@media(max-width:920px){
+  #how{grid-template-columns:1fr!important;gap:22px!important}
+  #how .section-head.center{position:static!important;max-width:680px!important}
+  .register-wrap{grid-template-columns:1fr!important}
+  .register-side{grid-template-columns:repeat(3,1fr)!important}
+  .vcf-card-v14:has(#dlForm[style*="display: block"]){grid-template-columns:1fr!important}
+}
+
+@media(max-width:680px){
+  .home-hero{padding:40px 0 42px!important;gap:28px!important}
+  .home-title{font-size:clamp(38px,11.5vw,50px)!important}
+  .section-block{padding:42px 0!important}
+  #how .step-card{padding:16px!important;grid-template-columns:36px 1fr!important;column-gap:12px!important}
+  #how .step-index{width:34px!important;height:34px!important}
+  .register-side{grid-template-columns:1fr!important}
+  .register-hero-v14,.members-hero-v14{padding:38px 0 20px!important}
+  .member-directory-panel,.vcf-card-v14{padding:15px!important}
+  .dv-footer{gap:12px!important}
+}
+
 @media(max-width:480px){
-  .home-title{font-size:clamp(38px,12vw,52px)!important;line-height:1.01!important}
+  .home-title{font-size:clamp(38px,12vw,50px)!important;line-height:1.01!important}
   .home-copy{line-height:1.65!important}
-  .network-console{border-radius:22px!important;padding:15px!important}
-  .console-main{padding-top:20px!important}
-  .console-number{font-size:44px!important}
-  .section-head h2,.control-copy h2,.faq-intro h2{font-size:30px!important}
-  .register-hero-v14 h1,.members-hero-v14 h1{font-size:36px!important}
-  .register-wrap>.panel,.vcf-card-v14{border-radius:20px!important}
+  .network-console{border-radius:18px!important;padding:14px!important}
+  .console-main{padding-top:18px!important}
+  .console-number{font-size:42px!important}
+  .section-head h2,.control-copy h2,.faq-intro h2{font-size:28px!important}
+  .register-hero-v14 h1,.members-hero-v14 h1{font-size:34px!important}
+  .register-wrap>.panel,.vcf-card-v14{border-radius:16px!important}
 }
 
 @media(prefers-reduced-motion:reduce){
