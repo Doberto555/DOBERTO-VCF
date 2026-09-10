@@ -16,6 +16,7 @@
 <link rel="stylesheet" href="css/site-v15.css?v=20260910-2" />
 <link rel="stylesheet" href="css/site-v16.css?v=20260910-1" />
 <link rel="stylesheet" href="css/register-v17.css?v=20260910-1" />
+<link rel="stylesheet" href="css/register-v18.css?v=20260910-1" />
 <link rel="manifest" href="manifest.webmanifest?v=20260910-4" />
 <meta name="theme-color" content="#06080b" />
 <link rel="icon" type="image/png" sizes="192x192" href="icons/doberto-vcf-192.png?v=20260904-1" />
@@ -46,7 +47,7 @@
       <div class="flow-steps" aria-label="Etap enskripsyon">
         <div class="flow-step active"><b>1</b><span>Google</span></div>
         <span class="flow-line"></span>
-        <div class="flow-step"><b>2</b><span>Profil</span></div>
+        <div class="flow-step"><b>2</b><span>Pwofil</span></div>
         <span class="flow-line"></span>
         <div class="flow-step"><b>3</b><span>Sync</span></div>
       </div>
@@ -68,7 +69,7 @@
       </div>
 
       <form id="regForm" class="clean-form" hidden>
-        <div class="form-section-head"><span>Profil</span><strong>Enfòmasyon ou</strong></div>
+        <div class="form-section-head"><span>Pwofil</span><strong>Enfòmasyon ou</strong></div>
         <label for="name" data-i18n="label_name">Non konplè</label>
         <input id="name" type="text" autocomplete="name" data-i18n-placeholder="ph_name" placeholder="Jean Baptiste" required />
         <label for="email" data-i18n="label_email">Email</label>
@@ -79,7 +80,8 @@
 
         <label class="privacy-consent" for="privacyConsent">
           <input id="privacyConsent" type="checkbox" required />
-          <span>Mwen dakò ak <a href="privacy.html" target="_blank" rel="noopener">Politik konfidansyalite</a> ak <a href="terms.html" target="_blank" rel="noopener">Kondisyon itilizasyon</a>.</span>
+          <span class="privacy-box" aria-hidden="true"></span>
+          <span class="privacy-copy">Mwen dakò ak <a href="privacy.html" target="_blank" rel="noopener">Politik konfidansyalite</a> ak <a href="terms.html" target="_blank" rel="noopener">Kondisyon itilizasyon</a>.</span>
         </label>
 
         <button type="submit" id="submitBtn" data-i18n="btn_register">Fini enskripsyon an</button>
@@ -124,5 +126,6 @@
 <script src="js/country-picker.js"></script>
 <script src="js/google-auth.js?v=20260910-4"></script>
 <script src="js/app.js?v=20260910-4"></script>
+<script src="js/register-v18.js?v=20260910-1"></script>
 </body>
 </html>
