@@ -1,0 +1,106 @@
+/* DOBERTO VCF — registration v18 mobile polish */
+
+/* Never let component display rules override the native hidden attribute. */
+body.register-v17 [hidden]{display:none!important}
+
+/* Compact Google sign-in: no oversized logo/card on mobile browsers. */
+body.register-v17 .clean-auth{overflow:hidden!important}
+body.register-v17 .google-auth-button{
+  display:flex!important;
+  flex-direction:row!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:11px!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:none!important;
+  min-height:52px!important;
+  height:52px!important;
+  margin:18px 0 0!important;
+  padding:0 18px!important;
+  border:1px solid rgba(255,255,255,.13)!important;
+  border-radius:12px!important;
+  background:#f8fafc!important;
+  color:#111827!important;
+  box-shadow:0 10px 24px rgba(0,0,0,.16)!important;
+  font-size:13px!important;
+  font-weight:700!important;
+  line-height:1!important;
+  letter-spacing:-.01em!important;
+}
+body.register-v17 .google-auth-button:hover{transform:translateY(-1px)!important;background:#fff!important}
+body.register-v17 .google-auth-button svg{
+  display:block!important;
+  flex:0 0 21px!important;
+  width:21px!important;
+  min-width:21px!important;
+  max-width:21px!important;
+  height:21px!important;
+  min-height:21px!important;
+  max-height:21px!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+body.register-v17 .google-auth-button span{display:inline!important;width:auto!important;margin:0!important;padding:0!important;color:#111827!important;font-size:13px!important;font-weight:700!important}
+
+/* Custom consent control so Android/Samsung cannot stretch the native checkbox. */
+body.register-v17 .privacy-consent{
+  position:relative!important;
+  display:grid!important;
+  grid-template-columns:20px minmax(0,1fr)!important;
+  align-items:start!important;
+  gap:11px!important;
+  margin:20px 0 18px!important;
+  padding:14px!important;
+}
+body.register-v17 .privacy-consent>input[type="checkbox"]{
+  position:absolute!important;
+  width:1px!important;
+  min-width:1px!important;
+  max-width:1px!important;
+  height:1px!important;
+  min-height:1px!important;
+  max-height:1px!important;
+  margin:0!important;
+  padding:0!important;
+  opacity:0!important;
+  pointer-events:none!important;
+}
+body.register-v17 .privacy-box{
+  display:grid!important;
+  place-items:center!important;
+  width:19px!important;
+  height:19px!important;
+  margin-top:1px!important;
+  border:1px solid rgba(255,255,255,.20)!important;
+  border-radius:5px!important;
+  background:#0b1118!important;
+  color:#03140d!important;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)!important;
+  transition:.16s ease!important;
+}
+body.register-v17 .privacy-box::after{content:"✓";font-size:12px!important;font-weight:900!important;line-height:1!important;opacity:0!important;transform:scale(.65)!important;transition:.16s ease!important}
+body.register-v17 .privacy-consent>input[type="checkbox"]:checked + .privacy-box{border-color:#5ee6b8!important;background:#5ee6b8!important;box-shadow:0 0 0 3px rgba(94,230,184,.10)!important}
+body.register-v17 .privacy-consent>input[type="checkbox"]:checked + .privacy-box::after{opacity:1!important;transform:scale(1)!important}
+body.register-v17 .privacy-consent>input[type="checkbox"]:focus-visible + .privacy-box{outline:2px solid rgba(102,168,255,.85)!important;outline-offset:3px!important}
+body.register-v17 .privacy-copy{min-width:0!important;color:#9aa6b4!important;font-size:11.5px!important;line-height:1.55!important;font-weight:450!important}
+
+/* Keep the unauthenticated state focused: only Google card is visible. */
+body.register-v17:not(.dv-session-ready) .registration-main{min-height:0!important}
+
+@media(max-width:680px){
+  body.register-v17 .registration-shell{padding-top:20px!important}
+  body.register-v17 .registration-intro{display:none!important}
+  body.register-v17 .registration-main{padding:15px!important}
+  body.register-v17 .flow-steps{margin-bottom:14px!important;padding-bottom:14px!important}
+  body.register-v17 .clean-auth,body.register-v17 .clean-sync{padding:16px!important}
+  body.register-v17 .clean-auth h2{font-size:21px!important;line-height:1.15!important}
+  body.register-v17 .clean-auth p{margin-bottom:0!important;font-size:12px!important;line-height:1.55!important}
+  body.register-v17 .google-auth-button{height:50px!important;min-height:50px!important;margin-top:16px!important}
+  body.register-v17 .registration-side{margin-top:2px!important}
+  body.register-v17 .privacy-consent{padding:13px!important}
+}
