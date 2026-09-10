@@ -55,7 +55,7 @@ catch (_) { location.replace('/register.html'); }
       <a href="register.html" data-home-key="navRegister">Enskri</a>
       <a href="list.html" data-home-key="navList">Manm</a>
     </nav>
-    <select id="langSelect" class="lang-select" aria-label="Lang"><option value="ht">KR</option><option value="fr">FR</option><option value="en">EN</option></select>
+    <select id="langSelect" class="lang-select" aria-label="Chwazi lang"><option value="ht">KR</option><option value="fr">FR</option><option value="en">EN</option></select>
   </div>
 </header>
 
@@ -77,7 +77,7 @@ catch (_) { location.replace('/register.html'); }
     </div>
 
     <aside class="network-console" aria-label="Estatistik rezo a">
-      <div class="console-head"><div class="console-brand"><i></i><span data-home-key="consoleTitle">Konsòl rezo</span></div><span class="console-live" id="homeUnlockBadge">An pwogrè</span></div>
+      <div class="console-head"><div class="console-brand"><i></i><span data-home-key="consoleTitle">Konsòl rezo</span></div><span class="console-live" id="homeUnlockBadge" aria-live="polite">Rezo aktif</span></div>
       <div class="console-main">
         <div class="console-label" data-home-key="live">Manm enskri</div>
         <div class="console-number" id="homeMemberCount">—</div>
@@ -85,8 +85,8 @@ catch (_) { location.replace('/register.html'); }
         <div class="console-progress"><span id="homeProgressFill"></span></div>
         <div class="console-progress-row"><span><span id="homeProgressPct">0%</span> <span data-home-key="goal">kapasite</span></span><strong id="homeMaxCount">50 000</strong></div>
         <div class="console-grid">
-          <div class="console-stat"><span data-home-key="downloads">Aksè VCF</span><strong id="homeDownloadCount">0</strong><em data-home-key="downloadsSub">aksè verifye</em></div>
-          <div class="console-stat"><span data-home-key="syncLabel">Auto-Sync</span><strong>15 min</strong><em data-home-key="syncSub">Google Contacts</em></div>
+          <div class="console-stat"><span data-home-key="downloads">Plan</span><strong id="homeDownloadCount">Standard</strong><em data-home-key="downloadsSub">Standard oswa VIP</em></div>
+          <div class="console-stat"><span data-home-key="syncLabel">Auto-Sync</span><strong>10 min</strong><em data-home-key="syncSub">Google Contacts</em></div>
         </div>
         <div class="console-sync"><div class="console-sync-icon">↻</div><div><strong data-home-key="syncReady">Sync fèt pou mache poukont li</strong><span data-home-key="syncReadySub">Konekte yon sèl fwa epi kenbe kontak yo ajou.</span></div></div>
       </div>
@@ -106,7 +106,7 @@ catch (_) { location.replace('/register.html'); }
     <div class="control-copy">
       <span class="section-kicker" data-home-key="controlKicker">Sant kontwòl ou</span>
       <h2 data-home-key="controlTitle">Tout rezo a nan yon eksperyans ki senp</h2>
-      <p data-home-key="controlDesc">DOBERTO VCF mete enskripsyon, manm, Google Contacts ak aksè VCF nan yon sèl sistèm ki fèt pou mobil ak desktop.</p>
+      <p data-home-key="controlDesc">DOBERTO VCF mete enskripsyon, manm ak Google Contacts nan yon sèl eksperyans ki fèt pou mobil ak òdinatè.</p>
       <div class="control-list">
         <div class="control-item"><b>01</b><div><strong data-home-key="control1">Kont Google sekirize</strong><span data-home-key="control1d">Login Google la rete separe ak pèmisyon Contacts.</span></div></div>
         <div class="control-item"><b>02</b><div><strong data-home-key="control2">Sync san travay manyèl</strong><span data-home-key="control2d">Lè Auto-Sync aktive, sistèm nan kontinye travay pou ou.</span></div></div>
@@ -116,18 +116,18 @@ catch (_) { location.replace('/register.html'); }
     <div class="dashboard-mock" aria-hidden="true">
       <div class="dashboard-top"><div class="dashboard-dots"><i></i><i></i><i></i></div><span>DOBERTO VCF / <span data-home-key="dashboard">TABLO DE BÒ</span></span></div>
       <div class="dashboard-body">
-        <div class="dashboard-menu"><span class="active" data-home-key="overview">Apèsi</span><span data-home-key="members">Manm</span><span data-home-key="googleSync">Google Sync</span><span data-home-key="vcfAccess">Aksè VCF</span><span data-home-key="account">Kont</span></div>
+        <div class="dashboard-menu"><span class="active" data-home-key="overview">Apèsi</span><span data-home-key="members">Manm</span><span data-home-key="googleSync">Google Sync</span><span data-home-key="vcfAccess">Plan</span><span data-home-key="account">Kont</span></div>
         <div class="dashboard-content">
           <div class="dashboard-welcome" data-home-key="networkOverview">Apèsi rezo a</div><div class="dashboard-sub" data-home-key="contactGrowth">Kwasans kontak ou an yon kout je</div>
-          <div class="dashboard-kpis"><div class="dashboard-kpi"><span data-home-key="members">Manm</span><strong id="homeMockMembers">—</strong></div><div class="dashboard-kpi"><span>Auto-Sync</span><strong>ON</strong></div><div class="dashboard-kpi"><span data-home-key="privacyLabel">Vi prive</span><strong data-home-key="safe">Pwoteje</strong></div></div>
-          <div class="dashboard-list"><div class="dashboard-row"><strong>Google Contacts</strong><span data-home-key="connected">Konekte</span></div><div class="dashboard-row"><strong data-home-key="latestSync">Dènye sync</strong><span data-home-key="automatic">Otomatik</span></div><div class="dashboard-row"><strong data-home-key="vcfSystem">Sistèm VCF</strong><span data-home-key="readyState">Pare</span></div><div class="dashboard-row"><strong data-home-key="publicNumber">Nimewo piblik</strong><span data-home-key="hiddenState">Kache</span></div></div>
+          <div class="dashboard-kpis"><div class="dashboard-kpi"><span data-home-key="members">Manm</span><strong id="homeMockMembers">—</strong></div><div class="dashboard-kpi"><span>Auto-Sync</span><strong>—</strong></div><div class="dashboard-kpi"><span data-home-key="privacyLabel">Vi prive</span><strong data-home-key="safe">Pwoteje</strong></div></div>
+          <div class="dashboard-list"><div class="dashboard-row"><strong>Google Contacts</strong><span>—</span></div><div class="dashboard-row"><strong data-home-key="latestSync">Dènye sync</strong><span data-home-key="automatic">Otomatik</span></div><div class="dashboard-row"><strong data-home-key="vcfSystem">Plan aktyèl</strong><span>—</span></div><div class="dashboard-row"><strong data-home-key="publicNumber">Nimewo piblik</strong><span data-home-key="hiddenState">Kache</span></div></div>
         </div>
       </div>
     </div>
   </section>
 
   <section class="section-block">
-    <div class="section-head"><span class="section-kicker" data-home-key="why">Poukisa DOBERTO VCF</span><h2 data-home-key="whyTitle">Fèt pou grandi, fèt pou rete senp</h2><p data-home-key="whyDesc">Nou retire etap initil yo pou ou ka konsantre sou rezo a.</p></div>
+    <div class="section-head"><span class="section-kicker" data-home-key="why">Poukisa DOBERTO VCF</span><h2 data-home-key="whyTitle">Fèt pou grandi epi rete senp</h2><p data-home-key="whyDesc">Nou retire etap initil yo pou ou ka konsantre sou rezo a.</p></div>
     <div class="home-grid">
       <article class="info-card"><div class="info-icon">01</div><h3 data-home-key="c1">Mobile-first</h3><p data-home-key="c1d">Entèfas la fèt pou mache byen sou telefòn san li pa pèdi kalite sou desktop.</p></article>
       <article class="info-card"><div class="info-icon">02</div><h3 data-home-key="c2">Sync otomatik</h3><p data-home-key="c2d">Konekte Google Contacts epi kite nouvo kontak yo antre san travay repetitif.</p></article>
@@ -141,9 +141,9 @@ catch (_) { location.replace('/register.html'); }
       <span class="google-auth-kicker">Google Contacts</span>
       <h3 data-home-key="homeSyncTitle">Kenbe kontak ou ajou otomatikman</h3>
       <p id="googleSyncDescription" data-home-key="homeSyncDesc">Aktive sync sèlman si ou vle. Lè li aktive, nouvo manm yo ka ajoute nan Google Contacts ou otomatikman.</p>
-      <div class="google-sync-status" id="googleSyncStatus" data-home-key="checkingSync">N ap verifye senkronizasyon an…</div>
+      <div class="google-sync-status" id="googleSyncStatus" data-home-key="checkingSync" aria-live="polite">N ap verifye senkronizasyon an…</div>
       <div class="google-sync-actions"><button type="button" id="googleConnectBtn" data-home-key="connectContacts">Konekte Google Contacts</button><button type="button" class="secondary" id="googleSyncNowBtn" data-home-key="syncNow" hidden>Senkronize kounye a</button></div>
-      <label class="google-auto-sync" id="googleAutoSyncWrap" hidden><input type="checkbox" id="googleAutoSync" /> <span data-home-key="auto15">Auto-Sync chak 15 minit</span></label>
+      <label class="google-auto-sync" id="googleAutoSyncWrap" hidden><input type="checkbox" id="googleAutoSync" /> <span data-home-key="auto15">Auto-Sync chak 10 minit</span></label>
     </div>
   </section>
 
@@ -154,7 +154,7 @@ catch (_) { location.replace('/register.html'); }
       <details><summary data-home-key="q2">Èske Google Contacts obligatwa?</summary><p data-home-key="a2">Non. Login Google la separe. Google Contacts aktive sèlman lè ou chwazi konekte li.</p></details>
       <details><summary data-home-key="q3">Èske nimewo mwen piblik?</summary><p data-home-key="a3">Non. Paj manm yo montre non ak peyi sèlman. Nimewo telefòn yo pa afiche piblikman.</p></details>
       <details><summary data-home-key="q4">Kijan Auto-Sync la mache?</summary><p data-home-key="a4">Apre ou otorize Google Contacts, sistèm nan ka ajoute nouvo manm yo otomatikman selon sync ki aktive sou kont ou.</p></details>
-      <details><summary data-home-key="q5">Kilè VCF la disponib?</summary><p data-home-key="a5">Sistèm nan aktive aksè VCF otomatikman lè objektif rezo a rive. Manm verifye yo jwenn aksè sou paj Manm yo.</p></details>
+      <details><summary data-home-key="q5">Ki diferans ki genyen ant Standard ak VIP?</summary><p data-home-key="a5">Plan Standard lan senkronize nouvo kontak yo apre 10 minit. Plan VIP la senkronize yo touswit.</p></details>
     </div>
   </section>
 
@@ -164,7 +164,7 @@ catch (_) { location.replace('/register.html'); }
 </main>
 
 <script src="js/stability.js?v=20260910-5"></script>
-<script src="js/google-auth.js?v=20260910-4"></script>
+<script src="js/google-auth.js?v=20260910-5"></script>
 <script src="js/home-v10.js?v=20260910-6"></script>
 </body>
 </html>
