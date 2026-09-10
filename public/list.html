@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="css/site-v14.css?v=20260910-1" />
 <link rel="stylesheet" href="css/site-v15.css?v=20260910-2" />
 <link rel="stylesheet" href="css/site-v16.css?v=20260910-1" />
-<link rel="stylesheet" href="css/list-v19.css?v=20260910-1" />
+<link rel="stylesheet" href="css/list-v19.css?v=20260910-2" />
 <link rel="manifest" href="manifest.webmanifest?v=20260910-4" />
 <meta name="theme-color" content="#06080b" />
 <link rel="icon" type="image/png" sizes="192x192" href="icons/doberto-vcf-192.png?v=20260904-1" />
@@ -37,12 +37,12 @@
   <section class="members-hero-v14 list-page-hero">
     <div>
       <span class="list-kicker">Manm DOBERTO VCF</span>
-      <h1><span data-i18n="list_title_1">Gade moun ki deja</span> <span style="color:var(--v14-accent)" data-i18n="list_title_2">nan rezo a</span></h1>
-      <p data-i18n="list_desc">Pou pwoteje vi prive manm yo, sèlman non ak peyi parèt isit la.</p>
+      <h1><span data-i18n="list_title_1">Dekouvri manm yo</span> <span style="color:var(--v14-accent)" data-i18n="list_title_2">nan rezo a</span></h1>
+      <p data-i18n="list_desc">Pou pwoteje vi prive chak moun, sèlman non ak peyi parèt nan anyè a.</p>
     </div>
     <div class="privacy-chip">
       <b aria-hidden="true">✓</b>
-      <div><strong id="privacyChipTitle">Vi prive pa default</strong><span id="privacyChipDesc">Nimewo telefòn yo pa parèt nan anyè piblik la.</span></div>
+      <div><strong id="privacyChipTitle">Enfòmasyon ou rete prive</strong><span id="privacyChipDesc">Nimewo telefòn yo pa janm parèt nan anyè piblik la.</span></div>
     </div>
   </section>
 
@@ -50,10 +50,10 @@
     <div class="member-directory-head">
       <div>
         <span class="member-directory-kicker" id="directoryKicker">Rezo</span>
-        <h2 id="directoryTitle">Manm yo</h2>
-        <p id="directoryDesc">Chèche yon moun pa non oswa peyi.</p>
+        <h2 id="directoryTitle">Anyè manm yo</h2>
+        <p id="directoryDesc">Chèche pa non oswa pa peyi.</p>
       </div>
-      <span class="member-total-chip" id="memberTotalChip">—</span>
+      <span class="member-total-chip" id="memberTotalChip" aria-live="polite">…</span>
     </div>
 
     <div class="pro-list-toolbar">
@@ -61,16 +61,17 @@
       <div class="pro-filter-grid">
         <div class="pro-search-wrap">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4 4"></path></svg>
-          <input id="publicSearch" type="search" autocomplete="off" placeholder="Chèche yon moun pa non..." />
+          <input id="publicSearch" type="search" autocomplete="off" placeholder="Chèche pa non..." />
+          <button type="button" class="clear-search-btn" id="clearSearchBtn" aria-label="Efase rechèch la" title="Efase rechèch la" hidden>×</button>
         </div>
-        <select id="publicCountry" aria-label="Peyi"><option value="">Tout peyi</option></select>
+        <select id="publicCountry" aria-label="Filtre pa peyi"><option value="">Tout peyi</option></select>
       </div>
     </div>
 
     <div class="table-scroll">
       <table>
         <thead><tr><th id="thName">Non</th><th id="thCountry">Peyi</th></tr></thead>
-        <tbody id="listBody"><tr><td colspan="2"><div class="pro-empty">Ap chaje manm yo...</div></td></tr></tbody>
+        <tbody id="listBody" aria-live="polite"><tr><td colspan="2"><div class="pro-empty">Ap chaje manm yo...</div></td></tr></tbody>
       </table>
     </div>
     <div class="pager"><button class="secondary" id="prevBtn">Anvan</button><span class="badge" id="pageInfo"></span><button class="secondary" id="nextBtn">Apre</button></div>
@@ -79,7 +80,7 @@
   <section class="directory-sync-note">
     <div>
       <span class="member-directory-kicker" id="syncNoteKicker">Auto-Sync</span>
-      <h3 id="syncNoteTitle">Kontak yo jere nan Google Contacts</h3>
+      <h3 id="syncNoteTitle">Kontak ou yo rete nan Google Contacts</h3>
       <p id="syncNoteDesc">Plan Standard la senkronize otomatikman apre 10 minit. VIP ajoute nouvo kontak yo touswit.</p>
     </div>
     <a href="register.html" id="syncNoteCta">Jere Auto-Sync</a>
@@ -93,6 +94,6 @@
 <script src="js/i18n-v12.js?v=20260910-3"></script>
 <script src="js/icons.js"></script>
 <script src="js/countries.js"></script>
-<script src="js/list.js?v=20260910-6"></script>
+<script src="js/list.js?v=20260910-7"></script>
 </body>
 </html>
