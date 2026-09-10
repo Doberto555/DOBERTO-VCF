@@ -16,8 +16,22 @@
 
   function cleanOAuthQuery() {
     const url = new URL(location.href);
-    ['code', 'state', 'scope', 'authuser', 'prompt', 'hd', 'error', 'error_description'].forEach((key) => url.searchParams.delete(key));
+    ['code', 'state', 'scope', 'authuser', 'prompt', 'hd', 'iss', 'error', 'error_description'].forEach((key) => url.searchParams.delete(key));
     history.replaceState({}, '', url.pathname + url.search + url.hash);
+  }
+
+  function oauthStoreGet(key) {
+    try { return sessionStorage.getItem(key) || localStorage.getItem(key) || ''; } catch (_) { return ''; }
+  }
+
+  function oauthStoreSet(key, value) {
+    try { sessionStorage.setItem(key, value || ''); } catch (_) {}
+    try { localStorage.setItem(key, value || ''); } catch (_) {}
+  }
+
+  function oauthStoreRemove(key) {
+    try { sessionStorage.removeItem(key); } catch (_) {}
+    try { localStorage.removeItem(key); } catch (_) {}
   }
 
   function setBusy(button, busy, label) {
@@ -35,8 +49,8 @@
       const data = await response.json().catch(() => ({}));
       if (!response.ok || !data.url) throw new Error(data.error || 'Google OAuth pa disponib.');
       const state = new URL(data.url).searchParams.get('state');
-      localStorage.setItem(OAUTH_STATE_KEY, state || '');
-      localStorage.setItem(OAUTH_FLOW_KEY, flow);
+      oauthStoreSet(OAUTH_STATE_KEY, state || '');
+      oauthStoreSet(OAUTH_FLOW_KEY, flow);
       location.assign(data.url);
     } catch (error) {
       alert(error.message || 'Koneksyon Google la pa mache.');
@@ -45,19 +59,23 @@
   }
 
   async function finishGoogleFlow(code, state) {
-    const expectedState = localStorage.getItem(OAUTH_STATE_KEY);
-    const flow = localStorage.getItem(OAUTH_FLOW_KEY) || 'login';
-    if (!expectedState || expectedState !== state) throw new Error('Google authorization lan pa valid oswa li ekspire.');
+    // Backend lan verifye JWT OAuth state la (signature, issuer, audience, expiry ak flow).
+    // Browser state la se sèlman yon hint pou UI a; nou pa bloke callback la si storage la
+    // disparèt apre redirect, si itilizatè a chanje tab, oswa si navigatè a netwaye storage.
+    const flowHint = oauthStoreGet(OAUTH_FLOW_KEY) || 'login';
     const response = await fetch('/api/auth/google/callback', {
       method: 'POST', headers: authHeaders(true), body: JSON.stringify({ code, state })
     });
     const data = await response.json().catch(() => ({}));
     if (!response.ok) throw new Error(data.error || 'Google authorization lan pa t fini.');
-    localStorage.removeItem(OAUTH_STATE_KEY);
-    localStorage.removeItem(OAUTH_FLOW_KEY);
+
+    oauthStoreRemove(OAUTH_STATE_KEY);
+    oauthStoreRemove(OAUTH_FLOW_KEY);
     cleanOAuthQuery();
 
-    if (flow === 'login') {
+    const resolvedFlow = data.flow || flowHint;
+    if (resolvedFlow === 'login') {
+      if (!data.token) throw new Error('Google login lan pa retounen yon sesyon valid.');
       localStorage.setItem(TOKEN_KEY, data.token);
       session = data;
       if (data.registered) {
@@ -66,6 +84,7 @@
       }
       return data;
     }
+
     await loadSyncStatus();
     alert(`Google Contacts konekte. ${data.sync && data.sync.created || 0} kontak senkronize.`);
     return data;
@@ -183,7 +202,8 @@
     document.getElementById('googleSyncNowBtn')?.addEventListener('click', syncNow);
     document.getElementById('googleAutoSync')?.addEventListener('change', toggleAutoSync);
     document.getElementById('googleLogoutBtn')?.addEventListener('click', () => {
-      [TOKEN_KEY, 'dv_registered', 'dv_member_name', OAUTH_STATE_KEY, OAUTH_FLOW_KEY].forEach((key) => localStorage.removeItem(key));
+      [TOKEN_KEY, 'dv_registered', 'dv_member_name'].forEach((key) => localStorage.removeItem(key));
+      [OAUTH_STATE_KEY, OAUTH_FLOW_KEY].forEach(oauthStoreRemove);
       location.replace('/register.html');
     });
 
@@ -196,6 +216,7 @@
       if (code && state) await finishGoogleFlow(code, state);
       if (!session) await loadSession();
     } catch (error) {
+      [OAUTH_STATE_KEY, OAUTH_FLOW_KEY].forEach(oauthStoreRemove);
       cleanOAuthQuery();
       alert(error.message || 'Koneksyon Google la pa t fini.');
     }
