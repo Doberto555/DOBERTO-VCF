@@ -10,38 +10,68 @@
   const COPY = {
     ht: {
       navHome:'Akèy', navRegister:'Enskri', navList:'Manm',
-      kicker:'Rezo kontak WhatsApp', title1:'Konekte ak plis moun.', title2:'Fè status ou rive pi lwen.',
-      desc:'Enskri nimewo WhatsApp ou, antre nan kominote a epi kenbe kontak ou òganize. Google Contacts rete opsyonèl epi ou toujou gen kontwòl sou sa ou aktive.',
-      join:'Enskri kounye a', list:'Gade manm yo', free:'Enskripsyon gratis', private:'Nimewo pa afiche piblikman', live:'Manm enskri', available:'VCF disponib', waiting:'An pwogrè', goal:'kapasite kontak',
-      downloads:'VCF delivre', downloadsSub:'aksè verifye',
-      why:'Poukisa DOBERTO VCF', whyTitle:'Tout sa ou bezwen nan yon sèl kote', whyDesc:'Enskripsyon an senp, manm yo fasil pou jwenn epi opsyon sync la rete anba kontwòl ou.',
-      c1:'Enskripsyon rapid', c1d:'Konekte ak Google epi ajoute nimewo WhatsApp ou nan kèk segond.', c2:'Vi prive klè', c2d:'Sou anyè piblik la sèlman non ak peyi parèt. Nimewo telefòn yo rete prive.', c3:'Sync otomatik', c3d:'Si ou aktive Google Contacts, nouvo kontak yo ka ajoute otomatikman sou kont ou.',
-      how:'Kijan sa mache', howTitle:'Twa etap senp', howDesc:'Konekte, enskri epi chwazi si ou vle aktive Google Contacts.', s1:'Konekte', s1d:'Sèvi ak kont Google ou pou idantifye pwofil ou.', s2:'Enskri', s2d:'Ajoute non ak nimewo WhatsApp ou pou antre nan rezo a.', s3:'Senkronize si ou vle', s3d:'Google Contacts separe ak login la epi li rete totalman opsyonèl.',
-      cta:'Pare pou antre nan rezo a?', ctad:'Enskripsyon an gratis epi li pran sèlman kèk segond.', welcome:'Byenveni sou', welcomesub:'Rezo kontak DOBERTO VCF', ready:'Rezo a pare',
+      kicker:'Platfòm kwasans kontak', title1:'Bati rezo WhatsApp ou.', title2:'Otomatikman.',
+      desc:'Konekte kont ou, ajoute nimewo WhatsApp ou epi kite DOBERTO VCF òganize kwasans rezo a. Google Contacts rete opsyonèl epi ou kontwole tout sa ou aktive.',
+      join:'Antre nan rezo a', howLink:'Kijan sa mache', free:'Gratis pou enskri', private:'Nimewo pa piblik', auto:'Auto-Sync opsyonèl',
+      consoleTitle:'Network Console', live:'Manm enskri', available:'VCF disponib', waiting:'An pwogrè', networkCaption:'Rezo DOBERTO VCF an dirèk', goal:'kapasite',
+      downloads:'Aksè VCF', downloadsSub:'aksè verifye', syncLabel:'Auto-Sync', syncSub:'Google Contacts', syncReady:'Sync fèt pou mache poukont li', syncReadySub:'Konekte yon sèl fwa epi kenbe kontak yo ajou.',
+      how:'Kijan sa mache', howTitle:'Twa etap. Kèk segond.', howDesc:'Pa gen pwosesis konplike. Konekte, ajoute enfòmasyon ou epi chwazi si ou vle aktive sync.',
+      s1:'Konekte ak Google', s1d:'Sèvi ak kont Google ou pou kreye yon sesyon sekirize san yon lòt modpas.', s2:'Ajoute nimewo ou', s2d:'Ranpli non ak nimewo WhatsApp ou pou antre nan rezo a.', s3:'Aktive sync si ou vle', s3d:'Google Contacts ka resevwa nouvo manm yo otomatikman. Ou ka dezaktive l nenpòt lè.',
+      controlKicker:'Sant kontwòl ou', controlTitle:'Tout rezo a nan yon eksperyans ki senp.', controlDesc:'DOBERTO VCF mete enskripsyon, manm, Google Contacts ak aksè VCF nan yon sèl sistèm ki fèt pou mobil ak desktop.',
+      control1:'Kont Google sekirize', control1d:'Login Google la rete separe ak pèmisyon Contacts.', control2:'Sync san travay manyèl', control2d:'Lè Auto-Sync aktive, sistèm nan kontinye travay pou ou.', control3:'Vi prive klè', control3d:'Lis piblik la montre sèlman enfòmasyon ki nesesè.',
+      why:'Poukisa DOBERTO VCF', whyTitle:'Fèt pou kwasans. Fèt pou rete senp.', whyDesc:'Nou retire etap initil yo pou ou ka konsantre sou rezo a.',
+      c1:'Mobile-first', c1d:'Entèfas la fèt pou mache byen sou telefòn san li pa pèdi kalite sou desktop.', c2:'Sync otomatik', c2d:'Konekte Google Contacts epi kite nouvo kontak yo antre san travay repetitif.', c3:'Kontwòl sou done', c3d:'Ou chwazi ki pèmisyon ou bay epi ou ka revoke aksè Google nenpòt lè.',
+      faqKicker:'Kesyon souvan', faqTitle:'Sa ou bezwen konnen anvan ou kòmanse.', faqDesc:'Fonksyon prensipal yo klè epi chak pèmisyon rete anba kontwòl ou.',
+      q1:'Kisa DOBERTO VCF fè?', a1:'Li ede manm yo bati yon rezo kontak WhatsApp epi òganize kontak yo atravè enskripsyon, Google Contacts ak VCF.',
+      q2:'Èske Google Contacts obligatwa?', a2:'Non. Login Google la separe. Google Contacts aktive sèlman lè ou chwazi konekte li.',
+      q3:'Èske nimewo mwen piblik?', a3:'Non. Paj manm yo montre non ak peyi sèlman. Nimewo telefòn yo pa afiche piblikman.',
+      q4:'Kijan Auto-Sync la mache?', a4:'Apre ou otorize Google Contacts, sistèm nan ka ajoute nouvo manm yo otomatikman selon sync ki aktive sou kont ou.',
+      q5:'Kilè VCF la disponib?', a5:'Sistèm nan aktive aksè VCF otomatikman lè objektif rezo a rive. Manm verifye yo jwenn aksè sou paj Manm yo.',
+      cta:'Pare pou bati rezo ou?', ctad:'Kreye aksè ou gratis epi kite sistèm nan fè rès la pi fasil.', welcome:'Byenveni sou', welcomesub:'Rezo kontak ou. Pi entelijan.', ready:'Sistèm nan pare',
       privacy:'Konfidansyalite', terms:'Kondisyon', admin:'Admin'
     },
     fr: {
       navHome:'Accueil', navRegister:'Inscription', navList:'Membres',
-      kicker:'Réseau de contacts WhatsApp', title1:'Connectez-vous à plus de personnes.', title2:'Donnez plus de portée à vos statuts.',
-      desc:'Inscrivez votre numéro WhatsApp, rejoignez la communauté et gardez vos contacts organisés. Google Contacts reste facultatif et vous gardez le contrôle sur ce que vous activez.',
-      join:'S’inscrire', list:'Voir les membres', free:'Inscription gratuite', private:'Numéros non affichés publiquement', live:'Membres inscrits', available:'VCF disponible', waiting:'En cours', goal:'capacité de contacts',
-      downloads:'VCF délivrés', downloadsSub:'accès vérifiés',
-      why:'Pourquoi DOBERTO VCF', whyTitle:'Tout ce dont vous avez besoin au même endroit', whyDesc:'L’inscription est simple, les membres sont faciles à retrouver et la synchronisation reste sous votre contrôle.',
-      c1:'Inscription rapide', c1d:'Connectez-vous avec Google et ajoutez votre numéro WhatsApp en quelques secondes.', c2:'Confidentialité claire', c2d:'Seuls le nom et le pays apparaissent dans l’annuaire public. Les numéros restent privés.', c3:'Synchronisation automatique', c3d:'Si vous activez Google Contacts, les nouveaux contacts peuvent être ajoutés automatiquement à votre compte.',
-      how:'Comment ça marche', howTitle:'Trois étapes simples', howDesc:'Connectez-vous, inscrivez-vous puis choisissez si vous souhaitez activer Google Contacts.', s1:'Connexion', s1d:'Utilisez votre compte Google pour identifier votre profil.', s2:'Inscription', s2d:'Ajoutez votre nom et votre numéro WhatsApp pour rejoindre le réseau.', s3:'Synchronisation facultative', s3d:'Google Contacts est séparé de la connexion et reste entièrement facultatif.',
-      cta:'Prêt à rejoindre le réseau ?', ctad:'L’inscription est gratuite et ne prend que quelques secondes.', welcome:'Bienvenue sur', welcomesub:'Le réseau DOBERTO VCF', ready:'Réseau prêt',
+      kicker:'Plateforme de croissance contacts', title1:'Développez votre réseau WhatsApp.', title2:'Automatiquement.',
+      desc:'Connectez votre compte, ajoutez votre numéro WhatsApp et laissez DOBERTO VCF organiser la croissance de votre réseau. Google Contacts reste facultatif et vous gardez le contrôle sur chaque autorisation.',
+      join:'Rejoindre le réseau', howLink:'Comment ça marche', free:'Inscription gratuite', private:'Numéro non public', auto:'Auto-Sync facultatif',
+      consoleTitle:'Console réseau', live:'Membres inscrits', available:'VCF disponible', waiting:'En cours', networkCaption:'Réseau DOBERTO VCF en direct', goal:'capacité',
+      downloads:'Accès VCF', downloadsSub:'accès vérifiés', syncLabel:'Auto-Sync', syncSub:'Google Contacts', syncReady:'Une synchronisation pensée pour fonctionner seule', syncReadySub:'Connectez une fois et gardez vos contacts à jour.',
+      how:'Comment ça marche', howTitle:'Trois étapes. Quelques secondes.', howDesc:'Aucun parcours compliqué. Connectez-vous, ajoutez vos informations puis choisissez si vous souhaitez activer la synchronisation.',
+      s1:'Connectez-vous avec Google', s1d:'Utilisez votre compte Google pour ouvrir une session sécurisée sans créer un nouveau mot de passe.', s2:'Ajoutez votre numéro', s2d:'Renseignez votre nom et votre numéro WhatsApp pour rejoindre le réseau.', s3:'Activez la sync si vous le souhaitez', s3d:'Google Contacts peut recevoir automatiquement les nouveaux membres. Vous pouvez la désactiver à tout moment.',
+      controlKicker:'Votre centre de contrôle', controlTitle:'Tout votre réseau dans une expérience simple.', controlDesc:'DOBERTO VCF réunit inscription, membres, Google Contacts et accès VCF dans un seul système conçu pour mobile et desktop.',
+      control1:'Compte Google sécurisé', control1d:'La connexion Google reste séparée de l’autorisation Contacts.', control2:'Sync sans travail manuel', control2d:'Lorsque Auto-Sync est activé, le système continue de travailler pour vous.', control3:'Confidentialité claire', control3d:'L’annuaire public n’affiche que les informations nécessaires.',
+      why:'Pourquoi DOBERTO VCF', whyTitle:'Conçu pour grandir. Conçu pour rester simple.', whyDesc:'Nous supprimons les étapes inutiles pour vous laisser vous concentrer sur votre réseau.',
+      c1:'Mobile-first', c1d:'L’interface est optimisée pour le téléphone sans perdre en qualité sur ordinateur.', c2:'Sync automatique', c2d:'Connectez Google Contacts et laissez les nouveaux contacts arriver sans tâches répétitives.', c3:'Contrôle des données', c3d:'Vous choisissez les autorisations accordées et pouvez révoquer l’accès Google à tout moment.',
+      faqKicker:'Questions fréquentes', faqTitle:'Ce qu’il faut savoir avant de commencer.', faqDesc:'Les fonctions principales sont claires et chaque autorisation reste sous votre contrôle.',
+      q1:'Que fait DOBERTO VCF ?', a1:'La plateforme aide les membres à développer leur réseau de contacts WhatsApp et à organiser leurs contacts grâce à l’inscription, Google Contacts et au VCF.',
+      q2:'Google Contacts est-il obligatoire ?', a2:'Non. La connexion Google est séparée. Google Contacts n’est activé que lorsque vous choisissez de le connecter.',
+      q3:'Mon numéro est-il public ?', a3:'Non. La page Membres affiche seulement le nom et le pays. Les numéros de téléphone ne sont pas affichés publiquement.',
+      q4:'Comment fonctionne Auto-Sync ?', a4:'Après autorisation de Google Contacts, le système peut ajouter automatiquement les nouveaux membres selon la synchronisation activée sur votre compte.',
+      q5:'Quand le VCF est-il disponible ?', a5:'Le système active automatiquement l’accès au VCF lorsque l’objectif du réseau est atteint. Les membres vérifiés y accèdent depuis la page Membres.',
+      cta:'Prêt à développer votre réseau ?', ctad:'Créez votre accès gratuitement et laissez le système simplifier le reste.', welcome:'Bienvenue sur', welcomesub:'Votre réseau de contacts. Plus intelligent.', ready:'Système prêt',
       privacy:'Confidentialité', terms:'Conditions', admin:'Admin'
     },
     en: {
       navHome:'Home', navRegister:'Register', navList:'Members',
-      kicker:'WhatsApp contact network', title1:'Connect with more people.', title2:'Give your status more reach.',
-      desc:'Register your WhatsApp number, join the community and keep your contacts organized. Google Contacts stays optional and you remain in control of what you enable.',
-      join:'Register now', list:'View members', free:'Free registration', private:'Numbers are not shown publicly', live:'Registered members', available:'VCF available', waiting:'In progress', goal:'contact capacity',
-      downloads:'VCFs delivered', downloadsSub:'verified access',
-      why:'Why DOBERTO VCF', whyTitle:'Everything you need in one place', whyDesc:'Registration is simple, members are easy to find and synchronization stays under your control.',
-      c1:'Fast registration', c1d:'Sign in with Google and add your WhatsApp number in seconds.', c2:'Clear privacy', c2d:'Only names and countries appear in the public directory. Phone numbers stay private.', c3:'Automatic sync', c3d:'If you enable Google Contacts, new contacts can be added to your account automatically.',
-      how:'How it works', howTitle:'Three simple steps', howDesc:'Sign in, register and choose whether you want to enable Google Contacts.', s1:'Sign in', s1d:'Use your Google account to identify your profile.', s2:'Register', s2d:'Add your name and WhatsApp number to join the network.', s3:'Sync if you want', s3d:'Google Contacts is separate from sign-in and remains fully optional.',
-      cta:'Ready to join the network?', ctad:'Registration is free and takes only a few seconds.', welcome:'Welcome to', welcomesub:'The DOBERTO VCF network', ready:'Network ready',
+      kicker:'Contact growth platform', title1:'Build your WhatsApp network.', title2:'Automatically.',
+      desc:'Connect your account, add your WhatsApp number and let DOBERTO VCF organize network growth. Google Contacts remains optional and every permission stays under your control.',
+      join:'Join the network', howLink:'How it works', free:'Free to join', private:'Number stays private', auto:'Optional Auto-Sync',
+      consoleTitle:'Network Console', live:'Registered members', available:'VCF available', waiting:'In progress', networkCaption:'Live DOBERTO VCF network', goal:'capacity',
+      downloads:'VCF access', downloadsSub:'verified access', syncLabel:'Auto-Sync', syncSub:'Google Contacts', syncReady:'Sync designed to run on its own', syncReadySub:'Connect once and keep your contacts up to date.',
+      how:'How it works', howTitle:'Three steps. A few seconds.', howDesc:'No complicated process. Sign in, add your information and choose whether to enable sync.',
+      s1:'Sign in with Google', s1d:'Use your Google account for a secure session without creating another password.', s2:'Add your number', s2d:'Enter your name and WhatsApp number to join the network.', s3:'Enable sync if you want', s3d:'Google Contacts can receive new members automatically. You can disable it at any time.',
+      controlKicker:'Your control center', controlTitle:'Your whole network in one simple experience.', controlDesc:'DOBERTO VCF brings registration, members, Google Contacts and VCF access into one system built for mobile and desktop.',
+      control1:'Secure Google account', control1d:'Google sign-in stays separate from Contacts permission.', control2:'Sync without manual work', control2d:'When Auto-Sync is enabled, the system keeps working for you.', control3:'Clear privacy', control3d:'The public directory only shows the information that is needed.',
+      why:'Why DOBERTO VCF', whyTitle:'Built to grow. Built to stay simple.', whyDesc:'We remove unnecessary steps so you can focus on your network.',
+      c1:'Mobile-first', c1d:'The interface is designed for phones without losing quality on desktop.', c2:'Automatic sync', c2d:'Connect Google Contacts and let new contacts arrive without repetitive work.', c3:'Data control', c3d:'You choose which permissions to grant and can revoke Google access at any time.',
+      faqKicker:'Frequently asked questions', faqTitle:'What you should know before getting started.', faqDesc:'Core features are clear and every permission remains under your control.',
+      q1:'What does DOBERTO VCF do?', a1:'It helps members grow a WhatsApp contact network and organize contacts through registration, Google Contacts and VCF access.',
+      q2:'Is Google Contacts required?', a2:'No. Google sign-in is separate. Google Contacts is enabled only when you choose to connect it.',
+      q3:'Is my phone number public?', a3:'No. The Members page shows only name and country. Phone numbers are not displayed publicly.',
+      q4:'How does Auto-Sync work?', a4:'After you authorize Google Contacts, the system can add new members automatically according to the sync enabled on your account.',
+      q5:'When is the VCF available?', a5:'The system automatically activates VCF access when the network goal is reached. Verified members access it from the Members page.',
+      cta:'Ready to grow your network?', ctad:'Create your access for free and let the system make the rest easier.', welcome:'Welcome to', welcomesub:'Your contact network. Smarter.', ready:'System ready',
       privacy:'Privacy', terms:'Terms', admin:'Admin'
     }
   };
@@ -82,12 +112,15 @@
       const max = Number(s.maxInFile || 50000);
       const pct = Math.min(100, max ? (total / max) * 100 : 0);
       const num = document.getElementById('homeMemberCount');
+      const mock = document.getElementById('homeMockMembers');
       const downloadNum = document.getElementById('homeDownloadCount');
       const maxEl = document.getElementById('homeMaxCount');
       const fill = document.getElementById('homeProgressFill');
       const pctEl = document.getElementById('homeProgressPct');
       const badge = document.getElementById('homeUnlockBadge');
-      if (num) num.textContent = total.toLocaleString(lang === 'en' ? 'en-US' : 'fr-FR');
+      const formatted = total.toLocaleString(lang === 'en' ? 'en-US' : 'fr-FR');
+      if (num) num.textContent = formatted;
+      if (mock) mock.textContent = formatted;
       if (downloadNum) downloadNum.textContent = downloads.toLocaleString(lang === 'en' ? 'en-US' : 'fr-FR');
       if (maxEl) maxEl.textContent = max.toLocaleString(lang === 'en' ? 'en-US' : 'fr-FR');
       if (fill) fill.style.width = `${Math.max(pct, total > 0 ? 1.2 : 0)}%`;
@@ -98,19 +131,18 @@
   loadStats();
 
   const scene = document.getElementById('welcomeScene');
-  const shouldWelcome = params.get('welcome') === '1' || sessionStorage.getItem('dv_show_welcome') === '1';
+  let shouldWelcome = params.get('welcome') === '1';
+  try { shouldWelcome = shouldWelcome || sessionStorage.getItem('dv_show_welcome') === '1'; } catch (_) {}
   if (scene) {
     if (!shouldWelcome) scene.remove();
     else {
-      sessionStorage.removeItem('dv_show_welcome');
+      try { sessionStorage.removeItem('dv_show_welcome'); } catch (_) {}
       if (params.get('welcome') === '1') history.replaceState({}, '', '/');
       const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       window.setTimeout(() => {
         scene.classList.add('is-leaving');
         window.setTimeout(() => scene.remove(), reduce ? 80 : 650);
-      }, reduce ? 500 : 2200);
+      }, reduce ? 500 : 1900);
     }
   }
-
-  if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
 })();
