@@ -2,11 +2,11 @@
 <html lang="ht">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<meta name="description" content="Eksplore anyè DOBERTO VCF la epi telechaje fichye VCF la apre verifikasyon." />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover" />
+<meta name="description" content="Eksplore manm DOBERTO VCF yo epi jwenn aksè ak VCF ou lè li pare." />
 <meta name="robots" content="index,follow" />
 <link rel="canonical" href="https://dobertovcf.online/list.html" />
-<title>DOBERTO VCF — Lis moun enskri</title>
+<title>DOBERTO VCF — Manm</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -15,8 +15,9 @@
 <link rel="stylesheet" href="css/brand-v7.css?v=20260904-1" />
 <link rel="stylesheet" href="css/site-v10.css?v=20260905-1" />
 <link rel="stylesheet" href="css/site-v11.css?v=20260910-1" />
+<link rel="stylesheet" href="css/site-v13.css?v=20260910-1" />
 <link rel="manifest" href="manifest.webmanifest?v=20260905-3" />
-<meta name="theme-color" content="#050806" />
+<meta name="theme-color" content="#07100c" />
 <link rel="icon" type="image/png" sizes="192x192" href="icons/doberto-vcf-192.png?v=20260904-1" />
 <link rel="apple-touch-icon" href="icons/doberto-vcf-192.png?v=20260904-1" />
 </head>
@@ -26,8 +27,8 @@
   <div class="topbar-right">
     <nav class="nav-links" aria-label="Navigasyon prensipal">
       <a href="/" data-i18n="nav_home">Akèy</a>
-      <a href="register.html" data-i18n="nav_register">Anrejistre</a>
-      <a class="active" href="list.html" data-i18n="nav_list">Lis moun</a>
+      <a href="register.html" data-i18n="nav_register">Enskri</a>
+      <a class="active" href="list.html" data-i18n="nav_list">Manm</a>
     </nav>
     <select id="langSelect" class="lang-select" aria-label="Lang"><option value="ht">KR</option><option value="fr">FR</option><option value="en">EN</option></select>
   </div>
@@ -35,39 +36,49 @@
 
 <main class="container">
   <section class="list-page-hero">
-    <span class="list-kicker">DOBERTO VCF · LIVE DIRECTORY</span>
-    <h1><span data-i18n="list_title_1">Eksplore moun ki</span> <span style="color:var(--signal)" data-i18n="list_title_2">deja nan rezo a</span></h1>
-    <p data-i18n="list_desc">Anyè a montre non ak peyi sèlman. Nimewo telefòn yo pa ekspoze piblikman.</p>
+    <span class="list-kicker">Manm DOBERTO VCF</span>
+    <h1><span data-i18n="list_title_1">Gade moun ki deja</span> <span style="color:var(--signal)" data-i18n="list_title_2">nan rezo a</span></h1>
+    <p data-i18n="list_desc">Pou pwoteje vi prive manm yo, sèlman non ak peyi parèt isit la.</p>
   </section>
 
   <section class="panel member-directory-panel" id="memberDirectoryPanel">
-    <div class="member-directory-head"><span class="member-directory-kicker" id="directoryKicker">NETWORK DIRECTORY</span><h2 id="directoryTitle">Moun ki deja enskri</h2><p id="directoryDesc">Chèche oswa filtre manm ki deja antre nan rezo DOBERTO VCF la.</p></div>
-    <div class="pro-list-toolbar"><div class="pro-filter-title" id="filterTitle">RECHÈCH AK FILTÈ</div><div class="pro-filter-grid"><div class="pro-search-wrap"><span aria-hidden="true">⌕</span><input id="publicSearch" type="search" autocomplete="off" placeholder="Chèche yon moun pa non..." /></div><select id="publicCountry" aria-label="Peyi"><option value="">Tout peyi</option></select></div></div>
+    <div class="member-directory-head"><span class="member-directory-kicker" id="directoryKicker">Anyè manm</span><h2 id="directoryTitle">Manm yo</h2><p id="directoryDesc">Chèche moun ki deja antre nan rezo a.</p></div>
+    <div class="pro-list-toolbar">
+      <div class="pro-filter-title" id="filterTitle">Chèche manm</div>
+      <div class="pro-filter-grid">
+        <div class="pro-search-wrap"><span aria-hidden="true">⌕</span><input id="publicSearch" type="search" autocomplete="off" placeholder="Chèche yon moun pa non..." /></div>
+        <select id="publicCountry" aria-label="Peyi"><option value="">Tout peyi</option></select>
+      </div>
+    </div>
     <div class="table-scroll"><table><thead><tr><th data-i18n="th_name">Non</th><th data-i18n="th_country">Peyi</th></tr></thead><tbody id="listBody"></tbody></table></div>
-    <div class="pager"><button class="secondary" id="prevBtn" data-i18n="pager_prev">← Anvan</button><span class="badge" id="pageInfo"></span><button class="secondary" id="nextBtn" data-i18n="pager_next">Apre →</button></div>
+    <div class="pager"><button class="secondary" id="prevBtn" data-i18n="pager_prev">Anvan</button><span class="badge" id="pageInfo"></span><button class="secondary" id="nextBtn" data-i18n="pager_next">Apre</button></div>
   </section>
 
   <section class="panel" id="download">
-    <span class="member-directory-kicker">SECURE VCF ACCESS</span>
-    <h3 style="margin:7px 0 8px" data-i18n="dl_title">Verifye epi telechaje VCF la</h3>
+    <span class="member-directory-kicker">VCF otomatik</span>
+    <h3 style="margin:7px 0 8px">Aksè ak VCF ou</h3>
+    <div class="vcf-auto-state" id="vcfAutoState">
+      <span class="vcf-auto-state-icon">✓</span>
+      <div><strong id="vcfAutoTitle">Sistèm nan ap prepare VCF la otomatikman</strong><p id="vcfAutoText">Ou pa bezwen kreye fichye a manyèlman. Lè objektif la rive, VCF la disponib pou manm ki verifye yo.</p></div>
+    </div>
     <p class="hint" id="dlDescText" style="margin-bottom:18px"></p>
     <form id="dlForm">
-      <label for="dlName" data-i18n="label_dl_name">Non ou te anrejistre a</label><input id="dlName" type="text" autocomplete="name" required />
-      <label data-i18n="label_dl_phone">Nimewo ou te anrejistre a</label><div class="phone-row"><select id="dlDial"></select><input id="dlPhone" type="tel" inputmode="numeric" autocomplete="tel" required /></div>
-      <button type="submit" id="dlBtn" data-i18n="btn_verify">Verifye &amp; Download</button><div class="msg" id="dlMsg" role="status"></div>
+      <label for="dlName" data-i18n="label_dl_name">Non ou te itilize a</label><input id="dlName" type="text" autocomplete="name" required />
+      <label data-i18n="label_dl_phone">Nimewo WhatsApp ou</label><div class="phone-row"><select id="dlDial"></select><input id="dlPhone" type="tel" inputmode="numeric" autocomplete="tel" required /></div>
+      <button type="submit" id="dlBtn">Jwenn VCF mwen</button><div class="msg" id="dlMsg" role="status"></div>
     </form>
   </section>
 
   <div class="social-row"><a href="https://www.instagram.com/doberto.best.dev?igsh=MW5iOWY3d2VlMTViaw==" target="_blank" rel="noopener" class="social-link" aria-label="Instagram"><span class="list-social-label">IG</span></a><a href="https://github.com/Doberto555" target="_blank" rel="noopener" class="social-link" aria-label="GitHub"><span class="list-social-label">GH</span></a><a href="https://whatsapp.com/channel/0029VbCtwNpJkK7Cng8qex1A" target="_blank" rel="noopener" class="social-link" aria-label="WhatsApp Channel"><span class="list-social-label">WA</span></a></div>
-  <footer class="dv-footer"><span>© 2026 DOBERTO VCF · DOBERTO MRLIT DEV</span><div class="footer-links"><a href="about.html">À propos</a><a href="/" data-i18n="nav_home">Akèy</a><a href="register.html" data-i18n="nav_register">Enskri</a><a href="privacy.html" data-i18n="nav_privacy">Konfidansyalite</a><a href="admin.html" data-i18n="nav_admin">Admin</a></div></footer>
+  <footer class="dv-footer"><span>© 2026 DOBERTO VCF · DOBERTO MRLIT DEV</span><div class="footer-links"><a href="about.html">À propos</a><a href="privacy.html" data-i18n="nav_privacy">Konfidansyalite</a><a href="terms.html" data-i18n="nav_terms">Kondisyon</a><a href="admin.html" data-i18n="nav_admin">Admin</a></div></footer>
 </main>
 
 <script src="js/i18n.js?v=20260905-3"></script>
-<script src="js/i18n-v12.js?v=20260905-3"></script>
+<script src="js/i18n-v12.js?v=20260910-3"></script>
 <script src="js/icons.js"></script>
 <script src="js/countries.js"></script>
 <script src="js/country-picker.js"></script>
-<script src="js/list.js?v=20260905-3"></script>
+<script src="js/list.js?v=20260910-3"></script>
 <script src="js/pro-v3.js?v=20260904-1"></script>
 </body>
 </html>
