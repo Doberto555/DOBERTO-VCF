@@ -42,6 +42,23 @@
     const el=document.getElementById('langSelect');
     return el && ['ht','fr','en'].includes(el.value) ? el.value : 'ht';
   }
+  function intervalCopy() {
+    const l=lang();
+    return l==='fr'?'Auto-Sync toutes les 10 minutes':l==='en'?'Auto-Sync every 10 minutes':'Auto-Sync chak 10 minit';
+  }
+  function normalizeVisibleSyncCopy() {
+    const interval=document.querySelector('[data-home-key="auto15"]');
+    if(interval) interval.textContent=intervalCopy();
+    document.querySelectorAll('.console-stat').forEach(card=>{
+      if(card.querySelector('[data-home-key="syncLabel"]')){
+        const strong=card.querySelector('strong');
+        if(strong) strong.textContent='10 min';
+      }
+    });
+    document.querySelectorAll('.google-auto-sync span').forEach(el=>{
+      if(/15\s*(min|minutes|minit)/i.test(el.textContent||'')) el.textContent=intervalCopy();
+    });
+  }
   function syncCopy(status) {
     const l=lang();
     if (!status.connected) return l==='fr'?'Google Contacts n’est pas encore connecté.':l==='en'?'Google Contacts is not connected yet.':'Google Contacts poko konekte.';
@@ -152,6 +169,7 @@
       if(autoWrap)autoWrap.hidden=!status.connected;if(autoInput)autoInput.checked=Boolean(status.autoSync);
       if(planBadge){planBadge.textContent=status.isVip?'VIP':'STANDARD';planBadge.classList.toggle('is-vip',Boolean(status.isVip));}
       if(statusEl)statusEl.textContent=syncCopy(status);
+      normalizeVisibleSyncCopy();
     }catch(_){if(statusEl&&!navigator.onLine)statusEl.textContent=lang()==='fr'?'Connexion interrompue. La synchronisation reprendra automatiquement.':lang()==='en'?'Connection interrupted. Sync will resume automatically.':'Koneksyon koupe. Sync la ap reprann otomatikman.';}
     finally{syncStatusBusy=false;}
   }
@@ -177,6 +195,7 @@
   }
 
   async function boot(){
+    normalizeVisibleSyncCopy();
     document.getElementById('googleLoginBtn')?.addEventListener('click',()=>startGoogleFlow('login'));
     document.getElementById('alreadyRegisteredLink')?.addEventListener('click',(event)=>{event.preventDefault();startGoogleFlow('login');});
     document.getElementById('googleConnectBtn')?.addEventListener('click',()=>startGoogleFlow('contacts'));
@@ -190,12 +209,12 @@
       if(oauthError)throw new Error(params.get('error_description')||'Google pa t bay otorizasyon an.');
       if(code&&state)await finishGoogleFlow(code,state);if(!session)await loadSession();
     }catch(error){oauthBusy=false;[OAUTH_STATE_KEY,OAUTH_FLOW_KEY].forEach(oauthStoreRemove);cleanOAuthQuery();notify(error?.message||'Koneksyon Google la pa t fini.','error');}
-    renderSession();await loadSyncStatus();
+    renderSession();await loadSyncStatus();normalizeVisibleSyncCopy();
   }
 
-  window.addEventListener('pageshow',(event)=>{if(!event.persisted)return;oauthBusy=false;renderSession();loadSyncStatus().catch(()=>{});});
+  window.addEventListener('pageshow',(event)=>{oauthBusy=false;renderSession();normalizeVisibleSyncCopy();if(event.persisted)loadSyncStatus().catch(()=>{});});
   window.addEventListener('online',()=>{if(session&&session.registered)loadSyncStatus().catch(()=>{});});
-  document.getElementById('langSelect')?.addEventListener('change',()=>{loadSyncStatus().catch(()=>{});});
+  document.getElementById('langSelect')?.addEventListener('change',()=>{window.setTimeout(normalizeVisibleSyncCopy,60);window.setTimeout(normalizeVisibleSyncCopy,220);loadSyncStatus().catch(()=>{});});
 
   window.DobertoGoogle={authHeaders,currentSession:()=>session,registrationCompleted(registration){if(!session)return;session.registered=true;session.registration=registration||null;storageSet(localStorage,'dv_registered','1');if(registration){storageSet(localStorage,'dv_member_name',registration.name||'');storageSet(localStorage,'dv_member_dial',registration.dial_code||'');storageSet(localStorage,'dv_member_phone',registration.phone||'');}renderSession();loadSyncStatus().catch(()=>{});}};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
