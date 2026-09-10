@@ -7,6 +7,8 @@
   let session = null;
   let oauthBusy = false;
   let syncStatusBusy = false;
+  let latestSyncStatus = null;
+  let homeObserverInstalled = false;
 
   function storageGet(storage, key) { try { return storage.getItem(key) || ''; } catch (_) { return ''; } }
   function storageSet(storage, key, value) { try { storage.setItem(key, value || ''); } catch (_) {} }
@@ -46,31 +48,111 @@
     const l=lang();
     return l==='fr'?'Auto-Sync toutes les 10 minutes':l==='en'?'Auto-Sync every 10 minutes':'Auto-Sync chak 10 minit';
   }
+  function setText(el,text){
+    if(el && typeof text==='string' && el.textContent!==text) el.textContent=text;
+  }
   function normalizeVisibleSyncCopy() {
     const interval=document.querySelector('[data-home-key="auto15"]');
-    if(interval) interval.textContent=intervalCopy();
+    if(interval) setText(interval,intervalCopy());
     document.querySelectorAll('.console-stat').forEach(card=>{
       if(card.querySelector('[data-home-key="syncLabel"]')){
         const strong=card.querySelector('strong');
-        if(strong) strong.textContent='10 min';
+        if(strong) setText(strong,'10 min');
       }
     });
     document.querySelectorAll('.google-auto-sync span').forEach(el=>{
-      if(/15\s*(min|minutes|minit)/i.test(el.textContent||'')) el.textContent=intervalCopy();
+      if(/15\s*(min|minutes|minit)/i.test(el.textContent||'')) setText(el,intervalCopy());
     });
+  }
+  function homeCopy(){
+    const l=lang();
+    if(l==='fr') return {
+      downloads:'Plan', downloadsSub:'Standard ou VIP', vcfAccess:'Plan', vcfSystem:'Plan actuel',
+      controlDesc:'DOBERTO VCF réunit l’inscription, les membres et Google Contacts dans une seule expérience conçue pour mobile et ordinateur.',
+      q5:'Quelle est la différence entre Standard et VIP ?',
+      a5:'Le plan Standard synchronise les nouveaux contacts après 10 minutes. Le plan VIP les synchronise immédiatement.',
+      whyTitle:'Conçu pour grandir et rester simple', networkActive:'Réseau actif', connected:'Connecté', notConnected:'Non connecté', on:'ON', off:'OFF'
+    };
+    if(l==='en') return {
+      downloads:'Plan', downloadsSub:'Standard or VIP', vcfAccess:'Plan', vcfSystem:'Current plan',
+      controlDesc:'DOBERTO VCF brings registration, members and Google Contacts into one experience built for mobile and desktop.',
+      q5:'What is the difference between Standard and VIP?',
+      a5:'Standard syncs new contacts after 10 minutes. VIP syncs them immediately.',
+      whyTitle:'Built to grow and stay simple', networkActive:'Network active', connected:'Connected', notConnected:'Not connected', on:'ON', off:'OFF'
+    };
+    return {
+      downloads:'Plan', downloadsSub:'Standard oswa VIP', vcfAccess:'Plan', vcfSystem:'Plan aktyèl',
+      controlDesc:'DOBERTO VCF mete enskripsyon, manm ak Google Contacts nan yon sèl eksperyans ki fèt pou mobil ak òdinatè.',
+      q5:'Ki diferans ki genyen ant Standard ak VIP?',
+      a5:'Plan Standard lan senkronize nouvo kontak yo apre 10 minit. Plan VIP la senkronize yo touswit.',
+      whyTitle:'Fèt pou grandi epi rete senp', networkActive:'Rezo aktif', connected:'Konekte', notConnected:'Pa konekte', on:'ON', off:'OFF'
+    };
+  }
+  function normalizeHomeExperience(status=latestSyncStatus){
+    if(!document.body?.classList.contains('home-page')) return;
+    const c=homeCopy();
+    const byKey=(key)=>document.querySelector(`[data-home-key="${key}"]`);
+    setText(byKey('downloads'),c.downloads);
+    setText(byKey('downloadsSub'),c.downloadsSub);
+    setText(byKey('vcfAccess'),c.vcfAccess);
+    setText(byKey('vcfSystem'),c.vcfSystem);
+    setText(byKey('controlDesc'),c.controlDesc);
+    setText(byKey('q5'),c.q5);
+    setText(byKey('a5'),c.a5);
+    setText(byKey('whyTitle'),c.whyTitle);
+    setText(document.getElementById('homeUnlockBadge'),c.networkActive);
+    setText(document.getElementById('homeDownloadCount'),status?.isVip?'VIP':'Standard');
+
+    document.querySelectorAll('.dashboard-row').forEach(row=>{
+      const strong=row.querySelector('strong');
+      const value=row.querySelector('span');
+      if(!strong||!value) return;
+      if((strong.textContent||'').trim()==='Google Contacts') setText(value,status ? (status.connected?c.connected:c.notConnected) : '—');
+      if(strong.matches('[data-home-key="vcfSystem"]')) setText(value,status?.isVip?'VIP':'Standard');
+    });
+    document.querySelectorAll('.dashboard-kpi').forEach(kpi=>{
+      const label=kpi.querySelector('span');
+      const value=kpi.querySelector('strong');
+      if(label&&value&&/auto-sync/i.test(label.textContent||'')) setText(value,status ? (status.autoSync?c.on:c.off) : '—');
+    });
+    normalizeVisibleSyncCopy();
+  }
+  function scheduleHomeNormalize(){
+    [0,80,260,700,1400].forEach(delay=>window.setTimeout(()=>normalizeHomeExperience(),delay));
+  }
+  function installHomeObserver(){
+    if(homeObserverInstalled || !document.body?.classList.contains('home-page') || !('MutationObserver' in window)) return;
+    homeObserverInstalled=true;
+    let queued=false;
+    const observer=new MutationObserver(()=>{
+      if(queued) return;
+      queued=true;
+      window.setTimeout(()=>{queued=false;normalizeHomeExperience();},0);
+    });
+    ['.network-console','.dashboard-mock','.control-center','.faq-grid'].forEach(selector=>{
+      const node=document.querySelector(selector);
+      if(node) observer.observe(node,{subtree:true,childList:true,characterData:true});
+    });
+  }
+  function primeSessionUI(){
+    if(!token()) return;
+    const gate=document.getElementById('googleAuthGate');
+    const alreadyLink=document.getElementById('alreadyRegisteredLink');
+    if(gate) gate.hidden=true;
+    if(alreadyLink?.parentElement) alreadyLink.parentElement.hidden=true;
   }
   function syncCopy(status) {
     const l=lang();
     if (!status.connected) return l==='fr'?'Google Contacts n’est pas encore connecté.':l==='en'?'Google Contacts is not connected yet.':'Google Contacts poko konekte.';
     if (status.lastError) return l==='fr'?'La dernière synchronisation a rencontré un problème.':l==='en'?'The last sync had a problem.':'Dènye sync la gen yon pwoblèm.';
     if (status.isVip) return status.lastSyncedAt
-      ? (l==='fr'?'VIP actif · synchronisation immédiate activée.':l==='en'?'VIP active · instant sync is enabled.':'VIP aktif · senkronizasyon imedyat aktive.')
-      : (l==='fr'?'VIP actif · première synchronisation prête immédiatement.':l==='en'?'VIP active · first sync is ready immediately.':'VIP aktif · premye sync la pare touswit.');
+      ? (l==='fr'?'VIP actif. Synchronisation immédiate activée.':l==='en'?'VIP active. Instant sync is enabled.':'VIP aktif. Senkronizasyon imedyat aktive.')
+      : (l==='fr'?'VIP actif. Première synchronisation prête immédiatement.':l==='en'?'VIP active. First sync is ready immediately.':'VIP aktif. Premye sync la pare touswit.');
     if (status.nextSyncAt) {
       const time=new Date(status.nextSyncAt).toLocaleTimeString(l==='en'?'en-US':'fr-FR',{hour:'2-digit',minute:'2-digit'});
-      return l==='fr'?`Standard · prochaine synchronisation automatique vers ${time}.`:l==='en'?`Standard · next automatic sync around ${time}.`:`Standard · pwochen Auto-Sync la anviwon ${time}.`;
+      return l==='fr'?`Standard. Prochaine synchronisation automatique vers ${time}.`:l==='en'?`Standard. Next automatic sync around ${time}.`:`Standard. Pwochen Auto-Sync la anviwon ${time}.`;
     }
-    return l==='fr'?'Standard · synchronisation automatique toutes les 10 minutes.':l==='en'?'Standard · automatic sync every 10 minutes.':'Standard · Auto-Sync chak 10 minit.';
+    return l==='fr'?'Standard. Synchronisation automatique toutes les 10 minutes.':l==='en'?'Standard. Automatic sync every 10 minutes.':'Standard. Auto-Sync chak 10 minit.';
   }
 
   async function startGoogleFlow(flow) {
@@ -163,13 +245,14 @@
       const response=await fetch('/api/google/status',{headers:authHeaders(false),cache:'no-store'});
       if(!response.ok){if(response.status===401){storageRemove(localStorage,TOKEN_KEY);session=null;renderSession();}return;}
       const status=await response.json();
+      latestSyncStatus=status;
       const connectBtn=document.getElementById('googleConnectBtn');const syncBtn=document.getElementById('googleSyncNowBtn');const autoWrap=document.getElementById('googleAutoSyncWrap');const autoInput=document.getElementById('googleAutoSync');const planBadge=document.getElementById('syncPlanBadge');
       if(connectBtn)connectBtn.textContent=status.connected?(lang()==='fr'?'Reconnecter Google Contacts':lang()==='en'?'Reconnect Google Contacts':'Rekonekte Google Contacts'):(lang()==='fr'?'Activer Google Contacts':lang()==='en'?'Enable Google Contacts':'Aktive Google Contacts');
       if(syncBtn){syncBtn.hidden=!status.connected || !status.isVip;syncBtn.textContent=lang()==='fr'?'Synchroniser maintenant':lang()==='en'?'Sync now':'Senkronize kounye a';}
       if(autoWrap)autoWrap.hidden=!status.connected;if(autoInput)autoInput.checked=Boolean(status.autoSync);
       if(planBadge){planBadge.textContent=status.isVip?'VIP':'STANDARD';planBadge.classList.toggle('is-vip',Boolean(status.isVip));}
       if(statusEl)statusEl.textContent=syncCopy(status);
-      normalizeVisibleSyncCopy();
+      normalizeHomeExperience(status);
     }catch(_){if(statusEl&&!navigator.onLine)statusEl.textContent=lang()==='fr'?'Connexion interrompue. La synchronisation reprendra automatiquement.':lang()==='en'?'Connection interrupted. Sync will resume automatically.':'Koneksyon koupe. Sync la ap reprann otomatikman.';}
     finally{syncStatusBusy=false;}
   }
@@ -195,26 +278,29 @@
   }
 
   async function boot(){
-    normalizeVisibleSyncCopy();
+    primeSessionUI();
+    normalizeHomeExperience();
+    installHomeObserver();
     document.getElementById('googleLoginBtn')?.addEventListener('click',()=>startGoogleFlow('login'));
     document.getElementById('alreadyRegisteredLink')?.addEventListener('click',(event)=>{event.preventDefault();startGoogleFlow('login');});
     document.getElementById('googleConnectBtn')?.addEventListener('click',()=>startGoogleFlow('contacts'));
     document.getElementById('googleSyncNowBtn')?.addEventListener('click',syncNow);
     document.getElementById('googleAutoSync')?.addEventListener('change',toggleAutoSync);
     document.getElementById('googleLogoutBtn')?.addEventListener('click',()=>{
-      [TOKEN_KEY,'dv_registered','dv_member_name','dv_member_dial','dv_member_phone'].forEach((key)=>storageRemove(localStorage,key));[OAUTH_STATE_KEY,OAUTH_FLOW_KEY].forEach(oauthStoreRemove);session=null;location.replace('/register.html');
+      [TOKEN_KEY,'dv_registered','dv_member_name','dv_member_dial','dv_member_phone'].forEach((key)=>storageRemove(localStorage,key));[OAUTH_STATE_KEY,OAUTH_FLOW_KEY].forEach(oauthStoreRemove);session=null;latestSyncStatus=null;location.replace('/register.html');
     });
     const params=new URLSearchParams(location.search);const code=params.get('code');const state=params.get('state');const oauthError=params.get('error');
     try{
       if(oauthError)throw new Error(params.get('error_description')||'Google pa t bay otorizasyon an.');
       if(code&&state)await finishGoogleFlow(code,state);if(!session)await loadSession();
     }catch(error){oauthBusy=false;[OAUTH_STATE_KEY,OAUTH_FLOW_KEY].forEach(oauthStoreRemove);cleanOAuthQuery();notify(error?.message||'Koneksyon Google la pa t fini.','error');}
-    renderSession();await loadSyncStatus();normalizeVisibleSyncCopy();
+    renderSession();await loadSyncStatus();scheduleHomeNormalize();
   }
 
-  window.addEventListener('pageshow',(event)=>{oauthBusy=false;renderSession();normalizeVisibleSyncCopy();if(event.persisted)loadSyncStatus().catch(()=>{});});
+  primeSessionUI();
+  window.addEventListener('pageshow',(event)=>{oauthBusy=false;renderSession();normalizeHomeExperience();scheduleHomeNormalize();if(event.persisted)loadSyncStatus().catch(()=>{});});
   window.addEventListener('online',()=>{if(session&&session.registered)loadSyncStatus().catch(()=>{});});
-  document.getElementById('langSelect')?.addEventListener('change',()=>{window.setTimeout(normalizeVisibleSyncCopy,60);window.setTimeout(normalizeVisibleSyncCopy,220);loadSyncStatus().catch(()=>{});});
+  document.getElementById('langSelect')?.addEventListener('change',()=>{scheduleHomeNormalize();loadSyncStatus().catch(()=>{});});
 
   window.DobertoGoogle={authHeaders,currentSession:()=>session,registrationCompleted(registration){if(!session)return;session.registered=true;session.registration=registration||null;storageSet(localStorage,'dv_registered','1');if(registration){storageSet(localStorage,'dv_member_name',registration.name||'');storageSet(localStorage,'dv_member_dial',registration.dial_code||'');storageSet(localStorage,'dv_member_phone',registration.phone||'');}renderSession();loadSyncStatus().catch(()=>{});}};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
