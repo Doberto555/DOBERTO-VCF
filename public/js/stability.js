@@ -50,7 +50,10 @@
   loadCss('/css/site-v15.css?v=20260910-5','dv-v15');
   loadCss('/css/site-v16.css?v=20260910-5','dv-v16');
   loadCss('/css/polish-v18.css?v=20260910-1','dv-v18');
+  loadCss('/css/payment-brands-v20.css?v=20260910-1','dv-payment-brands-v20');
   loadScript('/js/ui-l10n-v18.js?v=20260910-1','dv-l10n-v18');
+  loadScript('/js/human-copy-v20.js?v=20260910-1','dv-human-copy-v20');
+  loadScript('/js/payment-brands-v20.js?v=20260910-1','dv-payment-brands-v20');
 
   function toast(message,type='info',duration=4200){
     const text=String(message||'').trim();if(!text)return;
@@ -97,6 +100,6 @@
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup,{once:true});else setup();
 
-  if('serviceWorker'in navigator){window.addEventListener('load',async()=>{try{const reg=await navigator.serviceWorker.register('/sw.js?v=20260910-5',{updateViaCache:'none'});reg.update().catch(()=>{});}catch(_){}},{once:true});}
+  if('serviceWorker'in navigator){window.addEventListener('load',async()=>{try{const reg=await navigator.serviceWorker.register('/sw.js?v=20260910-6',{updateViaCache:'none'});reg.update().catch(()=>{});}catch(_){}},{once:true});}
   window.__DOBERTO_NATIVE_ALERT__=nativeAlert;
 })();
