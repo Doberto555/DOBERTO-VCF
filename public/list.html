@@ -16,8 +16,9 @@
 <link rel="stylesheet" href="css/site-v10.css?v=20260905-1" />
 <link rel="stylesheet" href="css/site-v11.css?v=20260910-1" />
 <link rel="stylesheet" href="css/site-v13.css?v=20260910-1" />
-<link rel="manifest" href="manifest.webmanifest?v=20260905-3" />
-<meta name="theme-color" content="#07100c" />
+<link rel="stylesheet" href="css/site-v14.css?v=20260910-1" />
+<link rel="manifest" href="manifest.webmanifest?v=20260910-4" />
+<meta name="theme-color" content="#05070a" />
 <link rel="icon" type="image/png" sizes="192x192" href="icons/doberto-vcf-192.png?v=20260904-1" />
 <link rel="apple-touch-icon" href="icons/doberto-vcf-192.png?v=20260904-1" />
 </head>
@@ -35,10 +36,13 @@
 </header>
 
 <main class="container">
-  <section class="list-page-hero">
-    <span class="list-kicker">Manm DOBERTO VCF</span>
-    <h1><span data-i18n="list_title_1">Gade moun ki deja</span> <span style="color:var(--signal)" data-i18n="list_title_2">nan rezo a</span></h1>
-    <p data-i18n="list_desc">Pou pwoteje vi prive manm yo, sèlman non ak peyi parèt isit la.</p>
+  <section class="members-hero-v14">
+    <div>
+      <span class="list-kicker">Rezo DOBERTO VCF</span>
+      <h1><span data-i18n="list_title_1">Dekouvri manm ki deja</span> <span style="color:var(--v14-accent)" data-i18n="list_title_2">nan rezo a.</span></h1>
+      <p data-i18n="list_desc">Chèche manm yo pa non oswa peyi. Pou vi prive, nimewo WhatsApp yo pa afiche piblikman.</p>
+    </div>
+    <div class="privacy-chip"><b>✓</b><div><strong>Privacy by default</strong><span>Non ak peyi sèlman vizib sou anyè piblik la. Nimewo telefòn yo rete prive.</span></div></div>
   </section>
 
   <section class="panel member-directory-panel" id="memberDirectoryPanel">
@@ -54,19 +58,24 @@
     <div class="pager"><button class="secondary" id="prevBtn" data-i18n="pager_prev">Anvan</button><span class="badge" id="pageInfo"></span><button class="secondary" id="nextBtn" data-i18n="pager_next">Apre</button></div>
   </section>
 
-  <section class="panel" id="download">
-    <span class="member-directory-kicker">VCF otomatik</span>
-    <h3 style="margin:7px 0 8px">Aksè ak VCF ou</h3>
-    <div class="vcf-auto-state" id="vcfAutoState">
-      <span class="vcf-auto-state-icon">✓</span>
-      <div><strong id="vcfAutoTitle">Sistèm nan ap prepare VCF la otomatikman</strong><p id="vcfAutoText">Ou pa bezwen kreye fichye a manyèlman. Lè objektif la rive, VCF la disponib pou manm ki verifye yo.</p></div>
+  <section class="panel vcf-card-v14" id="download">
+    <div class="vcf-intro">
+      <span class="member-directory-kicker">VCF otomatik</span>
+      <h3>Aksè VCF ou</h3>
+      <p>Pa gen fichye pou prepare manyèlman. Sistèm nan jere disponiblite a epi l aktive aksè a lè objektif rezo a rive.</p>
+      <div class="vcf-auto-state" id="vcfAutoState">
+        <span class="vcf-auto-state-icon">✓</span>
+        <div><strong id="vcfAutoTitle">Sistèm nan ap prepare VCF la otomatikman</strong><p id="vcfAutoText">Lè objektif la rive, manm verifye yo jwenn aksè otomatikman.</p></div>
+      </div>
     </div>
-    <p class="hint" id="dlDescText" style="margin-bottom:18px"></p>
-    <form id="dlForm">
-      <label for="dlName" data-i18n="label_dl_name">Non ou te itilize a</label><input id="dlName" type="text" autocomplete="name" required />
-      <label data-i18n="label_dl_phone">Nimewo WhatsApp ou</label><div class="phone-row"><select id="dlDial"></select><input id="dlPhone" type="tel" inputmode="numeric" autocomplete="tel" required /></div>
-      <button type="submit" id="dlBtn">Jwenn VCF mwen</button><div class="msg" id="dlMsg" role="status"></div>
-    </form>
+    <div class="vcf-access-panel">
+      <p class="hint" id="dlDescText"></p>
+      <form id="dlForm">
+        <label for="dlName" data-i18n="label_dl_name">Non ou te itilize a</label><input id="dlName" type="text" autocomplete="name" required />
+        <label data-i18n="label_dl_phone">Nimewo WhatsApp ou</label><div class="phone-row"><select id="dlDial"></select><input id="dlPhone" type="tel" inputmode="numeric" autocomplete="tel" required /></div>
+        <button type="submit" id="dlBtn">Jwenn VCF mwen</button><div class="msg" id="dlMsg" role="status"></div>
+      </form>
+    </div>
   </section>
 
   <div class="social-row"><a href="https://www.instagram.com/doberto.best.dev?igsh=MW5iOWY3d2VlMTViaw==" target="_blank" rel="noopener" class="social-link" aria-label="Instagram"><span class="list-social-label">IG</span></a><a href="https://github.com/Doberto555" target="_blank" rel="noopener" class="social-link" aria-label="GitHub"><span class="list-social-label">GH</span></a><a href="https://whatsapp.com/channel/0029VbCtwNpJkK7Cng8qex1A" target="_blank" rel="noopener" class="social-link" aria-label="WhatsApp Channel"><span class="list-social-label">WA</span></a></div>
