@@ -7,7 +7,8 @@ body.register-v17 [hidden]{display:none!important}
 body.register-v17 .flow-step{transition:color .18s ease!important}
 body.register-v17 .flow-step b{transition:background .18s ease,border-color .18s ease,color .18s ease,box-shadow .18s ease!important}
 body.register-v17 .flow-step.complete{color:#9fb3aa!important}
-body.register-v17 .flow-step.complete b{border-color:rgba(94,230,184,.45)!important;background:#5ee6b8!important;color:#06140e!important;box-shadow:none!important}
+body.register-v17 .flow-step.complete b{border-color:rgba(94,230,184,.45)!important;background:#5ee6b8!important;color:#06140e!important;box-shadow:none!important;font-size:0!important}
+body.register-v17 .flow-step.complete b::after{content:"✓";font-size:11px!important;font-weight:900!important;line-height:1!important}
 body.register-v17 .flow-step.active b{box-shadow:0 0 0 3px rgba(94,230,184,.07)!important}
 body.register-v17 .flow-line{transition:background .18s ease!important}
 body.register-v17 .flow-line.complete{background:rgba(94,230,184,.36)!important}
@@ -107,6 +108,8 @@ body.register-v17:not(.dv-session-ready) .registration-main{min-height:0!importa
   body.register-v17 .registration-main{padding:15px!important}
   body.register-v17 .flow-steps{margin-bottom:14px!important;padding-bottom:14px!important}
   body.register-v17 .flow-step b{width:28px!important;height:28px!important;font-size:10px!important}
+  body.register-v17 .flow-step.complete b{font-size:0!important}
+  body.register-v17 .flow-step.complete b::after{font-size:11px!important}
   body.register-v17 .clean-auth,body.register-v17 .clean-sync{padding:16px!important}
   body.register-v17 .clean-auth h2{font-size:21px!important;line-height:1.15!important}
   body.register-v17 .clean-auth p{margin-bottom:0!important;font-size:12px!important;line-height:1.55!important}
