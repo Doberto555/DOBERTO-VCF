@@ -7,6 +7,7 @@
     { "source": "/api/vip/moncash/create", "destination": "/api/vip-moncash-create" },
     { "source": "/api/vip/moncash/verify", "destination": "/api/vip-moncash-verify" },
     { "source": "/api/vip/moncash/return", "destination": "/api/vip-moncash-return" },
+    { "source": "/api/vip/trigger-sync", "destination": "/api/vip-trigger-sync" },
     { "source": "/api/admin/vip/methods", "destination": "/api/admin-vip-methods" },
     { "source": "/api/admin/vip/payments", "destination": "/api/admin-vip-payments" },
     { "source": "/api/(.*)", "destination": "/api/index" }
