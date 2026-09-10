@@ -11,38 +11,51 @@
 <link rel="stylesheet" href="css/style.css?v=20260819-2" />
 <link rel="stylesheet" href="css/brand-v7.css?v=20260904-1" />
 <link rel="stylesheet" href="css/site-v14.css?v=20260910-1" />
-<link rel="stylesheet" href="css/vip-v17.css?v=20260910-1" />
+<link rel="stylesheet" href="css/vip-v17.css?v=20260910-2" />
+<link rel="stylesheet" href="css/payment-brands-v20.css?v=20260910-2" />
 <link rel="icon" href="icons/doberto-vcf-192.png" />
 <meta name="theme-color" content="#06080b" />
 </head>
 <body class="site-v10 vip-page">
-<header class="topbar"><a href="/" class="brand"><img class="brand-logo" src="icons/doberto-vcf-mark.svg" alt="" /> DOBERTO VCF</a><div class="topbar-right"><a class="vip-back" href="register.html">Retounen</a></div></header>
+<header class="topbar">
+  <a href="/" class="brand"><img class="brand-logo" src="icons/doberto-vcf-mark.svg" alt="" /> DOBERTO VCF</a>
+  <div class="topbar-right">
+    <select id="langSelect" class="lang-select" aria-label="Lang"><option value="ht">KR</option><option value="fr">FR</option><option value="en">EN</option></select>
+    <a class="vip-back" href="register.html" data-vip-key="back">Retounen</a>
+  </div>
+</header>
 <main class="vip-shell">
-  <section class="vip-hero"><span class="vip-kicker">DOBERTO VCF VIP</span><h1>Sync san tann.</h1><p>Plan Standard lan senkronize otomatikman apre 10 minit. Avèk VIP, Google Contacts ou ka resevwa nouvo kontak yo imedyatman lè sistèm nan detekte yo.</p><div class="vip-status" id="vipStatus">N ap verifye plan ou...</div></section>
+  <section class="vip-hero">
+    <span class="vip-kicker">DOBERTO VCF VIP</span>
+    <h1 data-vip-key="heroTitle">Sync san tann</h1>
+    <p data-vip-key="heroDesc">Plan Standard lan senkronize otomatikman apre 10 minit. Avèk VIP, Google Contacts ou ka resevwa nouvo kontak yo imedyatman lè sistèm nan detekte yo.</p>
+    <div class="vip-status" id="vipStatus" data-vip-key="checkingPlan">N ap verifye plan ou…</div>
+  </section>
 
   <section class="vip-layout">
     <div class="vip-benefits">
-      <article><span>01</span><div><strong>Sync imedyat</strong><p>Pa tann sik Standard 10 minit la.</p></div></article>
-      <article><span>02</span><div><strong>Google Contacts otomatik</strong><p>Kenbe Auto-Sync aktive epi sistèm nan fè rès la.</p></div></article>
-      <article><span>03</span><div><strong>Peman verifye</strong><p>MonCash kapab verifye otomatikman. NatCash ak Binance bezwen referans tranzaksyon pou owner valide yo.</p></div></article>
+      <article><span>01</span><div><strong data-vip-key="b1">Sync imedyat</strong><p data-vip-key="b1d">Pa tann sik Standard 10 minit la.</p></div></article>
+      <article><span>02</span><div><strong data-vip-key="b2">Google Contacts otomatik</strong><p data-vip-key="b2d">Kenbe Auto-Sync aktive epi sistèm nan fè rès la.</p></div></article>
+      <article><span>03</span><div><strong data-vip-key="b3">Peman verifye</strong><p data-vip-key="b3d">MonCash ka verifye otomatikman. NatCash ak Binance bezwen referans tranzaksyon pou owner valide yo.</p></div></article>
     </div>
 
     <section class="vip-checkout panel">
-      <div class="vip-checkout-head"><span>Peman VIP</span><h2>Chwazi yon metòd</h2><p>Montan ak dire VIP yo soti dirèkteman nan konfigirasyon owner lan.</p></div>
-      <div id="vipMethods" class="vip-methods"><div class="vip-loading">N ap chaje metòd peman yo...</div></div>
+      <div class="vip-checkout-head"><span data-vip-key="payment">Peman VIP</span><h2 data-vip-key="choose">Chwazi yon metòd</h2><p data-vip-key="checkoutDesc">Montan ak dire VIP yo soti dirèkteman nan konfigirasyon owner lan.</p></div>
+      <div id="vipMethods" class="vip-methods"><div class="vip-loading" data-vip-key="loading">N ap chaje metòd peman yo…</div></div>
       <div id="manualPay" class="vip-manual" hidden>
-        <div class="vip-destination"><span id="recipientLabel">Destinasyon</span><strong id="recipientValue">—</strong></div>
-        <label for="transactionRef">Referans tranzaksyon</label><input id="transactionRef" autocomplete="off" placeholder="Egzanp: TX123456" />
-        <label for="paymentNote">Nòt <small>(opsyonèl)</small></label><textarea id="paymentNote" rows="3" placeholder="Ajoute yon detay si sa nesesè"></textarea>
-        <button type="button" id="submitManualVip">Voye pou verifikasyon</button>
+        <div class="vip-destination"><span id="recipientLabel" data-vip-key="destination">Destinasyon</span><strong id="recipientValue">—</strong></div>
+        <label for="transactionRef" data-vip-key="transactionRef">Referans tranzaksyon</label><input id="transactionRef" autocomplete="off" data-vip-placeholder="transactionPh" placeholder="Egzanp: TX123456" />
+        <label for="paymentNote"><span data-vip-key="note">Nòt</span> <small>(<span data-vip-key="optional">opsyonèl</span>)</small></label><textarea id="paymentNote" rows="3" data-vip-placeholder="notePh" placeholder="Ajoute yon detay si sa nesesè"></textarea>
+        <button type="button" id="submitManualVip" data-vip-key="submit">Voye pou verifikasyon</button>
       </div>
       <button type="button" id="startMoncashVip" class="vip-pay-btn" hidden>Peye ak MonCash</button>
       <div class="vip-message" id="vipMessage"></div>
     </section>
   </section>
-  <footer class="dv-footer"><span>© 2026 DOBERTO VCF</span><div class="footer-links"><a href="privacy.html">Konfidansyalite</a><a href="terms.html">Kondisyon</a></div></footer>
+  <footer class="dv-footer"><span>© 2026 DOBERTO VCF</span><div class="footer-links"><a href="privacy.html" data-vip-key="privacy">Konfidansyalite</a><a href="terms.html" data-vip-key="terms">Kondisyon</a></div></footer>
 </main>
-<script src="js/stability.js?v=20260910-3"></script>
-<script src="js/vip.js?v=20260910-1"></script>
+<script src="js/stability.js?v=20260910-5"></script>
+<script src="js/vip.js?v=20260910-2"></script>
+<script src="js/payment-brands-v20.js?v=20260910-2"></script>
 </body>
 </html>
