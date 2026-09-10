@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<meta name="description" content="Politik konfidansyalite DOBERTO VCF, ki eksplike Google OAuth, Google Contacts ak itilizasyon done yo." />
+<meta name="description" content="Politik konfidansyalite DOBERTO VCF pou Google login, Google Contacts ak done itilizatè yo." />
 <link rel="canonical" href="https://dobertovcf.online/privacy.html" />
-<title>Privacy — DOBERTO VCF</title>
+<title>Konfidansyalite — DOBERTO VCF</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -13,10 +13,12 @@
 <link rel="stylesheet" href="css/pro-v3.css?v=20260904-1" />
 <link rel="stylesheet" href="css/brand-v7.css?v=20260904-1" />
 <link rel="stylesheet" href="css/site-v11.css?v=20260910-1" />
+<link rel="stylesheet" href="css/site-v13.css?v=20260910-1" />
 <link rel="icon" type="image/png" sizes="192x192" href="icons/doberto-vcf-192.png?v=20260904-1" />
-<link rel="apple-touch-icon" href="icons/doberto-vcf-192.png?v=20260904-1" />
-<meta name="theme-color" content="#050806" />
-<style>.legal-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px}.legal-head .brand{margin:0!important}.legal-head .lang-select{flex:0 0 auto}.legal-page>.panel{max-width:900px;margin:0 auto;padding:34px!important}.legal-page h1{margin:9px 0 20px;font-size:clamp(34px,5vw,52px);letter-spacing:-.05em}.legal-page h2{margin:28px 0 9px;font-size:19px;letter-spacing:-.025em}.legal-page p{color:#94a89e;line-height:1.75;font-size:13px}.google-policy-note{margin-top:26px;padding:20px;border:1px solid rgba(54,231,167,.16);border-radius:18px;background:rgba(54,231,167,.045)}.google-policy-note h2{margin-top:0}.legal-back{display:inline-flex;margin-top:12px;text-decoration:none}@media(max-width:520px){.legal-head{align-items:flex-start}.legal-head .brand{font-size:14px!important}.legal-page>.panel{padding:22px!important}}</style>
+<meta name="theme-color" content="#07100c" />
+<style>
+.legal-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px}.legal-head .brand{margin:0!important}.legal-page>.panel{max-width:820px;margin:0 auto}.legal-page h1{margin:8px 0 14px}.legal-page h2{margin:25px 0 8px}.legal-back{display:inline-flex;margin-top:18px;text-decoration:none}.privacy-summary{padding:15px 16px;border:1px solid rgba(57,223,159,.13);border-radius:14px;background:rgba(57,223,159,.05);color:#a8b9b0;font-size:12px;line-height:1.65}.privacy-list{margin:8px 0 0;padding-left:19px;color:#9aa9a1;font-size:12.5px;line-height:1.75}.privacy-list li+li{margin-top:4px}@media(max-width:520px){.legal-head{align-items:center}.legal-page>.panel{padding:22px!important}}
+</style>
 </head>
 <body class="site-v10">
 <div class="container legal-page">
@@ -24,39 +26,49 @@
     <a href="/" class="brand"><img class="brand-logo" src="icons/doberto-vcf-mark.svg?v=20260904-1" alt="" width="38" height="38" /> DOBERTO VCF</a>
     <select id="langSelect" class="lang-select" aria-label="Lang"><option value="ht">KR</option><option value="fr">FR</option><option value="en">EN</option></select>
   </div>
-  <div class="panel">
-    <span class="member-directory-kicker">LEGAL · PRIVACY</span>
-    <h1 data-i18n="privacy_title">Politik konfidansyalite</h1>
-    <p data-i18n="privacy_intro">DOBERTO VCF kolekte enfòmasyon ou bay pandan enskripsyon an, tankou non ou, nimewo WhatsApp ou ak email ou. Si ou chwazi konekte ak Google, nou ka resevwa non, email ak foto pwofil Google ou pou idantifye kont ou.</p>
 
-    <h2 data-i18n="privacy_use_title">Itilizasyon done yo</h2>
-    <p data-i18n="privacy_use_desc">Done yo sèvi pou fonksyònman sèvis la, pou jere enskripsyon an, jenere VCF la ak anpeche abi. Nimewo telefòn yo pa afiche piblikman nan anyè sit la.</p>
+  <article class="panel">
+    <span class="member-directory-kicker" id="privacyKicker">Konfidansyalite</span>
+    <h1 id="privacyTitle">Politik konfidansyalite</h1>
+    <div class="privacy-summary" id="privacySummary">Nou itilize sèlman done ki nesesè pou fè DOBERTO VCF fonksyone. Google Contacts rete opsyonèl epi ou ka retire aksè a nenpòt lè.</div>
 
-    <div class="google-policy-note">
-      <h2 data-i18n="privacy_google_title">Google Account ak Google Contacts</h2>
-      <p data-i18n="privacy_google_desc">Koneksyon Google sèvi pou idantifye kont ou. Otorizasyon Google Contacts la separe epi opsyonèl. Si ou aktive li, DOBERTO VCF itilize aksè sa a sèlman pou ajoute kontak manm DOBERTO VCF yo nan Google Contacts ou epi kenbe yo senkronize lè Auto-Sync aktive.</p>
+    <h2 id="dataTitle">Done nou itilize</h2>
+    <ul class="privacy-list" id="dataList">
+      <li>Non, nimewo WhatsApp ak email ou bay pandan enskripsyon an.</li>
+      <li>Non, email ak foto pwofil Google ou lè ou konekte ak Google.</li>
+    </ul>
 
-      <h2 data-i18n="privacy_google_security_title">Sekirite ak depo done Google</h2>
-      <p data-i18n="privacy_google_security_desc">Token OAuth Google yo estoke sou sèvè a an fòm chiffres pou pèmèt senkronizasyon an fonksyone. DOBERTO VCF pa itilize done Google ou pou piblisite, pa vann yo, epi pa pataje yo pou rezon ki pa nesesè pou sèvis la.</p>
+    <h2 id="googleTitle">Google Contacts</h2>
+    <p id="googleText">Aksè Google Contacts separe ak koneksyon Google la epi li pa obligatwa. Si ou aktive li, DOBERTO VCF itilize aksè a sèlman pou ajoute kontak manm rezo a nan Google Contacts ou epi kenbe yo ajou lè Auto-Sync aktive.</p>
 
-      <h2 data-i18n="privacy_google_control_title">Kontwòl ou sou aksè Google</h2>
-      <p data-i18n="privacy_google_control_desc">Ou ka dezaktive Auto-Sync sou DOBERTO VCF nenpòt lè. Ou kapab tou retire aksè DOBERTO VCF nan paramèt sekirite Kont Google ou; sa anpeche nouvo aksè API. Ou ka mande efasman done ak token ki estoke yo lè ou kontakte administratè sèvis la.</p>
+    <h2 id="securityTitle">Sekirite ak kontwòl</h2>
+    <p id="securityText">Token OAuth Google yo estoke sou sèvè a an fòm chiffres. Nou pa vann done Google ou epi nou pa itilize yo pou piblisite. Ou ka dezaktive Auto-Sync oswa revoke aksè DOBERTO VCF nan paramèt Kont Google ou nenpòt lè.</p>
 
-      <h2 data-i18n="privacy_limited_use_title">Google API Services User Data Policy</h2>
-      <p data-i18n="privacy_limited_use_desc">Itilizasyon done Google pa DOBERTO VCF limite ak fonksyon itilizatè a mande yo epi li fèt an akò ak Google API Services User Data Policy, ki gen ladan kondisyon Limited Use yo.</p>
-    </div>
+    <h2 id="notificationsTitle">Notifikasyon</h2>
+    <p id="notificationsText">Si ou bay email ou oswa aktive notifikasyon navigatè a, nou ka avèti ou lè yon fonksyon enpòtan pare tankou aksè VCF la. Ou ka retire pèmisyon sa yo nenpòt lè.</p>
 
-    <h2 data-i18n="privacy_notifications_title">Notifikasyon sèvis</h2>
-    <p data-i18n="privacy_notifications_desc">Si ou bay yon adrès email, DOBERTO VCF ka itilize li pou avèti ou lè objektif enskripsyon an rive epi fichye VCF la disponib. Si ou aktive notifikasyon navigatè a, sèvis la ka itilize OneSignal pou jere abònman push la ak voye alèt sèvis yo.</p>
+    <h2 id="rightsTitle">Dwa ou</h2>
+    <p id="rightsText">Ou ka mande koreksyon oswa efasman done ou lè ou kontakte administratè DOBERTO VCF.</p>
 
-    <h2 data-i18n="privacy_choices_title">Chwa ou yo</h2>
-    <p data-i18n="privacy_choices_desc">Ou ka mande koreksyon oswa efasman enfòmasyon ou, dezaktive Auto-Sync, oswa revoke aksè Google nan kont Google ou nenpòt lè.</p>
-
-    <p class="hint" data-i18n="legal_updated">Dènye mizajou: 10 septanm 2026.</p>
-    <a class="secondary legal-back" href="/" data-i18n="legal_back">Retounen sou Akèy</a>
-  </div>
+    <p class="hint" id="updatedText">Dènye mizajou: 10 septanm 2026.</p>
+    <a class="secondary legal-back" href="/" id="backText">Retounen sou Akèy</a>
+  </article>
 </div>
-<script src="js/i18n.js?v=20260905-3"></script>
-<script src="js/i18n-v12.js?v=20260909-2"></script>
+<script>
+(() => {
+  const C={
+    ht:{k:'Konfidansyalite',t:'Politik konfidansyalite',s:'Nou itilize sèlman done ki nesesè pou fè DOBERTO VCF fonksyone. Google Contacts rete opsyonèl epi ou ka retire aksè a nenpòt lè.',dt:'Done nou itilize',dl:['Non, nimewo WhatsApp ak email ou bay pandan enskripsyon an.','Non, email ak foto pwofil Google ou lè ou konekte ak Google.'],gt:'Google Contacts',g:'Aksè Google Contacts separe ak koneksyon Google la epi li pa obligatwa. Si ou aktive li, DOBERTO VCF itilize aksè a sèlman pou ajoute kontak manm rezo a nan Google Contacts ou epi kenbe yo ajou lè Auto-Sync aktive.',st:'Sekirite ak kontwòl',sec:'Token OAuth Google yo estoke sou sèvè a an fòm chiffres. Nou pa vann done Google ou epi nou pa itilize yo pou piblisite. Ou ka dezaktive Auto-Sync oswa revoke aksè DOBERTO VCF nan paramèt Kont Google ou nenpòt lè.',nt:'Notifikasyon',n:'Si ou bay email ou oswa aktive notifikasyon navigatè a, nou ka avèti ou lè yon fonksyon enpòtan pare tankou aksè VCF la. Ou ka retire pèmisyon sa yo nenpòt lè.',rt:'Dwa ou',r:'Ou ka mande koreksyon oswa efasman done ou lè ou kontakte administratè DOBERTO VCF.',u:'Dènye mizajou: 10 septanm 2026.',b:'Retounen sou Akèy'},
+    fr:{k:'Confidentialité',t:'Politique de confidentialité',s:'Nous utilisons uniquement les données nécessaires au fonctionnement de DOBERTO VCF. Google Contacts reste facultatif et vous pouvez retirer l’accès à tout moment.',dt:'Données utilisées',dl:['Nom, numéro WhatsApp et email fournis lors de l’inscription.','Nom, email et photo de profil Google lorsque vous vous connectez avec Google.'],gt:'Google Contacts',g:'L’accès à Google Contacts est séparé de la connexion Google et reste facultatif. Si vous l’activez, DOBERTO VCF l’utilise uniquement pour ajouter les contacts des membres à votre compte Google Contacts et les maintenir à jour lorsque Auto-Sync est activé.',st:'Sécurité et contrôle',sec:'Les jetons OAuth Google sont stockés sous forme chiffrée sur le serveur. Nous ne vendons pas vos données Google et ne les utilisons pas à des fins publicitaires. Vous pouvez désactiver Auto-Sync ou révoquer l’accès de DOBERTO VCF depuis votre compte Google à tout moment.',nt:'Notifications',n:'Si vous fournissez votre email ou activez les notifications du navigateur, nous pouvons vous avertir lorsqu’une fonction importante devient disponible, comme l’accès au VCF. Vous pouvez retirer ces autorisations à tout moment.',rt:'Vos droits',r:'Vous pouvez demander la correction ou la suppression de vos données en contactant l’administrateur de DOBERTO VCF.',u:'Dernière mise à jour : 10 septembre 2026.',b:'Retour à l’accueil'},
+    en:{k:'Privacy',t:'Privacy Policy',s:'We only use the data needed to operate DOBERTO VCF. Google Contacts is optional and you can remove access at any time.',dt:'Data we use',dl:['Name, WhatsApp number and email provided during registration.','Google name, email and profile picture when you sign in with Google.'],gt:'Google Contacts',g:'Google Contacts access is separate from Google sign-in and remains optional. If enabled, DOBERTO VCF only uses it to add network member contacts to your Google Contacts account and keep them updated while Auto-Sync is enabled.',st:'Security and control',sec:'Google OAuth tokens are stored encrypted on the server. We do not sell your Google data or use it for advertising. You can disable Auto-Sync or revoke DOBERTO VCF access from your Google Account at any time.',nt:'Notifications',n:'If you provide your email or enable browser notifications, we may notify you when an important feature becomes available, such as VCF access. You can remove these permissions at any time.',rt:'Your rights',r:'You can request correction or deletion of your data by contacting the DOBERTO VCF administrator.',u:'Last updated: September 10, 2026.',b:'Back to Home'}
+  };
+  const sel=document.getElementById('langSelect');
+  let lang='ht';
+  try{const saved=localStorage.getItem('doberto_lang');if(C[saved])lang=saved;}catch(_){}
+  sel.value=lang;
+  const apply=()=>{const c=C[lang];document.documentElement.lang=lang;privacyKicker.textContent=c.k;privacyTitle.textContent=c.t;privacySummary.textContent=c.s;dataTitle.textContent=c.dt;dataList.innerHTML=c.dl.map(x=>`<li>${x}</li>`).join('');googleTitle.textContent=c.gt;googleText.textContent=c.g;securityTitle.textContent=c.st;securityText.textContent=c.sec;notificationsTitle.textContent=c.nt;notificationsText.textContent=c.n;rightsTitle.textContent=c.rt;rightsText.textContent=c.r;updatedText.textContent=c.u;backText.textContent=c.b;};
+  apply();
+  sel.addEventListener('change',()=>{lang=C[sel.value]?sel.value:'ht';try{localStorage.setItem('doberto_lang',lang);}catch(_){}apply();});
+})();
+</script>
 </body>
 </html>
