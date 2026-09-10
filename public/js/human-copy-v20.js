@@ -5,17 +5,20 @@
     ht: {
       title1: 'Bati rezo WhatsApp ou',
       title2: 'Otomatikman',
-      howTitle: 'Twa etap nan kèk segond'
+      howTitle: 'Twa etap nan kèk segond',
+      whyTitle: 'Fèt pou grandi epi rete senp'
     },
     fr: {
       title1: 'Développez votre réseau WhatsApp',
       title2: 'Automatiquement',
-      howTitle: 'Trois étapes en quelques secondes'
+      howTitle: 'Trois étapes en quelques secondes',
+      whyTitle: 'Conçu pour grandir et rester simple'
     },
     en: {
       title1: 'Build your WhatsApp network',
       title2: 'Automatically',
-      howTitle: 'Three steps in seconds'
+      howTitle: 'Three steps in seconds',
+      whyTitle: 'Built to grow and stay simple'
     }
   };
 
@@ -35,7 +38,8 @@
     const nodes = {
       title1: document.querySelector('[data-home-key="title1"]'),
       title2: document.querySelector('[data-home-key="title2"]'),
-      howTitle: document.querySelector('[data-home-key="howTitle"]')
+      howTitle: document.querySelector('[data-home-key="howTitle"]'),
+      whyTitle: document.querySelector('[data-home-key="whyTitle"]')
     };
     Object.entries(nodes).forEach(([key, node]) => {
       if (node && node.textContent !== copy[key]) node.textContent = copy[key];
@@ -53,7 +57,8 @@
     const targets = [
       document.querySelector('[data-home-key="title1"]'),
       document.querySelector('[data-home-key="title2"]'),
-      document.querySelector('[data-home-key="howTitle"]')
+      document.querySelector('[data-home-key="howTitle"]'),
+      document.querySelector('[data-home-key="whyTitle"]')
     ].filter(Boolean);
     if (targets.length && 'MutationObserver' in window) {
       const observer = new MutationObserver(() => window.setTimeout(apply, 0));
