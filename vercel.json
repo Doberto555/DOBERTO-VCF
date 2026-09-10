@@ -123,16 +123,6 @@
       "permanent": false
     },
     {
-      "source": "/register.html",
-      "destination": "/maintenance.html",
-      "permanent": false
-    },
-    {
-      "source": "/register",
-      "destination": "/maintenance.html",
-      "permanent": false
-    },
-    {
       "source": "/list.html",
       "destination": "/maintenance.html",
       "permanent": false
