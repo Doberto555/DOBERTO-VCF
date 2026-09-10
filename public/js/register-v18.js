@@ -4,27 +4,30 @@
   const COPY = {
     ht: {
       title:'DOBERTO VCF — Enskripsyon', headline:'Antre nan rezo a', lead:'Konekte kont Google ou, ajoute nimewo WhatsApp ou epi aktive Google Contacts. Apre sa sistèm nan pran swen senkronizasyon an.',
-      flowLabel:'Pwogrè enskripsyon', stepGoogle:'Google', stepProfile:'Pwofil', stepSync:'Sync',
+      flowLabel:'Pwogrè enskripsyon', stepGoogle:'Google', stepProfile:'Pwofil', stepSync:'Senkronizasyon',
       account:'Kont Google', loginTitle:'Konekte pou kontinye', loginDesc:'Google sèvi sèlman pou idantifye kont ou. Aksè Google Contacts mande yon lòt otorizasyon apa.', loginBtn:'Kontinye ak Google',
       profile:'Pwofil', yourInfo:'Enfòmasyon ou', consent:'Mwen dakò ak {privacy} ak {terms}.', privacy:'Politik konfidansyalite', terms:'Kondisyon itilizasyon', submit:'Fini enskripsyon an', already:'Mwen deja enskri', logout:'Dekonekte',
-      contacts:'Google Contacts', syncTitle:'Aktive senkronizasyon', syncDesc:'Apre ou bay otorizasyon an, plan Standard la kòmanse senkronize otomatikman apre 10 minit. VIP senkronize touswit.', connect:'Aktive Google Contacts', syncNow:'Senkronize kounye a', auto:'Kenbe Auto-Sync aktive', vipLink:'VIP: senkronizasyon imedyat',
-      standardTitle:'Auto-Sync apre 10 minit', standardDesc:'Aktive Google Contacts yon sèl fwa. Sistèm nan ap kontinye mete nouvo kontak yo ajou otomatikman.', vipTitle:'Auto-Sync imedyat', vipDesc:'Nouvo kontak yo antre san tann pwochen sik Standard la.', discoverVip:'Dekouvri VIP', privacyTitle:'Nimewo ou rete prive.', privacyDesc:'Li pa parèt sou anyè piblik manm yo.'
+      contacts:'Google Contacts', syncTitle:'Aktive senkronizasyon', syncDesc:'Apre ou bay otorizasyon an, plan Standard la kòmanse senkronize otomatikman apre 10 minit. VIP senkronize touswit.', connect:'Aktive Google Contacts', syncNow:'Senkronize kounye a', auto:'Kenbe Auto-Sync aktive', vipLink:'VIP ak senkronizasyon imedyat',
+      standardTitle:'Auto-Sync apre 10 minit', standardDesc:'Aktive Google Contacts yon sèl fwa. Sistèm nan ap kontinye mete nouvo kontak yo ajou otomatikman.', vipTitle:'Auto-Sync imedyat', vipDesc:'Nouvo kontak yo antre san tann pwochen sik Standard la.', discoverVip:'Dekouvri VIP', privacyTitle:'Nimewo ou rete prive.', privacyDesc:'Li pa parèt sou anyè piblik manm yo.',
+      footerAbout:'Konsènan', footerPrivacy:'Konfidansyalite', footerTerms:'Kondisyon'
     },
     fr: {
       title:'DOBERTO VCF — Inscription', headline:'Rejoignez le réseau', lead:'Connectez votre compte Google, ajoutez votre numéro WhatsApp puis activez Google Contacts. Le système gère ensuite la synchronisation automatiquement.',
-      flowLabel:'Progression de l’inscription', stepGoogle:'Google', stepProfile:'Profil', stepSync:'Sync',
+      flowLabel:'Progression de l’inscription', stepGoogle:'Google', stepProfile:'Profil', stepSync:'Synchronisation',
       account:'Compte Google', loginTitle:'Connectez-vous pour continuer', loginDesc:'Google sert uniquement à identifier votre compte. L’accès à Google Contacts nécessite une autorisation distincte.', loginBtn:'Continuer avec Google',
       profile:'Profil', yourInfo:'Vos informations', consent:'J’accepte la {privacy} et les {terms}.', privacy:'Politique de confidentialité', terms:'Conditions d’utilisation', submit:'Terminer l’inscription', already:'Je suis déjà inscrit', logout:'Se déconnecter',
-      contacts:'Google Contacts', syncTitle:'Activer la synchronisation', syncDesc:'Après autorisation, le plan Standard démarre automatiquement la synchronisation après 10 minutes. Le plan VIP synchronise immédiatement.', connect:'Activer Google Contacts', syncNow:'Synchroniser maintenant', auto:'Maintenir Auto-Sync activé', vipLink:'VIP : synchronisation immédiate',
-      standardTitle:'Auto-Sync après 10 minutes', standardDesc:'Activez Google Contacts une seule fois. Le système continuera ensuite à ajouter automatiquement les nouveaux contacts.', vipTitle:'Auto-Sync immédiat', vipDesc:'Les nouveaux contacts sont ajoutés sans attendre le prochain cycle Standard.', discoverVip:'Découvrir VIP', privacyTitle:'Votre numéro reste privé.', privacyDesc:'Il n’apparaît pas dans l’annuaire public des membres.'
+      contacts:'Google Contacts', syncTitle:'Activer la synchronisation', syncDesc:'Après autorisation, le plan Standard démarre automatiquement la synchronisation après 10 minutes. Le plan VIP synchronise immédiatement.', connect:'Activer Google Contacts', syncNow:'Synchroniser maintenant', auto:'Maintenir Auto-Sync activé', vipLink:'VIP avec synchronisation immédiate',
+      standardTitle:'Auto-Sync après 10 minutes', standardDesc:'Activez Google Contacts une seule fois. Le système continuera ensuite à ajouter automatiquement les nouveaux contacts.', vipTitle:'Auto-Sync immédiat', vipDesc:'Les nouveaux contacts sont ajoutés sans attendre le prochain cycle Standard.', discoverVip:'Découvrir VIP', privacyTitle:'Votre numéro reste privé.', privacyDesc:'Il n’apparaît pas dans l’annuaire public des membres.',
+      footerAbout:'À propos', footerPrivacy:'Confidentialité', footerTerms:'Conditions'
     },
     en: {
       title:'DOBERTO VCF — Registration', headline:'Join the network', lead:'Connect your Google account, add your WhatsApp number, then enable Google Contacts. The system handles synchronization automatically after that.',
       flowLabel:'Registration progress', stepGoogle:'Google', stepProfile:'Profile', stepSync:'Sync',
       account:'Google account', loginTitle:'Sign in to continue', loginDesc:'Google is used only to identify your account. Google Contacts requires a separate permission.', loginBtn:'Continue with Google',
       profile:'Profile', yourInfo:'Your information', consent:'I agree to the {privacy} and {terms}.', privacy:'Privacy Policy', terms:'Terms of Use', submit:'Complete registration', already:'I am already registered', logout:'Sign out',
-      contacts:'Google Contacts', syncTitle:'Enable synchronization', syncDesc:'After permission is granted, the Standard plan starts syncing automatically after 10 minutes. VIP syncs immediately.', connect:'Enable Google Contacts', syncNow:'Sync now', auto:'Keep Auto-Sync enabled', vipLink:'VIP: instant synchronization',
-      standardTitle:'Auto-Sync after 10 minutes', standardDesc:'Enable Google Contacts once. The system will then continue adding new contacts automatically.', vipTitle:'Instant Auto-Sync', vipDesc:'New contacts are added without waiting for the next Standard cycle.', discoverVip:'Explore VIP', privacyTitle:'Your number stays private.', privacyDesc:'It is not shown in the public member directory.'
+      contacts:'Google Contacts', syncTitle:'Enable synchronization', syncDesc:'After permission is granted, the Standard plan starts syncing automatically after 10 minutes. VIP syncs immediately.', connect:'Enable Google Contacts', syncNow:'Sync now', auto:'Keep Auto-Sync enabled', vipLink:'VIP with instant synchronization',
+      standardTitle:'Auto-Sync after 10 minutes', standardDesc:'Enable Google Contacts once. The system will then continue adding new contacts automatically.', vipTitle:'Instant Auto-Sync', vipDesc:'New contacts are added without waiting for the next Standard cycle.', discoverVip:'Explore VIP', privacyTitle:'Your number stays private.', privacyDesc:'It is not shown in the public member directory.',
+      footerAbout:'About', footerPrivacy:'Privacy', footerTerms:'Terms'
     }
   };
 
@@ -70,6 +73,7 @@
   }
 
   function apply(){
+    document.documentElement.lang=lang();
     document.title=tr('title');
     text('#registrationHeadline',tr('headline'));
     text('#registrationLead',tr('lead'));
@@ -106,6 +110,13 @@
     if(tiers[1]){const strong=tiers[1].querySelector('strong'),p=tiers[1].querySelector('p'),a=tiers[1].querySelector('a');if(strong)strong.textContent=tr('vipTitle');if(p)p.textContent=tr('vipDesc');if(a)a.textContent=tr('discoverVip');}
     const privacy=document.querySelector('.privacy-note p');
     if(privacy)privacy.innerHTML=`<strong>${tr('privacyTitle')}</strong>${tr('privacyDesc')}`;
+    const footerLinks=document.querySelectorAll('.dv-footer .footer-links a');
+    footerLinks.forEach(link=>{
+      const href=(link.getAttribute('href')||'').toLowerCase();
+      if(href.includes('about')) link.textContent=tr('footerAbout');
+      else if(href.includes('privacy')) link.textContent=tr('footerPrivacy');
+      else if(href.includes('terms')) link.textContent=tr('footerTerms');
+    });
     updateFlowState();
   }
 
