@@ -67,12 +67,21 @@
   };
 
   function loadPremiumCss() {
-    if (document.querySelector('link[data-dv-v15]')) return;
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = '/css/site-v15.css?v=20260910-1';
-    link.dataset.dvV15 = '1';
-    document.head.appendChild(link);
+    if (!document.querySelector('link[data-dv-v15]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = '/css/site-v15.css?v=20260910-1';
+      link.dataset.dvV15 = '1';
+      document.head.appendChild(link);
+    }
+
+    if (!document.querySelector('link[data-dv-v16]')) {
+      const cleanup = document.createElement('link');
+      cleanup.rel = 'stylesheet';
+      cleanup.href = '/css/site-v16.css?v=20260910-1';
+      cleanup.dataset.dvV16 = '1';
+      document.head.appendChild(cleanup);
+    }
   }
 
   function toast(message, type = 'info', duration = 4300) {
