@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover" />
-<meta name="description" content="DOBERTO VCF ede w devlope rezo kontak WhatsApp ou epi òganize kontak yo pi fasil." />
+<meta name="description" content="DOBERTO VCF ede w bati yon rezo kontak WhatsApp epi kenbe nouvo kontak yo ajou otomatikman." />
 <meta name="robots" content="index,follow,max-image-preview:large" />
 <meta name="application-name" content="DOBERTO VCF" />
 <link rel="canonical" href="https://dobertovcf.online/" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="DOBERTO VCF" />
-<meta property="og:title" content="DOBERTO VCF — Grow Your Contact Network" />
-<meta property="og:description" content="Antre nan rezo DOBERTO VCF la epi jere kontak ou pi fasil." />
+<meta property="og:title" content="DOBERTO VCF — Grow Your WhatsApp Network" />
+<meta property="og:description" content="Antre nan rezo DOBERTO VCF la epi grandi kontak WhatsApp ou pi fasil." />
 <meta property="og:url" content="https://dobertovcf.online/" />
 <meta property="og:image" content="https://dobertovcf.online/icons/doberto-vcf-512.png" />
 <title>DOBERTO VCF — Akèy</title>
@@ -23,16 +23,14 @@
 <link rel="stylesheet" href="css/site-v10.css?v=20260905-1" />
 <link rel="stylesheet" href="css/site-v11.css?v=20260910-1" />
 <link rel="stylesheet" href="css/site-v13.css?v=20260910-1" />
-<link rel="manifest" href="manifest.webmanifest?v=20260905-3" />
-<meta name="theme-color" content="#07100c" />
+<link rel="stylesheet" href="css/site-v14.css?v=20260910-1" />
+<link rel="manifest" href="manifest.webmanifest?v=20260910-4" />
+<meta name="theme-color" content="#05070a" />
 <link rel="icon" type="image/png" sizes="192x192" href="icons/doberto-vcf-192.png?v=20260904-1" />
 <link rel="apple-touch-icon" href="icons/doberto-vcf-192.png?v=20260904-1" />
 <script>
-try {
-  if (localStorage.getItem('dv_registered') !== '1') location.replace('/register.html');
-} catch (_) {
-  location.replace('/register.html');
-}
+try { if (localStorage.getItem('dv_registered') !== '1') location.replace('/register.html'); }
+catch (_) { location.replace('/register.html'); }
 </script>
 </head>
 <body class="site-v10 home-page">
@@ -43,9 +41,9 @@ try {
     <div class="welcome-mark-wrap"><span class="welcome-ring ring-one"></span><span class="welcome-ring ring-two"></span><div class="welcome-logo-shell"><img class="welcome-logo" src="icons/doberto-vcf-mark.svg?v=20260904-1" alt="" /></div></div>
     <div class="welcome-eyebrow" data-home-key="welcome">Byenveni sou</div>
     <div class="welcome-title">DOBERTO VCF</div>
-    <div class="welcome-sub" data-home-key="welcomesub">Rezo kontak DOBERTO VCF</div>
+    <div class="welcome-sub" data-home-key="welcomesub">Rezo kontak ou. Pi entelijan.</div>
     <div class="welcome-progress"><span></span></div>
-    <div class="welcome-ready"><i></i><span data-home-key="ready">Rezo a pare</span></div>
+    <div class="welcome-ready"><i></i><span data-home-key="ready">Sistèm nan pare</span></div>
   </div>
 </div>
 
@@ -63,40 +61,77 @@ try {
 
 <main class="site-shell">
   <section class="home-hero">
-    <div>
-      <span class="home-kicker" data-home-key="kicker">Rezo kontak WhatsApp</span>
-      <h1 class="home-title"><span data-home-key="title1">Konekte ak plis moun.</span><span class="accent" data-home-key="title2">Fè status ou rive pi lwen.</span></h1>
-      <p class="home-copy" data-home-key="desc">Enskri nimewo WhatsApp ou, antre nan kominote a epi kenbe kontak ou òganize. Google Contacts rete opsyonèl epi ou toujou gen kontwòl sou sa ou aktive.</p>
+    <div class="home-hero-copy">
+      <span class="home-kicker" data-home-key="kicker">Platfòm kwasans kontak</span>
+      <h1 class="home-title"><span data-home-key="title1">Bati rezo WhatsApp ou.</span><span class="accent" data-home-key="title2">Otomatikman.</span></h1>
+      <p class="home-copy" data-home-key="desc">Konekte kont ou, ajoute nimewo WhatsApp ou epi kite DOBERTO VCF òganize kwasans rezo a. Google Contacts rete opsyonèl epi ou kontwole tout sa ou aktive.</p>
       <div class="home-actions">
-        <a class="dv-btn dv-btn-primary" href="register.html"><span data-home-key="join">Enskri kounye a</span><span aria-hidden="true">→</span></a>
-        <a class="dv-btn dv-btn-secondary" href="list.html"><span data-home-key="list">Gade manm yo</span></a>
+        <a class="dv-btn dv-btn-primary" href="register.html"><span data-home-key="join">Antre nan rezo a</span><span aria-hidden="true">→</span></a>
+        <a class="dv-btn dv-btn-secondary" href="#how"><span data-home-key="howLink">Kijan sa mache</span></a>
       </div>
       <div class="hero-mini-trust">
-        <span><b>✓</b><span data-home-key="free">Enskripsyon gratis</span></span>
-        <span><b>✓</b><span data-home-key="private">Nimewo pa afiche piblikman</span></span>
-        <span><b>✓</b><span>Google Contacts opsyonèl</span></span>
+        <span><b>✓</b><span data-home-key="free">Gratis pou enskri</span></span>
+        <span><b>✓</b><span data-home-key="private">Nimewo pa piblik</span></span>
+        <span><b>✓</b><span data-home-key="auto">Auto-Sync opsyonèl</span></span>
       </div>
     </div>
 
-    <aside class="live-card" aria-label="Estatistik an dirèk">
-      <div class="live-top"><div class="live-label"><span class="live-pulse"></span><span data-home-key="live">Manm enskri</span></div><span class="live-badge" id="homeUnlockBadge" data-state="waiting">An pwogrè</span></div>
-      <div class="live-number" id="homeMemberCount">—</div>
-      <div class="live-sub">DOBERTO VCF</div>
-      <div class="live-progress"><span id="homeProgressFill"></span></div>
-      <div class="live-progress-meta"><span><span id="homeProgressPct">0%</span> <span data-home-key="goal">kapasite kontak</span></span><strong id="homeMaxCount">50 000</strong></div>
-      <div class="download-stat-card">
-        <div class="download-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3.5 7.5h6l1.8 2h9.2v8.5a2 2 0 0 1-2 2h-15a2 2 0 0 1-2-2v-8.5a2 2 0 0 1 2-2Z"/><path d="M12 11v5m0 0-2-2m2 2 2-2"/></svg></div>
-        <div class="download-stat-copy"><span class="download-stat-label" data-home-key="downloads">VCF delivre</span><strong id="homeDownloadCount">0</strong><small data-home-key="downloadsSub">aksè verifye</small></div>
+    <aside class="network-console" aria-label="Estatistik rezo a">
+      <div class="console-head"><div class="console-brand"><i></i><span data-home-key="consoleTitle">Network Console</span></div><span class="console-live" id="homeUnlockBadge">An pwogrè</span></div>
+      <div class="console-main">
+        <div class="console-label" data-home-key="live">Manm enskri</div>
+        <div class="console-number" id="homeMemberCount">—</div>
+        <div class="console-caption" data-home-key="networkCaption">Rezo DOBERTO VCF an dirèk</div>
+        <div class="console-progress"><span id="homeProgressFill"></span></div>
+        <div class="console-progress-row"><span><span id="homeProgressPct">0%</span> <span data-home-key="goal">kapasite</span></span><strong id="homeMaxCount">50 000</strong></div>
+        <div class="console-grid">
+          <div class="console-stat"><span data-home-key="downloads">Aksè VCF</span><strong id="homeDownloadCount">0</strong><em data-home-key="downloadsSub">aksè verifye</em></div>
+          <div class="console-stat"><span data-home-key="syncLabel">Auto-Sync</span><strong>15 min</strong><em data-home-key="syncSub">Google Contacts</em></div>
+        </div>
+        <div class="console-sync"><div class="console-sync-icon">↻</div><div><strong data-home-key="syncReady">Sync fèt pou mache poukont li</strong><span data-home-key="syncReadySub">Konekte yon sèl fwa epi kenbe kontak yo ajou.</span></div></div>
       </div>
     </aside>
   </section>
 
+  <section class="section-block" id="how">
+    <div class="section-head center"><span class="section-kicker" data-home-key="how">Kijan sa mache</span><h2 data-home-key="howTitle">Twa etap. Kèk segond.</h2><p data-home-key="howDesc">Pa gen pwosesis konplike. Konekte, ajoute enfòmasyon ou epi chwazi si ou vle aktive sync.</p></div>
+    <div class="steps-grid">
+      <article class="step-card"><div class="step-index">01</div><h3 data-home-key="s1">Konekte ak Google</h3><p data-home-key="s1d">Sèvi ak kont Google ou pou kreye yon sesyon sekirize san yon lòt modpas.</p></article>
+      <article class="step-card"><div class="step-index">02</div><h3 data-home-key="s2">Ajoute nimewo ou</h3><p data-home-key="s2d">Ranpli non ak nimewo WhatsApp ou pou antre nan rezo a.</p></article>
+      <article class="step-card"><div class="step-index">03</div><h3 data-home-key="s3">Aktive sync si ou vle</h3><p data-home-key="s3d">Google Contacts ka resevwa nouvo manm yo otomatikman. Ou ka dezaktive l nenpòt lè.</p></article>
+    </div>
+  </section>
+
+  <section class="section-block control-center">
+    <div class="control-copy">
+      <span class="section-kicker" data-home-key="controlKicker">Sant kontwòl ou</span>
+      <h2 data-home-key="controlTitle">Tout rezo a nan yon eksperyans ki senp.</h2>
+      <p data-home-key="controlDesc">DOBERTO VCF mete enskripsyon, manm, Google Contacts ak aksè VCF nan yon sèl sistèm ki fèt pou mobil ak desktop.</p>
+      <div class="control-list">
+        <div class="control-item"><b>01</b><div><strong data-home-key="control1">Kont Google sekirize</strong><span data-home-key="control1d">Login Google la rete separe ak pèmisyon Contacts.</span></div></div>
+        <div class="control-item"><b>02</b><div><strong data-home-key="control2">Sync san travay manyèl</strong><span data-home-key="control2d">Lè Auto-Sync aktive, sistèm nan kontinye travay pou ou.</span></div></div>
+        <div class="control-item"><b>03</b><div><strong data-home-key="control3">Vi prive klè</strong><span data-home-key="control3d">Lis piblik la montre sèlman enfòmasyon ki nesesè.</span></div></div>
+      </div>
+    </div>
+    <div class="dashboard-mock" aria-hidden="true">
+      <div class="dashboard-top"><div class="dashboard-dots"><i></i><i></i><i></i></div><span>DOBERTO VCF / DASHBOARD</span></div>
+      <div class="dashboard-body">
+        <div class="dashboard-menu"><span class="active">Overview</span><span>Members</span><span>Google Sync</span><span>VCF Access</span><span>Account</span></div>
+        <div class="dashboard-content">
+          <div class="dashboard-welcome">Network overview</div><div class="dashboard-sub">Your contact growth at a glance</div>
+          <div class="dashboard-kpis"><div class="dashboard-kpi"><span>Members</span><strong id="homeMockMembers">Live</strong></div><div class="dashboard-kpi"><span>Auto-Sync</span><strong>ON</strong></div><div class="dashboard-kpi"><span>Privacy</span><strong>Safe</strong></div></div>
+          <div class="dashboard-list"><div class="dashboard-row"><strong>Google Contacts</strong><span>Connected</span></div><div class="dashboard-row"><strong>Latest sync</strong><span>Automatic</span></div><div class="dashboard-row"><strong>VCF system</strong><span>Ready</span></div><div class="dashboard-row"><strong>Public number</strong><span>Hidden</span></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="section-block">
-    <div class="section-head"><span class="section-kicker" data-home-key="why">Poukisa DOBERTO VCF</span><h2 data-home-key="whyTitle">Tout sa ou bezwen nan yon sèl kote</h2><p data-home-key="whyDesc">Enskripsyon an senp, manm yo fasil pou jwenn epi opsyon sync la rete anba kontwòl ou.</p></div>
+    <div class="section-head"><span class="section-kicker" data-home-key="why">Poukisa DOBERTO VCF</span><h2 data-home-key="whyTitle">Fèt pou kwasans. Fèt pou rete senp.</h2><p data-home-key="whyDesc">Nou retire etap initil yo pou ou ka konsantre sou rezo a.</p></div>
     <div class="home-grid">
-      <article class="info-card"><div class="info-icon">01</div><h3 data-home-key="c1">Enskripsyon rapid</h3><p data-home-key="c1d">Konekte ak Google epi ajoute nimewo WhatsApp ou nan kèk segond.</p></article>
-      <article class="info-card"><div class="info-icon">02</div><h3 data-home-key="c2">Vi prive klè</h3><p data-home-key="c2d">Sou anyè piblik la sèlman non ak peyi parèt. Nimewo telefòn yo rete prive.</p></article>
-      <article class="info-card"><div class="info-icon">03</div><h3 data-home-key="c3">Sync otomatik</h3><p data-home-key="c3d">Si ou aktive Google Contacts, nouvo kontak yo ka ajoute otomatikman sou kont ou.</p></article>
+      <article class="info-card"><div class="info-icon">01</div><h3 data-home-key="c1">Mobile-first</h3><p data-home-key="c1d">Entèfas la fèt pou mache byen sou telefòn san li pa pèdi kalite sou desktop.</p></article>
+      <article class="info-card"><div class="info-icon">02</div><h3 data-home-key="c2">Sync otomatik</h3><p data-home-key="c2d">Konekte Google Contacts epi kite nouvo kontak yo antre san travay repetitif.</p></article>
+      <article class="info-card"><div class="info-icon">03</div><h3 data-home-key="c3">Kontwòl sou done</h3><p data-home-key="c3d">Ou chwazi ki pèmisyon ou bay epi ou ka revoke aksè Google nenpòt lè.</p></article>
     </div>
   </section>
 
@@ -112,22 +147,24 @@ try {
     </div>
   </section>
 
-  <section class="section-block">
-    <div class="section-head"><span class="section-kicker" data-home-key="how">Kijan sa mache</span><h2 data-home-key="howTitle">Twa etap senp</h2><p data-home-key="howDesc">Konekte, enskri epi chwazi si ou vle aktive Google Contacts.</p></div>
-    <div class="steps-grid">
-      <article class="step-card"><h3 data-home-key="s1">Konekte</h3><p data-home-key="s1d">Sèvi ak kont Google ou pou idantifye pwofil ou.</p></article>
-      <article class="step-card"><h3 data-home-key="s2">Enskri</h3><p data-home-key="s2d">Ajoute non ak nimewo WhatsApp ou pou antre nan rezo a.</p></article>
-      <article class="step-card"><h3 data-home-key="s3">Senkronize si ou vle</h3><p data-home-key="s3d">Google Contacts separe ak login la epi li rete totalman opsyonèl.</p></article>
+  <section class="section-block faq-grid">
+    <div class="faq-intro"><span class="section-kicker" data-home-key="faqKicker">Kesyon souvan</span><h2 data-home-key="faqTitle">Sa ou bezwen konnen anvan ou kòmanse.</h2><p data-home-key="faqDesc">Fonksyon prensipal yo klè epi chak pèmisyon rete anba kontwòl ou.</p></div>
+    <div class="faq-list">
+      <details><summary data-home-key="q1">Kisa DOBERTO VCF fè?</summary><p data-home-key="a1">Li ede manm yo bati yon rezo kontak WhatsApp epi òganize kontak yo atravè enskripsyon, Google Contacts ak VCF.</p></details>
+      <details><summary data-home-key="q2">Èske Google Contacts obligatwa?</summary><p data-home-key="a2">Non. Login Google la separe. Google Contacts aktive sèlman lè ou chwazi konekte li.</p></details>
+      <details><summary data-home-key="q3">Èske nimewo mwen piblik?</summary><p data-home-key="a3">Non. Paj manm yo montre non ak peyi sèlman. Nimewo telefòn yo pa afiche piblikman.</p></details>
+      <details><summary data-home-key="q4">Kijan Auto-Sync la mache?</summary><p data-home-key="a4">Apre ou otorize Google Contacts, sistèm nan ka ajoute nouvo manm yo otomatikman selon sync ki aktive sou kont ou.</p></details>
+      <details><summary data-home-key="q5">Kilè VCF la disponib?</summary><p data-home-key="a5">Sistèm nan aktive aksè VCF otomatikman lè objektif rezo a rive. Manm verifye yo jwenn aksè sou paj Manm yo.</p></details>
     </div>
   </section>
 
-  <section class="home-cta"><div><h2 data-home-key="cta">Pare pou antre nan rezo a?</h2><p data-home-key="ctad">Enskripsyon an gratis epi li pran sèlman kèk segond.</p></div><a class="dv-btn dv-btn-primary" href="register.html"><span data-home-key="join">Enskri kounye a</span><span>→</span></a></section>
+  <section class="home-cta"><div><h2 data-home-key="cta">Pare pou bati rezo ou?</h2><p data-home-key="ctad">Kreye aksè ou gratis epi kite sistèm nan fè rès la pi fasil.</p></div><a class="dv-btn dv-btn-primary" href="register.html"><span data-home-key="join">Antre nan rezo a</span><span>→</span></a></section>
 
   <footer class="dv-footer"><span>© 2026 DOBERTO VCF · DOBERTO MRLIT DEV</span><div class="footer-links"><a href="about.html">À propos</a><a href="privacy.html" data-home-key="privacy">Konfidansyalite</a><a href="terms.html" data-home-key="terms">Kondisyon</a><a href="admin.html" data-home-key="admin">Admin</a></div></footer>
 </main>
 
 <script src="js/stability.js?v=20260910-1"></script>
 <script src="js/google-auth.js?v=20260910-2"></script>
-<script src="js/home-v10.js?v=20260910-2"></script>
+<script src="js/home-v10.js?v=20260910-4"></script>
 </body>
 </html>
