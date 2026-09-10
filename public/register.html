@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<meta name="description" content="Enskri gratis sou DOBERTO VCF ak non ou ak nimewo WhatsApp ou." />
+<meta name="description" content="Enskri gratis sou DOBERTO VCF, devlope rezo kontak ou epi konekte Google Contacts si ou vle." />
+<meta name="robots" content="index,follow" />
+<link rel="canonical" href="https://dobertovcf.online/register.html" />
 <title>DOBERTO VCF — Enskripsyon</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -12,9 +14,9 @@
 <link rel="stylesheet" href="css/pro-v3.css?v=20260904-1" />
 <link rel="stylesheet" href="css/brand-v7.css?v=20260904-1" />
 <link rel="stylesheet" href="css/site-v10.css?v=20260905-1" />
-<link rel="stylesheet" href="css/site-v11.css?v=20260905-3" />
+<link rel="stylesheet" href="css/site-v11.css?v=20260910-1" />
 <link rel="manifest" href="manifest.webmanifest?v=20260905-3" />
-<meta name="theme-color" content="#020705" />
+<meta name="theme-color" content="#050806" />
 <link rel="icon" type="image/png" sizes="192x192" href="icons/doberto-vcf-192.png?v=20260904-1" />
 <link rel="apple-touch-icon" href="icons/doberto-vcf-192.png?v=20260904-1" />
 </head>
@@ -33,9 +35,9 @@
 
 <main class="page-shell">
   <section class="page-hero">
-    <span class="page-kicker">DOBERTO VCF · REGISTRATION</span>
+    <span class="page-kicker">DOBERTO VCF · NETWORK ACCESS</span>
     <h1><span data-i18n="hero_title_1">Antre nan rezo a,</span> <span style="color:var(--signal)" data-i18n="hero_title_2">fè yo wè status ou</span></h1>
-    <p data-i18n="hero_desc">Anrejistre non ou ak nimewo WhatsApp ou pou plis moun ka gen kontak ou epi wè status ou.</p>
+    <p data-i18n="hero_desc">Anrejistre non ou ak nimewo WhatsApp ou pou plis moun ka gen kontak ou epi wè status ou. Koneksyon Google ak Google Contacts rete separe pou plis kontwòl sou done ou.</p>
   </section>
 
   <div class="capacity-banner" id="capacityBanner">
@@ -51,17 +53,17 @@
     <div class="panel" data-tour="form">
       <div class="register-flow-note">
         <span aria-hidden="true">01</span>
-        <div><strong data-i18n="reg_flow_title">Premye etap</strong><span data-i18n="reg_flow_desc">Ranpli enskripsyon an. Lè li fini, DOBERTO VCF ap ouvri Home Page la otomatikman pou ou.</span></div>
+        <div><strong data-i18n="reg_flow_title">Premye etap</strong><span data-i18n="reg_flow_desc">Konekte ak Google, ranpli enskripsyon an, epi chwazi apa si ou vle aktive Google Contacts.</span></div>
       </div>
       <div class="google-auth-gate" id="googleAuthGate">
         <span class="google-auth-kicker">KONT SEKIRIZE</span>
         <h2 data-google-copy="title">Konekte ak Google pou kontinye</h2>
-        <p data-google-copy="desc">Nou pran sèlman non, imèl ak foto pwofil ou. Aksè Google Contacts ap rete yon chwa apa.</p>
+        <p data-google-copy="desc">Nou itilize koneksyon Google pou idantifye kont ou. Aksè Google Contacts pa obligatwa epi li mande apa.</p>
         <button type="button" class="google-auth-button" id="googleLoginBtn">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M21.6 12.23c0-.71-.06-1.4-.18-2.07H12v3.92h5.38a4.6 4.6 0 0 1-2 3.02v2.54h3.24c1.9-1.75 2.98-4.33 2.98-7.41Z"/><path fill="#34A853" d="M12 22c2.7 0 4.97-.9 6.62-2.36l-3.24-2.54c-.9.6-2.05.96-3.38.96-2.61 0-4.82-1.76-5.61-4.13H3.04v2.62A10 10 0 0 0 12 22Z"/><path fill="#FBBC05" d="M6.39 13.93A6 6 0 0 1 6.08 12c0-.67.11-1.32.31-1.93V7.45H3.04A10 10 0 0 0 2 12c0 1.64.39 3.19 1.04 4.55l3.35-2.62Z"/><path fill="#EA4335" d="M12 5.94c1.47 0 2.79.51 3.83 1.5l2.87-2.88A9.62 9.62 0 0 0 12 2a10 10 0 0 0-8.96 5.45l3.35 2.62C7.18 7.7 9.39 5.94 12 5.94Z"/></svg>
           <span data-google-copy="login">Kontinye ak Google</span>
         </button>
-        <small>Google OAuth · Non ak imèl sèlman nan premye etap la</small>
+        <small>Google OAuth · login ak sync Contacts se 2 otorizasyon diferan</small>
       </div>
 
       <div class="google-account-bar" id="googleAccountBar" hidden>
@@ -74,7 +76,7 @@
         <label for="name" data-i18n="label_name">Non konplè</label>
         <input id="name" type="text" autocomplete="name" data-i18n-placeholder="ph_name" placeholder="Egzanp: Jean Baptiste" required />
 
-        <label for="email" data-i18n="label_email">Email (opsyonèl)</label>
+        <label for="email" data-i18n="label_email">Email</label>
         <input id="email" type="email" autocomplete="email" data-i18n-placeholder="ph_email" placeholder="egzanp@gmail.com" readonly />
 
         <label data-i18n="label_phone">Nimewo WhatsApp</label>
@@ -85,9 +87,9 @@
         <div class="msg" id="formMsg" role="status"></div>
       </form>
       <div class="google-sync-panel" id="googleSyncPanel" hidden>
-        <span class="google-auth-kicker">GOOGLE CONTACTS</span>
-        <h3>Senkronize rezo a ak telefòn ou</h3>
-        <p id="googleSyncDescription">Otorizasyon sa a opsyonèl. Li pèmèt DOBERTO VCF ajoute nouvo manm yo nan Google Contacts ou.</p>
+        <span class="google-auth-kicker">GOOGLE CONTACTS · OPSYONÈL</span>
+        <h3>Senkronize rezo a ak Google Contacts</h3>
+        <p id="googleSyncDescription">Si ou aktive li, DOBERTO VCF ka ajoute nouvo manm rezo a nan Google Contacts ou. Ou ka dezaktive Auto-Sync nenpòt ki lè.</p>
         <div class="google-sync-status" id="googleSyncStatus">Google Contacts poko konekte.</div>
         <div class="google-sync-actions">
           <button type="button" id="googleConnectBtn">Konekte Google Contacts</button>
@@ -100,25 +102,21 @@
     </div>
 
     <aside class="register-side">
-      <div class="side-card"><div class="side-icon">✓</div><h3 data-i18n="reg_side_fast_title">Rapid &amp; gratis</h3><p data-i18n="reg_side_fast_desc">Pa gen peman. Fòm lan pran sèlman kèk segond pou ranpli.</p></div>
-      <div class="side-card"><div class="side-icon">◉</div><h3 data-i18n="reg_side_privacy_title">Vi prive</h3><p data-i18n="reg_side_privacy_desc">Nimewo telefòn ou pa afiche sou lis piblik moun ki enskri yo.</p></div>
-      <div class="side-card"><div class="side-icon">VCF</div><h3 data-i18n="reg_side_vcf_title">Yon sèl fichye</h3><p data-i18n="reg_side_vcf_desc">Apre verifikasyon, ou ka jwenn fichye kontak la dirèkteman sou paj lis la.</p></div>
+      <div class="side-card"><div class="side-icon">01</div><h3 data-i18n="reg_side_fast_title">Rapid &amp; gratis</h3><p data-i18n="reg_side_fast_desc">Konekte, verifye enfòmasyon ou epi antre nan rezo a nan kèk segond.</p></div>
+      <div class="side-card"><div class="side-icon">02</div><h3 data-i18n="reg_side_privacy_title">Vi prive</h3><p data-i18n="reg_side_privacy_desc">Nimewo telefòn ou pa afiche sou lis piblik moun ki enskri yo.</p></div>
+      <div class="side-card"><div class="side-icon">03</div><h3 data-i18n="reg_side_vcf_title">Sync &amp; VCF</h3><p data-i18n="reg_side_vcf_desc">Google Contacts opsyonèl; VCF disponib lè objektif rezo a satisfè.</p></div>
     </aside>
   </section>
 
-  <div class="panel sponsor-panel" style="margin-top:22px"><p class="hint sponsor-copy" data-i18n="sponsor_desc">Ofri espesyal pou ou jodi a</p><a href="https://omg10.com/4/11250663" target="_blank" rel="noopener sponsored" class="icon-btn sponsor-cta" data-i18n="sponsor_btn">Gade ofri a</a></div>
-
-  <footer class="dv-footer"><span>© 2026 DOBERTO VCF · Doberto Mr Lit</span><div class="footer-links"><a href="list.html" data-i18n="nav_list">Lis moun</a><a href="privacy.html" data-i18n="nav_privacy">Konfidansyalite</a><a href="terms.html" data-i18n="nav_terms">Kondisyon</a></div></footer>
+  <footer class="dv-footer"><span>© 2026 DOBERTO VCF · DOBERTO MRLIT DEV</span><div class="footer-links"><a href="about.html">À propos</a><a href="privacy.html" data-i18n="nav_privacy">Konfidansyalite</a><a href="terms.html" data-i18n="nav_terms">Kondisyon</a></div></footer>
 </main>
 
 <script src="js/i18n.js?v=20260905-3"></script>
 <script src="js/i18n-v12.js?v=20260905-3"></script>
 <script src="js/countries.js"></script>
 <script src="js/country-picker.js"></script>
-<script src="js/google-auth.js?v=20260909-1"></script>
+<script src="js/google-auth.js?v=20260910-1"></script>
 <script src="js/app.js?v=20260905-2"></script>
 <script src="js/pro-v3.js?v=20260904-1"></script>
-<script src="https://glamournakedemployee.com/96/9c/2e/969c2e401fa168f84352ab34ae62ee5b.js"></script>
-<script src="https://glamournakedemployee.com/6a/bd/13/6abd13d15ce30dc4dcd5c757b85aa97f.js"></script>
 </body>
 </html>
