@@ -1,0 +1,24 @@
+/* DOBERTO VCF v16 — final visual cleanup */
+
+/* Keep step numbers clean. Remove decorative bars/pseudo-elements inherited from older layers. */
+#how .step-index,
+.steps-grid .step-index{
+  position:relative!important;
+  overflow:hidden!important;
+  background:rgba(94,230,184,.075)!important;
+  border:1px solid rgba(94,230,184,.18)!important;
+  box-shadow:none!important;
+}
+
+#how .step-index::before,
+#how .step-index::after,
+.steps-grid .step-index::before,
+.steps-grid .step-index::after{
+  content:none!important;
+  display:none!important;
+  width:0!important;
+  height:0!important;
+  border:0!important;
+  background:none!important;
+  box-shadow:none!important;
+}
