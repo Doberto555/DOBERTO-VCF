@@ -31,7 +31,7 @@
       <a class="active" href="register.html" data-i18n="nav_register">Enskri</a>
       <a href="list.html" data-i18n="nav_list">Manm</a>
     </nav>
-    <select id="langSelect" class="lang-select" aria-label="Lang"><option value="ht">KR</option><option value="fr">FR</option><option value="en">EN</option></select>
+    <select id="langSelect" class="lang-select" aria-label="Chwazi lang"><option value="ht">KR</option><option value="fr">FR</option><option value="en">EN</option></select>
   </div>
 </header>
 
@@ -75,7 +75,7 @@
         <label for="email" data-i18n="label_email">Email</label>
         <input id="email" type="email" autocomplete="email" data-i18n-placeholder="ph_email" placeholder="exemple@gmail.com" readonly />
         <label data-i18n="label_phone">Nimewo WhatsApp</label>
-        <div class="phone-row"><select id="dial" aria-label="Kòd peyi"></select><input id="phone" type="tel" inputmode="numeric" autocomplete="tel" data-i18n-placeholder="ph_phone" placeholder="Nimewo san kòd peyi" required /></div>
+        <div class="phone-row"><select id="dial" aria-label="Kòd peyi"></select><input id="phone" type="tel" inputmode="numeric" autocomplete="tel" aria-describedby="phoneHint" data-i18n-placeholder="ph_phone" placeholder="Nimewo san kòd peyi" required /></div>
         <div class="hint" id="phoneHint" data-i18n="hint_choose_country">Chwazi peyi ou.</div>
 
         <label class="privacy-consent" for="privacyConsent">
@@ -85,13 +85,13 @@
         </label>
 
         <button type="submit" id="submitBtn" data-i18n="btn_register">Fini enskripsyon an</button>
-        <div class="msg" id="formMsg" role="status"></div>
+        <div class="msg" id="formMsg" role="status" aria-live="polite"></div>
       </form>
 
       <div class="google-sync-panel clean-sync" id="googleSyncPanel" hidden>
         <div class="sync-heading"><div><span class="google-auth-kicker">Google Contacts</span><h3>Aktive senkronizasyon</h3></div><span class="sync-plan" id="syncPlanBadge">STANDARD</span></div>
         <p id="googleSyncDescription">Apre ou bay otorizasyon an, plan Standard la kòmanse senkronize otomatikman apre 10 minit. VIP senkronize touswit.</p>
-        <div class="google-sync-status" id="googleSyncStatus">Google Contacts poko konekte.</div>
+        <div class="google-sync-status" id="googleSyncStatus" aria-live="polite">Google Contacts poko konekte.</div>
         <div class="google-sync-actions"><button type="button" id="googleConnectBtn">Aktive Google Contacts</button><button type="button" class="secondary" id="googleSyncNowBtn" hidden>Senkronize kounye a</button></div>
         <label class="google-auto-sync" id="googleAutoSyncWrap" hidden><input type="checkbox" id="googleAutoSync" /> <span>Kenbe Auto-Sync aktive</span></label>
         <a class="vip-inline-link" href="vip.html">VIP: senkronizasyon imedyat <span>→</span></a>
@@ -116,7 +116,7 @@
     </aside>
   </section>
 
-  <footer class="dv-footer"><span>© 2026 DOBERTO VCF · DOBERTO MRLIT DEV</span><div class="footer-links"><a href="about.html">À propos</a><a href="privacy.html">Konfidansyalite</a><a href="terms.html">Kondisyon</a></div></footer>
+  <footer class="dv-footer"><span>© 2026 DOBERTO VCF · DOBERTO MRLIT DEV</span><div class="footer-links"><a href="about.html">Konsènan</a><a href="privacy.html">Konfidansyalite</a><a href="terms.html">Kondisyon</a></div></footer>
 </main>
 
 <script src="js/stability.js?v=20260910-6"></script>
@@ -124,7 +124,7 @@
 <script src="js/i18n-v12.js?v=20260910-3"></script>
 <script src="js/countries.js"></script>
 <script src="js/country-picker.js"></script>
-<script src="js/google-auth.js?v=20260910-4"></script>
+<script src="js/google-auth.js?v=20260910-5"></script>
 <script src="js/app.js?v=20260910-4"></script>
 <script src="js/register-v18.js?v=20260910-1"></script>
 </body>
