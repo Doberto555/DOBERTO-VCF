@@ -1,5 +1,5 @@
 // DOBERTO VCF — PWA service worker: offline shell + fresh network data.
-const CACHE = 'doberto-vcf-v15-20260910';
+const CACHE = 'doberto-vcf-v16-20260910';
 const OFFLINE_URL = '/offline.html';
 const APP_SHELL = [
   '/',
@@ -15,6 +15,7 @@ const APP_SHELL = [
   '/css/brand-v7.css',
   '/css/site-v10.css',
   '/css/site-v11.css',
+  '/css/site-v13.css',
   '/css/prompt-premium.css',
   '/js/home-v10.js',
   '/js/i18n.js',
@@ -77,7 +78,6 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // CSS/JS itilize network-first pou nouvo update yo parèt touswit; lòt assets rete cache-first.
   const isCodeAsset = url.pathname.endsWith('.css') || url.pathname.endsWith('.js');
   if (isCodeAsset) {
     event.respondWith((async () => {
