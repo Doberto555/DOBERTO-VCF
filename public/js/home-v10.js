@@ -1,4 +1,12 @@
 (() => {
+  if (!document.querySelector('link[data-human-v13]')) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = '/css/human-v13.css?v=20260910-1';
+    link.dataset.humanV13 = '1';
+    document.head.appendChild(link);
+  }
+
   const params = new URLSearchParams(location.search);
   let registered = false;
   try { registered = localStorage.getItem('dv_registered') === '1'; } catch (_) {}
@@ -10,39 +18,72 @@
   const COPY = {
     ht: {
       navHome:'Akèy', navRegister:'Enskri', navList:'Lis moun',
-      kicker:'REZO KONTAK WHATSAPP', title1:'Konekte plis.', title2:'Fè status ou rive pi lwen.',
-      desc:'DOBERTO VCF ede kominote a pataje kontak fasil. Enskri nimewo WhatsApp ou, antre nan lis la epi telechaje VCF la lè li disponib.',
-      join:'Enskri kounye a', list:'Gade lis moun yo', free:'100% gratis', private:'Nimewo pa afiche piblikman', live:'MOUN ENSKRI', available:'VCF DISPONIB', waiting:'AN PWOGRÈ', goal:'kapasite kontak',
-      downloads:'MOUN KI TELECHAJE VCF', downloadsSub:'telechajman verifye',
-      why:'POUKISA DOBERTO VCF', whyTitle:'Yon fason pi pwòp pou grandi rezo ou', whyDesc:'Tout bagay separe klèman: akèy, enskripsyon ak lis moun yo.',
-      c1:'Enskripsyon rapid', c1d:'Antre non ou, chwazi peyi ou epi mete nimewo WhatsApp ou nan kèk segond.', c2:'Vi prive an premye', c2d:'Sou lis piblik la, se non moun yo sèlman ki parèt. Nimewo yo rete prive.', c3:'VCF pare pou itilize', c3d:'Lè kondisyon yo satisfè, verifye menm non ak nimewo a epi telechaje fichye VCF la.',
-      how:'KIJAN LI MACHE', howTitle:'3 etap. Senp. Rapid.', howDesc:'Pa gen pwosesis konplike pou antre nan rezo DOBERTO VCF la.', s1:'Enskri', s1d:'Ranpli fòm enskripsyon an ak enfòmasyon ki kòrèk.', s2:'Antre nan lis la', s2d:'Non ou parèt nan anyè piblik la san nimewo telefòn ou.', s3:'Telechaje VCF', s3d:'Lè VCF la disponib, verifye enfòmasyon ou pou resevwa fichye a.',
-      cta:'Pare pou antre nan rezo a?', ctad:'Enskripsyon an gratis epi li pran sèlman kèk segond.', welcome:'BYENVENI SOU', welcomesub:'Rezo kontak DOBERTO VCF', ready:'REZO KONTAK SEKIRIZE',
-      sponsor:'Ofri espesyal pou ou jodi a', sponsorBtn:'Gade ofri a', privacy:'Konfidansyalite', terms:'Kondisyon itilizasyon', admin:'Admin'
+      kicker:'Rezo kontak WhatsApp',
+      title1:'Konekte ak plis moun.',
+      title2:'Fè status ou rive pi lwen.',
+      desc:'DOBERTO VCF ede ou antre nan yon rezo kontak WhatsApp san nimewo ou parèt piblikman. Lè fichye VCF la disponib ou ka telechaje li apre verifikasyon.',
+      join:'Enskri kounye a', list:'Gade lis manm yo', free:'Enskripsyon gratis', private:'Nimewo yo rete prive',
+      live:'Moun ki enskri', available:'VCF disponib', waiting:'An pwogrè', goal:'nan objektif la',
+      downloads:'Telechajman VCF', downloadsSub:'telechajman verifye',
+      why:'Poukisa DOBERTO VCF',
+      whyTitle:'Yon fason senp pou devlope rezo ou',
+      whyDesc:'Enskri, gade lis manm yo epi itilize Google Contacts oswa fichye VCF la selon sa ou bezwen.',
+      c1:'Enskripsyon rapid', c1d:'Konekte ak Google epi ranpli enfòmasyon ou nan kèk segond.',
+      c2:'Vi prive', c2d:'Lis piblik la montre non manm yo sèlman. Nimewo telefòn yo rete prive.',
+      c3:'Google Contacts ak VCF', c3d:'Ou ka aktive Google Contacts si ou vle oswa telechaje fichye VCF la lè li disponib.',
+      how:'Kijan li mache', howTitle:'Kèk etap senp pou kòmanse', howDesc:'Chak etap klè pou ou konnen ki enfòmasyon ou bay ak ki otorizasyon ou aktive.',
+      s1:'Konekte epi enskri', s1d:'Konekte ak Google epi verifye non ak nimewo WhatsApp ou.',
+      s2:'Antre nan rezo a', s2d:'Non ou antre nan lis manm yo san nimewo telefòn ou pa parèt piblikman.',
+      s3:'Chwazi fason ou vle senkronize', s3d:'Aktive Google Contacts si sa itil pou ou oswa itilize fichye VCF la lè li pare.',
+      cta:'Pare pou antre nan rezo a?', ctad:'Enskripsyon an gratis epi li pran sèlman kèk segond.',
+      welcome:'Byenveni sou', welcomesub:'Rezo kontak DOBERTO VCF', ready:'Rezo kontak sekirize',
+      sponsor:'', sponsorBtn:'', privacy:'Konfidansyalite', terms:'Kondisyon itilizasyon', admin:'Admin'
     },
     fr: {
       navHome:'Accueil', navRegister:'Inscription', navList:'Membres',
-      kicker:'RÉSEAU DE CONTACTS WHATSAPP', title1:'Connectez-vous davantage.', title2:'Donnez plus de portée à vos statuts.',
-      desc:'DOBERTO VCF aide la communauté à partager ses contacts simplement. Inscrivez votre numéro WhatsApp, rejoignez la liste et téléchargez le VCF lorsqu’il est disponible.',
-      join:'S’inscrire maintenant', list:'Voir les membres', free:'100 % gratuit', private:'Numéros jamais affichés publiquement', live:'MEMBRES INSCRITS', available:'VCF DISPONIBLE', waiting:'EN COURS', goal:'capacité de contacts',
-      downloads:'PERSONNES AYANT TÉLÉCHARGÉ LE VCF', downloadsSub:'téléchargements vérifiés',
-      why:'POURQUOI DOBERTO VCF', whyTitle:'Une manière plus propre de développer votre réseau', whyDesc:'Tout est clairement séparé : accueil, inscription et liste des membres.',
-      c1:'Inscription rapide', c1d:'Ajoutez votre nom, choisissez votre pays et saisissez votre numéro WhatsApp en quelques secondes.', c2:'Confidentialité d’abord', c2d:'Sur la liste publique, seuls les noms sont visibles. Les numéros restent privés.', c3:'VCF prêt à utiliser', c3d:'Lorsque les conditions sont remplies, vérifiez le même nom et numéro puis téléchargez le fichier VCF.',
-      how:'COMMENT ÇA MARCHE', howTitle:'3 étapes. Simple. Rapide.', howDesc:'Aucune procédure compliquée pour rejoindre le réseau DOBERTO VCF.', s1:'Inscrivez-vous', s1d:'Remplissez le formulaire avec des informations correctes.', s2:'Rejoignez la liste', s2d:'Votre nom apparaît dans l’annuaire public sans votre numéro.', s3:'Téléchargez le VCF', s3d:'Quand le VCF est disponible, vérifiez vos informations pour récupérer le fichier.',
-      cta:'Prêt à rejoindre le réseau ?', ctad:'L’inscription est gratuite et ne prend que quelques secondes.', welcome:'BIENVENUE SUR', welcomesub:'Le réseau de contacts DOBERTO VCF', ready:'RÉSEAU DE CONTACTS SÉCURISÉ',
-      sponsor:'Offre spéciale pour vous aujourd’hui', sponsorBtn:'Voir l’offre', privacy:'Confidentialité', terms:'Conditions d’utilisation', admin:'Admin'
+      kicker:'Réseau de contacts WhatsApp',
+      title1:'Développez votre réseau.',
+      title2:'Donnez plus de portée à vos statuts.',
+      desc:'DOBERTO VCF vous permet de rejoindre un réseau de contacts WhatsApp sans afficher votre numéro publiquement. Lorsque le fichier VCF est disponible vous pouvez le télécharger après vérification.',
+      join:'S’inscrire maintenant', list:'Voir les membres', free:'Inscription gratuite', private:'Numéros privés',
+      live:'Membres inscrits', available:'VCF disponible', waiting:'En cours', goal:'de l’objectif',
+      downloads:'Téléchargements VCF', downloadsSub:'téléchargements vérifiés',
+      why:'Pourquoi DOBERTO VCF',
+      whyTitle:'Une façon simple de développer votre réseau',
+      whyDesc:'Inscrivez-vous, consultez les membres puis utilisez Google Contacts ou le fichier VCF selon vos besoins.',
+      c1:'Inscription rapide', c1d:'Connectez-vous avec Google puis complétez vos informations en quelques secondes.',
+      c2:'Confidentialité', c2d:'La liste publique affiche uniquement les noms. Les numéros de téléphone restent privés.',
+      c3:'Google Contacts et VCF', c3d:'Vous pouvez activer Google Contacts si vous le souhaitez ou télécharger le fichier VCF lorsqu’il est disponible.',
+      how:'Comment ça marche', howTitle:'Quelques étapes simples pour commencer', howDesc:'Chaque étape est claire afin que vous sachiez quelles informations vous partagez et quelles autorisations vous activez.',
+      s1:'Connectez-vous et inscrivez-vous', s1d:'Connectez-vous avec Google puis vérifiez votre nom et votre numéro WhatsApp.',
+      s2:'Rejoignez le réseau', s2d:'Votre nom apparaît dans la liste des membres sans publier votre numéro de téléphone.',
+      s3:'Choisissez votre méthode de synchronisation', s3d:'Activez Google Contacts si cela vous convient ou utilisez le fichier VCF lorsqu’il est prêt.',
+      cta:'Prêt à rejoindre le réseau ?', ctad:'L’inscription est gratuite et ne prend que quelques secondes.',
+      welcome:'Bienvenue sur', welcomesub:'Le réseau de contacts DOBERTO VCF', ready:'Réseau de contacts sécurisé',
+      sponsor:'', sponsorBtn:'', privacy:'Confidentialité', terms:'Conditions d’utilisation', admin:'Admin'
     },
     en: {
       navHome:'Home', navRegister:'Register', navList:'Members',
-      kicker:'WHATSAPP CONTACT NETWORK', title1:'Connect more.', title2:'Give your status more reach.',
-      desc:'DOBERTO VCF helps the community share contacts simply. Register your WhatsApp number, join the directory and download the VCF when it is available.',
-      join:'Register now', list:'View members', free:'100% free', private:'Numbers are never shown publicly', live:'REGISTERED MEMBERS', available:'VCF AVAILABLE', waiting:'IN PROGRESS', goal:'contact capacity',
-      downloads:'PEOPLE WHO DOWNLOADED THE VCF', downloadsSub:'verified downloads',
-      why:'WHY DOBERTO VCF', whyTitle:'A cleaner way to grow your network', whyDesc:'Everything is clearly separated: home, registration and member directory.',
-      c1:'Fast registration', c1d:'Add your name, choose your country and enter your WhatsApp number in seconds.', c2:'Privacy first', c2d:'Only names appear in the public directory. Phone numbers stay private.', c3:'Ready-to-use VCF', c3d:'When requirements are met, verify the same name and number and download the VCF file.',
-      how:'HOW IT WORKS', howTitle:'3 steps. Simple. Fast.', howDesc:'No complicated process to join the DOBERTO VCF network.', s1:'Register', s1d:'Complete the registration form with accurate information.', s2:'Join the directory', s2d:'Your name appears publicly without exposing your phone number.', s3:'Download VCF', s3d:'When the VCF is available, verify your details to get the file.',
-      cta:'Ready to join the network?', ctad:'Registration is free and takes only a few seconds.', welcome:'WELCOME TO', welcomesub:'The DOBERTO VCF contact network', ready:'SECURE CONTACT NETWORK',
-      sponsor:'Special offer for you today', sponsorBtn:'View offer', privacy:'Privacy', terms:'Terms of use', admin:'Admin'
+      kicker:'WhatsApp contact network',
+      title1:'Grow your network.',
+      title2:'Give your status more reach.',
+      desc:'DOBERTO VCF lets you join a WhatsApp contact network without displaying your phone number publicly. When the VCF file is available you can download it after verification.',
+      join:'Register now', list:'View members', free:'Free registration', private:'Phone numbers stay private',
+      live:'Registered members', available:'VCF available', waiting:'In progress', goal:'of the goal',
+      downloads:'VCF downloads', downloadsSub:'verified downloads',
+      why:'Why DOBERTO VCF',
+      whyTitle:'A simple way to grow your network',
+      whyDesc:'Register, view members and use Google Contacts or the VCF file depending on what works for you.',
+      c1:'Fast registration', c1d:'Sign in with Google and complete your details in a few seconds.',
+      c2:'Privacy', c2d:'The public directory shows names only. Phone numbers stay private.',
+      c3:'Google Contacts and VCF', c3d:'You can enable Google Contacts if you want or download the VCF file when it becomes available.',
+      how:'How it works', howTitle:'A few simple steps to get started', howDesc:'Each step is clear so you know what information you share and which permissions you enable.',
+      s1:'Sign in and register', s1d:'Sign in with Google and confirm your name and WhatsApp number.',
+      s2:'Join the network', s2d:'Your name appears in the member directory without publishing your phone number.',
+      s3:'Choose how you want to sync', s3d:'Enable Google Contacts if it is useful to you or use the VCF file when it is ready.',
+      cta:'Ready to join the network?', ctad:'Registration is free and takes only a few seconds.',
+      welcome:'Welcome to', welcomesub:'The DOBERTO VCF contact network', ready:'Secure contact network',
+      sponsor:'', sponsorBtn:'', privacy:'Privacy', terms:'Terms of use', admin:'Admin'
     }
   };
 
