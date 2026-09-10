@@ -3,10 +3,13 @@
 
   const BRAND_LOGOS = {
     moncash: [
-      'https://cdn.aptoide.com/imgs/d/6/f/d6fb107b85364c2fc2e2376995f3aed3_icon.jpg',
-      'https://kominotek.com/wp-content/uploads/2024/04/moncash.png'
+      'https://play-lh.googleusercontent.com/gh5vciO93wEDR2OvjkZk62Pdbn9PODYI7QXRSLl6MBIo8qE898cj8hcmmDqgbTOMGMselKMkeF1KZvHoGZ48bQ=w240-h480',
+      'https://cdn.aptoide.com/imgs/d/6/f/d6fb107b85364c2fc2e2376995f3aed3_icon.jpg'
     ],
-    natcash: ['/icons/natcash.svg'],
+    natcash: [
+      'https://play-lh.googleusercontent.com/VSzs3X7r3DNthDl1jvhmtrAY7p1jX2LeX3i7l9uZsolwVU85CapsmKYPdPzkp4ZQrEKf6nsHmuk9qUbbZWKp2bc=w240-h480',
+      '/icons/natcash.svg'
+    ],
     binance: [
       'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Binance_Logo.svg/500px-Binance_Logo.svg.png'
     ]
@@ -23,8 +26,9 @@
     logo.textContent = '';
 
     const img = document.createElement('img');
-    img.alt = label;
+    img.alt = `${label} logo`;
     img.loading = 'eager';
+    img.decoding = 'async';
     img.referrerPolicy = 'no-referrer';
     let index = 0;
     img.src = sources[index];
