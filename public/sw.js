@@ -1,10 +1,10 @@
 // DOBERTO VCF — stable PWA service worker: fresh code first, safe offline fallback.
-const CACHE='doberto-vcf-v26-20260910';
+const CACHE='doberto-vcf-v27-20260910';
 const OFFLINE_URL='/offline.html';
 const APP_SHELL=[
   '/','/index.html','/register.html','/list.html','/vip.html','/privacy.html','/terms.html','/mesi.html','/offline.html',
   '/css/style.css','/css/pro-v3.css','/css/brand-v7.css','/css/site-v10.css','/css/site-v11.css','/css/site-v13.css','/css/site-v14.css','/css/site-v15.css','/css/site-v16.css','/css/register-v17.css','/css/register-v18.css','/css/vip-v17.css','/css/polish-v18.css','/css/payment-brands-v20.css','/css/prompt-premium.css',
-  '/js/stability.js','/js/ui-l10n-v18.js','/js/home-v10.js','/js/i18n.js','/js/i18n-v12.js','/js/countries.js','/js/country-picker.js','/js/icons.js','/js/app.js','/js/list.js','/js/mesi.js','/js/push.js','/js/install-prompt.js','/js/tour.js','/js/pro-v3.js','/js/google-auth.js','/js/vip.js','/js/payment-brands-v20.js',
+  '/js/stability.js','/js/ui-l10n-v18.js','/js/home-v10.js','/js/i18n.js','/js/i18n-v12.js','/js/countries.js','/js/country-picker.js','/js/icons.js','/js/app.js','/js/list.js','/js/mesi.js','/js/push.js','/js/install-prompt.js','/js/tour.js','/js/pro-v3.js','/js/google-auth.js','/js/register-v18.js','/js/vip.js','/js/payment-brands-v20.js',
   '/icons/doberto-vcf-192.png','/icons/doberto-vcf-512.png','/icons/doberto-vcf-maskable-512.png','/icons/doberto-vcf-mark.svg','/icons/natcash.svg'
 ];
 async function fetchTimeout(request,timeout=10000,options={}){const c=new AbortController();const t=setTimeout(()=>c.abort(),timeout);try{return await fetch(request,{...options,signal:c.signal});}finally{clearTimeout(t);}}
