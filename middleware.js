@@ -1,5 +1,10 @@
 import { next } from '@vercel/functions';
 
+export const config = {
+  runtime: 'nodejs',
+  matcher: ['/:path*']
+};
+
 const OWNER_COOKIE = 'dv_owner_access';
 const OWNER_LOGIN_PATH = '/owner-access.html';
 const MAINTENANCE_PATH = '/maintenance.html';
