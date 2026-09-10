@@ -1,0 +1,124 @@
+/* DOBERTO VCF — Human typography pass
+   Keep the interface premium without exaggerated tracking, all-caps labels or stylized body copy. */
+
+body.site-v10,
+body.register-page,
+body.home-page,
+body.list-page,
+body.admin-v11,
+.legal-page{
+  letter-spacing:0!important;
+  font-style:normal!important;
+}
+
+body.site-v10 p,
+body.site-v10 .hint,
+body.site-v10 label,
+body.site-v10 button,
+body.site-v10 input,
+body.site-v10 select,
+body.site-v10 a,
+.legal-page p,
+.legal-page a,
+.admin-v11 p,
+.admin-v11 label,
+.admin-v11 button,
+.admin-v11 input,
+.admin-v11 select{
+  letter-spacing:0!important;
+}
+
+.page-kicker,
+.home-kicker,
+.section-kicker,
+.member-directory-kicker,
+.list-kicker,
+.google-auth-kicker,
+.capacity-label,
+.live-label,
+.live-sub,
+.download-stat-label,
+.pro-filter-title,
+.admin-kicker,
+.welcome-eyebrow,
+.welcome-ready{
+  text-transform:none!important;
+  letter-spacing:.02em!important;
+  font-weight:650!important;
+}
+
+.page-kicker,
+.home-kicker,
+.section-kicker,
+.member-directory-kicker,
+.list-kicker,
+.google-auth-kicker{
+  font-size:11.5px!important;
+}
+
+.capacity-label,
+.live-label,
+.download-stat-label,
+.pro-filter-title,
+.admin-kicker{
+  font-size:10.5px!important;
+}
+
+body.site-v10 h1,
+body.site-v10 h2,
+body.site-v10 h3,
+body.site-v10 h4,
+.legal-page h1,
+.legal-page h2,
+.legal-page h3,
+.admin-v11 h1,
+.admin-v11 h2,
+.admin-v11 h3{
+  font-style:normal!important;
+  letter-spacing:-.025em!important;
+  text-transform:none!important;
+}
+
+.page-hero h1,
+.home-title{
+  letter-spacing:-.035em!important;
+  line-height:1.04!important;
+}
+
+.page-hero p,
+.home-copy,
+.section-head p,
+.info-card p,
+.step-card p,
+.side-card p,
+.google-auth-gate p,
+.google-sync-panel p,
+.member-directory-head p,
+.list-page-hero p{
+  line-height:1.65!important;
+  letter-spacing:0!important;
+}
+
+.register-flow-note div span,
+.google-auth-gate small,
+.google-sync-status,
+.hero-mini-trust,
+.live-progress-meta,
+.download-stat-copy small{
+  letter-spacing:0!important;
+}
+
+/* Avoid AI-like visual punctuation and excessive visual separators. */
+.page-kicker,
+.home-kicker,
+.section-kicker,
+.member-directory-kicker,
+.list-kicker,
+.google-auth-kicker{
+  word-spacing:0!important;
+}
+
+@media(max-width:760px){
+  .page-hero h1,.home-title{letter-spacing:-.025em!important}
+  .page-kicker,.home-kicker,.section-kicker,.member-directory-kicker,.list-kicker,.google-auth-kicker{font-size:11px!important}
+}
