@@ -1,15 +1,10 @@
 /* DOBERTO VCF v16 — final visual cleanup */
 
-/* Keep step numbers clean. Remove decorative bars/pseudo-elements inherited from older layers. */
-#how .step-index,
-.steps-grid .step-index{
-  position:relative!important;
-  overflow:hidden!important;
-  background:rgba(94,230,184,.075)!important;
-  border:1px solid rgba(94,230,184,.18)!important;
-  box-shadow:none!important;
-}
-
+/* Clean step numbers: no decorative bars from legacy layers. */
+#how .step-card::before,
+#how .step-card::after,
+.steps-grid .step-card::before,
+.steps-grid .step-card::after,
 #how .step-index::before,
 #how .step-index::after,
 .steps-grid .step-index::before,
@@ -21,4 +16,61 @@
   border:0!important;
   background:none!important;
   box-shadow:none!important;
+}
+
+#how .step-index,
+.steps-grid .step-index{
+  position:relative!important;
+  overflow:hidden!important;
+  width:38px!important;
+  height:38px!important;
+  min-width:38px!important;
+  min-height:38px!important;
+  margin:0!important;
+  padding:0!important;
+  background:rgba(94,230,184,.075)!important;
+  background-image:none!important;
+  border:1px solid rgba(94,230,184,.18)!important;
+  border-radius:10px!important;
+  box-shadow:none!important;
+  transform:none!important;
+}
+
+#how .step-card h3,
+#how .step-card p{
+  margin-left:0!important;
+  transform:none!important;
+}
+
+#how .steps-grid{
+  margin-left:0!important;
+  margin-right:0!important;
+}
+
+@media(max-width:680px){
+  #how .step-card{
+    grid-template-columns:36px minmax(0,1fr)!important;
+    grid-template-areas:"num title" "num copy"!important;
+    column-gap:10px!important;
+    row-gap:4px!important;
+    padding:14px!important;
+    margin-left:0!important;
+    margin-right:0!important;
+  }
+  #how .step-index{
+    width:36px!important;
+    height:36px!important;
+    min-width:36px!important;
+    min-height:36px!important;
+    border-radius:9px!important;
+    font-size:10px!important;
+  }
+  #how .step-card h3{
+    font-size:14px!important;
+    line-height:1.28!important;
+  }
+  #how .step-card p{
+    font-size:11px!important;
+    line-height:1.55!important;
+  }
 }
