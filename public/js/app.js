@@ -68,6 +68,46 @@ async function triggerVipInstantSync(){
   }catch(_){/* Standard registration must never fail because a VIP background sync failed. */}
 }
 
+function rememberRegistration(registration){
+  try{
+    localStorage.setItem('dv_registered','1');
+    localStorage.setItem('dv_member_name',registration.name||'');
+    localStorage.setItem('dv_member_dial',registration.dial_code||registration.dialCode||'');
+    localStorage.setItem('dv_member_phone',registration.phone||'');
+  }catch(_){}
+}
+
+function finishRegistration(registration){
+  const normalized={
+    name:registration.name||'',
+    email:registration.email||document.getElementById('email')?.value.trim()||'',
+    dial_code:registration.dial_code||registration.dialCode||dialSelect?.value||'',
+    phone:registration.phone||phoneInput?.value.replace(/\D/g,'')||''
+  };
+  rememberRegistration(normalized);
+  if(window.DobertoGoogle) window.DobertoGoogle.registrationCompleted(normalized);
+  triggerVipInstantSync();
+  markStep(3);
+  showMsg(COPY[currentLang()].success,true);
+  const syncPanel=document.getElementById('googleSyncPanel');
+  if(syncPanel){
+    syncPanel.hidden=false;
+    window.setTimeout(()=>syncPanel.scrollIntoView({behavior:'smooth',block:'center'}),120);
+  }
+}
+
+async function reconcileRegistration(fallback){
+  if(!window.DobertoGoogle) return false;
+  try{
+    const response=await fetch('/api/auth/session',{headers:window.DobertoGoogle.authHeaders(false),cache:'no-store'});
+    if(!response.ok) return false;
+    const session=await response.json().catch(()=>null);
+    if(!session?.registered) return false;
+    finishRegistration({...fallback,...(session.registration||{}),email:session.user?.email||fallback.email||''});
+    return true;
+  }catch(_){return false;}
+}
+
 if(form) form.addEventListener('submit',async(e)=>{
   e.preventDefault();
   if(msg) msg.className='msg';
@@ -78,6 +118,7 @@ if(form) form.addEventListener('submit',async(e)=>{
   const dialCode=dialSelect.value;
   const countryName=dialSelect.options[dialSelect.selectedIndex].textContent;
   const phone=phoneInput.value.replace(/\D/g,'');
+  const registration={name,email,dialCode,dial_code:dialCode,countryName,phone};
   const rule=getValidationRule(dialCode);
   if(rule.exact && phone.length!==rule.exact){showMsg(t('hint_exact',{n:rule.exact}),false);return;}
   if(!rule.exact && (phone.length<rule.min || phone.length>rule.max)){showMsg(t('hint_generic'),false);return;}
@@ -91,25 +132,15 @@ if(form) form.addEventListener('submit',async(e)=>{
       body:JSON.stringify({name,email,dialCode,countryName,phone})
     });
     const data=await res.json().catch(()=>({}));
-    if(!res.ok){showMsg(typeof errT==='function'?errT(data):(data.error||'Enskripsyon an pa fini.'),false);return;}
-
-    try{
-      localStorage.setItem('dv_registered','1');
-      localStorage.setItem('dv_member_name',name);
-      localStorage.setItem('dv_member_dial',dialCode);
-      localStorage.setItem('dv_member_phone',phone);
-    }catch(_){}
-
-    if(window.DobertoGoogle) window.DobertoGoogle.registrationCompleted({name,email,dial_code:dialCode,phone});
-    triggerVipInstantSync();
-    markStep(3);
-    showMsg(COPY[currentLang()].success,true);
-    const syncPanel=document.getElementById('googleSyncPanel');
-    if(syncPanel){
-      syncPanel.hidden=false;
-      window.setTimeout(()=>syncPanel.scrollIntoView({behavior:'smooth',block:'center'}),120);
+    if(!res.ok){
+      if((res.status>=500 || res.status===409) && await reconcileRegistration(registration)) return;
+      showMsg(typeof errT==='function'?errT(data):(data.error||'Enskripsyon an pa fini.'),false);
+      return;
     }
-  }catch(err){showMsg(t('err_no_connection'),false);}
+    finishRegistration(registration);
+  }catch(err){
+    if(!(await reconcileRegistration(registration))) showMsg(t('err_no_connection'),false);
+  }
   finally{submitBtn.disabled=false;applyCopy();}
 });
 
