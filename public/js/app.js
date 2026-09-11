@@ -25,7 +25,7 @@ function applyCopy(){
   const c=COPY[currentLang()]||COPY.ht;
   const headline=document.getElementById('registrationHeadline');
   const lead=document.getElementById('registrationLead');
-  const consent=document.querySelector('.privacy-consent span');
+  const consent=document.querySelector('.privacy-consent .privacy-copy');
   if(headline) headline.textContent=c.headline;
   if(lead) lead.textContent=c.lead;
   if(consent) consent.innerHTML=c.consent;
