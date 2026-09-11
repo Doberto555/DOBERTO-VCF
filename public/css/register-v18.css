@@ -93,14 +93,16 @@ body.register-v17 .privacy-box{
   border:1px solid rgba(255,255,255,.20)!important;
   border-radius:5px!important;
   background:#0b1118!important;
-  color:#03140d!important;
+  color:transparent!important;
+  font-size:0!important;
+  line-height:0!important;
   box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)!important;
   overflow:hidden!important;
   transition:.16s ease!important;
 }
 /* Defensive rule: the visual checkbox must never render translated consent HTML. */
 body.register-v17 .privacy-box>*{display:none!important}
-body.register-v17 .privacy-box::after{content:"✓";font-size:12px!important;font-weight:900!important;line-height:1!important;opacity:0!important;transform:scale(.65)!important;transition:.16s ease!important}
+body.register-v17 .privacy-box::after{content:"✓";color:#03140d!important;font-size:12px!important;font-weight:900!important;line-height:1!important;opacity:0!important;transform:scale(.65)!important;transition:.16s ease!important}
 body.register-v17 .privacy-consent>input[type="checkbox"]:checked + .privacy-box{border-color:#5ee6b8!important;background:#5ee6b8!important;box-shadow:0 0 0 3px rgba(94,230,184,.10)!important}
 body.register-v17 .privacy-consent>input[type="checkbox"]:checked + .privacy-box::after{opacity:1!important;transform:scale(1)!important}
 body.register-v17 .privacy-consent>input[type="checkbox"]:focus-visible + .privacy-box{outline:2px solid rgba(102,168,255,.85)!important;outline-offset:3px!important}
