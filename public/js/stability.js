@@ -47,13 +47,37 @@
     if(document.querySelector(`script[data-${key}]`))return;
     const script=document.createElement('script');script.src=src;script.defer=true;script.setAttribute(`data-${key}`,'1');document.head.appendChild(script);
   }
+
+  function primeRegisterState(){
+    if(!document.body?.classList.contains('register-page'))return;
+    try{
+      const saved=localStorage.getItem('doberto_lang');
+      const select=document.getElementById('langSelect');
+      if(select&&['ht','fr','en'].includes(saved)&&select.value!==saved)select.value=saved;
+      const hasToken=Boolean(localStorage.getItem('dv_auth_token'));
+      const registered=localStorage.getItem('dv_registered')==='1';
+      document.documentElement.classList.toggle('dv-has-session',hasToken);
+      document.documentElement.classList.toggle('dv-registered-session',hasToken&&registered);
+      if(hasToken){
+        const gate=document.getElementById('googleAuthGate');
+        const already=document.getElementById('alreadyRegisteredLink')?.parentElement;
+        if(gate)gate.hidden=true;
+        if(already)already.hidden=true;
+      }
+    }catch(_){}
+  }
+  primeRegisterState();
+
   loadCss('/css/site-v15.css?v=20260910-5','dv-v15');
   loadCss('/css/site-v16.css?v=20260910-5','dv-v16');
   loadCss('/css/polish-v18.css?v=20260910-1','dv-v18');
   loadCss('/css/payment-brands-v20.css?v=20260910-1','dv-payment-brands-v20');
+  loadCss('/css/vip-v21.css?v=20260911-1','dv-vip-v21');
   loadScript('/js/ui-l10n-v18.js?v=20260910-1','dv-l10n-v18');
   loadScript('/js/human-copy-v20.js?v=20260910-1','dv-human-copy-v20');
   loadScript('/js/payment-brands-v20.js?v=20260910-1','dv-payment-brands-v20');
+  loadScript('/js/register-stability-v21.js?v=20260911-1','dv-register-stability-v21');
+  loadScript('/js/vip-stability-v21.js?v=20260911-1','dv-vip-stability-v21');
 
   function toast(message,type='info',duration=4200){
     const text=String(message||'').trim();if(!text)return;
@@ -100,6 +124,6 @@
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup,{once:true});else setup();
 
-  if('serviceWorker'in navigator){window.addEventListener('load',async()=>{try{const reg=await navigator.serviceWorker.register('/sw.js?v=20260910-6',{updateViaCache:'none'});reg.update().catch(()=>{});}catch(_){}},{once:true});}
+  if('serviceWorker'in navigator){window.addEventListener('load',async()=>{try{const reg=await navigator.serviceWorker.register('/sw.js?v=20260911-1',{updateViaCache:'none'});reg.update().catch(()=>{});}catch(_){}},{once:true});}
   window.__DOBERTO_NATIVE_ALERT__=nativeAlert;
 })();
