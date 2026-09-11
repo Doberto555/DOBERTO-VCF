@@ -3,13 +3,37 @@
   if (window.__DV_MONCASH_HEALTH_V22__) return;
   window.__DV_MONCASH_HEALTH_V22__ = true;
 
+  // MonCash can return directly with transactionId/orderId depending on the merchant
+  // Return URL. Normalize that callback so vip.js verifies the payment automatically.
+  try {
+    const url = new URL(window.location.href);
+    const hasReturnReference = Boolean(
+      url.searchParams.get('transactionId') || url.searchParams.get('orderId')
+    );
+    if (hasReturnReference && url.searchParams.get('moncash') !== 'return') {
+      url.searchParams.set('moncash', 'return');
+      history.replaceState({}, '', `${url.pathname}?${url.searchParams.toString()}${url.hash}`);
+    }
+  } catch (_) {}
+
   const COPY = {
-    ht: 'Konfigirasyon an ap fèt',
-    fr: 'Configuration en cours',
-    en: 'Setup in progress'
+    ht: {
+      setup: 'Konfigirasyon an ap fèt',
+      unavailable: 'MonCash pa disponib pou kounye a'
+    },
+    fr: {
+      setup: 'Configuration en cours',
+      unavailable: 'MonCash est temporairement indisponible'
+    },
+    en: {
+      setup: 'Setup in progress',
+      unavailable: 'MonCash is temporarily unavailable'
+    }
   };
 
-  let configured = null;
+  let ready = null;
+  let reason = 'setup';
+
   const lang = () => {
     const select = document.getElementById('langSelect');
     if (select && COPY[select.value]) return select.value;
@@ -20,15 +44,21 @@
     return 'ht';
   };
 
+  const statusCopy = () => {
+    const selected = COPY[lang()] || COPY.ht;
+    return selected[reason] || selected.unavailable;
+  };
+
   function apply() {
-    if (configured !== false) return;
+    if (ready !== false) return;
+
     const method = document.querySelector('#vipMethods [data-method="moncash"]');
     if (method) {
       method.disabled = true;
       method.classList.add('disabled', 'moncash-not-ready');
       method.setAttribute('aria-disabled', 'true');
       const status = method.querySelector('small');
-      if (status) status.textContent = COPY[lang()] || COPY.ht;
+      if (status) status.textContent = statusCopy();
     }
 
     const payButton = document.getElementById('startMoncashVip');
@@ -45,10 +75,16 @@
     try {
       const response = await fetch('/api/vip-moncash-health', { cache: 'no-store' });
       const data = await response.json().catch(() => ({}));
-      configured = Boolean(response.ok && data.configured === true);
+      ready = Boolean(
+        response.ok &&
+        data.configured === true &&
+        data.authenticated === true
+      );
+      reason = data.configured === true ? 'unavailable' : 'setup';
       apply();
     } catch (_) {
-      configured = false;
+      ready = false;
+      reason = 'unavailable';
       apply();
     }
   }
