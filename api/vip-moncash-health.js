@@ -6,7 +6,9 @@ module.exports = (req, res) => {
 
   const clientId = String(process.env.MONCASH_CLIENT_ID || '').trim();
   const clientSecret = String(process.env.MONCASH_CLIENT_SECRET || '').trim();
+  const rawMode = String(process.env.MONCASH_MODE || 'sandbox').trim().toLowerCase();
+  const mode = rawMode === 'live' ? 'live' : 'sandbox';
   const configured = Boolean(clientId && clientSecret);
 
-  return res.status(200).json({ ok: true, configured });
+  return res.status(200).json({ ok: true, configured, mode });
 };
