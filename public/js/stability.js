@@ -53,7 +53,7 @@
   loadCss('/css/polish-v18.css?v=20260910-1','dv-v18');
   loadCss('/css/payment-brands-v20.css?v=20260910-1','dv-payment-brands-v20');
   loadCss('/css/vip-v21.css?v=20260911-1','dv-vip-v21');
-  loadScript('/js/ui-l10n-v18.js?v=20260910-1','dv-l10n-v18');
+  loadScript('/js/ui-l10n-v18.js?v=20260911-2','dv-l10n-v18');
   loadScript('/js/human-copy-v20.js?v=20260910-1','dv-human-copy-v20');
   loadScript('/js/payment-brands-v20.js?v=20260910-1','dv-payment-brands-v20');
   loadScript('/js/vip-stability-v21.js?v=20260911-1','dv-vip-stability-v21');
@@ -103,6 +103,6 @@
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup,{once:true});else setup();
 
-  if('serviceWorker'in navigator){window.addEventListener('load',async()=>{try{const reg=await navigator.serviceWorker.register('/sw.js?v=20260911-3',{updateViaCache:'none'});reg.update().catch(()=>{});}catch(_){}},{once:true});}
+  if('serviceWorker'in navigator){window.addEventListener('load',async()=>{try{const reg=await navigator.serviceWorker.register('/sw.js?v=20260911-4',{updateViaCache:'none'});reg.update().catch(()=>{});}catch(_){}},{once:true});}
   window.__DOBERTO_NATIVE_ALERT__=nativeAlert;
 })();
