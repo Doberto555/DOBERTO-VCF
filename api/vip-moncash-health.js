@@ -15,36 +15,25 @@ module.exports = async (req, res) => {
     return res.status(200).json({ ok: true, configured, mode });
   }
 
-  async function authAt(restBase) {
-    try {
-      const basic = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
-      const response = await fetch(`${restBase}/oauth/token`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Basic ${basic}`,
-          Accept: 'application/json',
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: 'scope=read,write&grant_type=client_credentials'
-      });
-      const data = await response.json().catch(() => ({}));
-      return Boolean(response.ok && data.access_token);
-    } catch (_) {
-      return false;
-    }
+  const restBase = mode === 'live'
+    ? 'https://moncashbutton.digicelgroup.com/Api'
+    : 'https://sandbox.moncashbutton.digicelgroup.com/Api';
+
+  try {
+    const basic = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+    const response = await fetch(`${restBase}/oauth/token`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${basic}`,
+        Accept: 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: 'scope=read,write&grant_type=client_credentials'
+    });
+    const data = await response.json().catch(() => ({}));
+    const authenticated = Boolean(response.ok && data.access_token);
+    return res.status(200).json({ ok: true, configured, mode, authenticated });
+  } catch (_) {
+    return res.status(200).json({ ok: true, configured, mode, authenticated: false });
   }
-
-  const [sandboxAuthenticated, liveAuthenticated] = await Promise.all([
-    authAt('https://sandbox.moncashbutton.digicelgroup.com/Api'),
-    authAt('https://moncashbutton.digicelgroup.com/Api')
-  ]);
-
-  return res.status(200).json({
-    ok: true,
-    configured,
-    mode,
-    authenticated: mode === 'live' ? liveAuthenticated : sandboxAuthenticated,
-    sandboxAuthenticated,
-    liveAuthenticated
-  });
 };
