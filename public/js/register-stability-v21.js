@@ -65,8 +65,6 @@
         if(sync && (seenSync || sync.dataset.dvStableSeen==='1')) sync.hidden=false;
       }
       restoreDynamicConnectedState();
-      if(window.DVRegisterI18n?.apply) window.DVRegisterI18n.apply();
-      restoreDynamicConnectedState();
     } finally { guarding=false; }
   }
 
@@ -81,10 +79,10 @@
 
   if('MutationObserver' in window){
     const observer=new MutationObserver(queueGuard);
-    [gate,account,form,sync,autoWrap,status,connect,langSelect].filter(Boolean).forEach(el=>observer.observe(el,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['hidden','value']}));
+    [gate,account,form,sync,autoWrap,status,connect].filter(Boolean).forEach(el=>observer.observe(el,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['hidden']}));
   }
 
-  langSelect?.addEventListener('change',()=>{setTimeout(()=>{guard();},0);});
+  langSelect?.addEventListener('change',()=>setTimeout(guard,0));
   window.addEventListener('pageshow',guard);
   window.addEventListener('focus',guard);
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)guard();});
