@@ -1,0 +1,17 @@
+/* DOBERTO VCF — registration state loader and stable mobile hydration */
+.register-session-loader{display:grid;gap:14px;padding:22px 0 2px}
+.register-session-loader[hidden]{display:none!important}
+.register-loader-account,.register-loader-card{position:relative;overflow:hidden;border:1px solid rgba(151,177,166,.14);background:rgba(9,16,19,.72);border-radius:16px}
+.register-loader-account{display:grid;grid-template-columns:44px 1fr 86px;align-items:center;gap:14px;padding:15px}
+.register-loader-avatar{width:44px;height:44px;border-radius:50%;background:rgba(133,157,149,.14)}
+.register-loader-lines{display:grid;gap:8px}.register-loader-line{display:block;height:10px;border-radius:999px;background:rgba(133,157,149,.14)}
+.register-loader-line:first-child{width:min(170px,72%)}.register-loader-line:last-child{width:min(230px,92%);opacity:.72}
+.register-loader-button{height:38px;border-radius:10px;background:rgba(133,157,149,.11)}
+.register-loader-card{height:170px;padding:18px}
+.register-loader-card:before,.register-loader-card:after{content:"";display:block;border-radius:999px;background:rgba(133,157,149,.13)}
+.register-loader-card:before{width:42%;height:12px;margin-bottom:16px}.register-loader-card:after{width:78%;height:10px}
+.register-loader-account:after,.register-loader-card span{content:"";position:absolute;inset:0;transform:translateX(-105%);background:linear-gradient(90deg,transparent,rgba(110,239,191,.055),transparent);animation:dv-register-shimmer 1.45s ease-in-out infinite}
+@keyframes dv-register-shimmer{to{transform:translateX(105%)}}
+html.dv-register-resolved .register-session-loader{display:none!important}
+@media(max-width:680px){.register-session-loader{padding:18px 0 0}.register-loader-account{grid-template-columns:40px 1fr;padding:14px}.register-loader-avatar{width:40px;height:40px}.register-loader-button{display:none}.register-loader-card{height:148px}}
+@media(prefers-reduced-motion:reduce){.register-loader-account:after,.register-loader-card span{animation:none}}
