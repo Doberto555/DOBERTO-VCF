@@ -86,7 +86,7 @@
     text('#googleAuthGate .google-auth-kicker',c.gateKicker); text('#googleAuthGate h2',c.gateTitle); text('#googleAuthGate p',c.gateDesc); text('#googleLoginBtn span',c.login);
     text('#googleLogoutBtn',c.logout);
     const fh=document.querySelector('.form-section-head'); if(fh){text('.form-section-head span',c.formSmall);text('.form-section-head strong',c.formTitle);}
-    const consent=document.querySelector('.privacy-consent span');
+    const consent=document.querySelector('.privacy-consent .privacy-copy');
     if(consent) consent.innerHTML=`${c.consentStart} <a href="privacy.html" target="_blank" rel="noopener">${c.privacy}</a> ${c.and} <a href="terms.html" target="_blank" rel="noopener">${c.terms}</a>.`;
     text('#submitBtn',c.finish); text('#alreadyRegisteredLink',c.already);
     text('#googleSyncPanel .google-auth-kicker',c.syncKicker); text('#googleSyncPanel h3',c.syncTitle); text('#googleSyncDescription',c.syncDesc); text('#googleAutoSyncWrap span',c.syncAuto);
