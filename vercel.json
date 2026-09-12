@@ -7,11 +7,13 @@
     { "source": "/api/vip/moncash/create", "destination": "/api/vip-moncash-create" },
     { "source": "/api/vip/moncash/verify", "destination": "/api/vip-moncash-verify" },
     { "source": "/api/vip/moncash/return", "destination": "/api/vip-moncash-return" },
+    { "source": "/api/vip/moncash/health", "destination": "/api/vip-moncash-health" },
     { "source": "/api/vip/trigger-sync", "destination": "/api/vip-trigger-sync" },
     { "source": "/api/admin/vip/methods", "destination": "/api/admin-vip-methods" },
     { "source": "/api/admin/vip/payments", "destination": "/api/admin-vip-payments" },
     { "source": "/api/admin/vip/members", "destination": "/api/admin-vip-members" },
     { "source": "/api/admin/vip/member/action", "destination": "/api/admin-vip-member-action" },
+    { "source": "/api/admin/system/health", "destination": "/api/admin-system-health" },
     { "source": "/api/(.*)", "destination": "/api/index" }
   ],
   "headers": [
