@@ -1,0 +1,77 @@
+/* DOBERTO VCF — Admin Control Center v28 */
+#adminPanel.admin-shell{overflow:visible}
+.dv-admin-viewbar{
+  position:sticky;
+  top:84px;
+  z-index:40;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin:18px 0 24px;
+  padding:8px;
+  border:1px solid rgba(143,255,203,.12);
+  border-radius:16px;
+  background:rgba(5,13,10,.88);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  box-shadow:0 16px 40px rgba(0,0,0,.22)
+}
+.dv-admin-viewbar button{
+  width:auto!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:10px 14px!important;
+  border:1px solid transparent!important;
+  border-radius:11px!important;
+  background:transparent!important;
+  color:#91a29c!important;
+  box-shadow:none!important;
+  font-size:12px!important;
+  font-weight:750!important;
+  white-space:nowrap
+}
+.dv-admin-viewbar button:hover:not(.active){
+  background:rgba(255,255,255,.035)!important;
+  border-color:rgba(143,255,203,.10)!important;
+  color:#dfece7!important;
+  transform:none!important
+}
+.dv-admin-viewbar button.active{
+  background:linear-gradient(135deg,#36e7a7,#18c98d)!important;
+  border-color:#5af0bb!important;
+  color:#03130d!important;
+  box-shadow:0 10px 24px rgba(54,231,167,.18)!important
+}
+.dv-admin-viewbar .dv-admin-view-icon{
+  display:inline-grid;
+  place-items:center;
+  width:20px;
+  height:20px;
+  margin-right:7px;
+  border-radius:7px;
+  background:rgba(255,255,255,.05);
+  font-size:11px;
+  vertical-align:-1px
+}
+.dv-admin-viewbar button.active .dv-admin-view-icon{background:rgba(3,19,13,.10)}
+.dv-admin-view-hidden{display:none!important}
+#adminPanel>.admin-kicker,#adminPanel>.panel-header{position:relative;z-index:2}
+#adminPanel>.panel-header{margin-bottom:0!important}
+#adminPanel .dv-admin-view-content{animation:dvAdminIn .18s ease both}
+@keyframes dvAdminIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+#adminPanel[data-admin-view="dashboard"] #adminVipOverview{margin-top:0!important}
+#adminPanel[data-admin-view="payments"] #adminVipPanel{margin-top:0!important}
+#adminPanel[data-admin-view="vip"] #adminVipMembers{margin-top:0!important}
+#adminPanel[data-admin-view="push"] #adminPushPanel{margin-top:0!important}
+#adminPanel[data-admin-view="registrations"] .admin-tools{margin-top:0!important}
+
+@media(max-width:820px){
+  .dv-admin-viewbar{top:74px;overflow-x:auto;scrollbar-width:none;justify-content:flex-start}
+  .dv-admin-viewbar::-webkit-scrollbar{display:none}
+  .dv-admin-viewbar button{flex:0 0 auto;padding:10px 12px!important}
+}
+@media(max-width:560px){
+  .dv-admin-viewbar{margin:14px -4px 20px;padding:6px;border-radius:14px}
+  .dv-admin-viewbar button{font-size:11px!important;padding:9px 10px!important}
+  .dv-admin-viewbar .dv-admin-view-icon{display:none}
+}
