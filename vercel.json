@@ -11,6 +11,7 @@
     { "source": "/api/admin/vip/methods", "destination": "/api/admin-vip-methods" },
     { "source": "/api/admin/vip/payments", "destination": "/api/admin-vip-payments" },
     { "source": "/api/admin/vip/members", "destination": "/api/admin-vip-members" },
+    { "source": "/api/admin/vip/member/action", "destination": "/api/admin-vip-member-action" },
     { "source": "/api/(.*)", "destination": "/api/index" }
   ],
   "headers": [
