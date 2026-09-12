@@ -82,19 +82,66 @@ module.exports = async function handler(req, res) {
 
     const userIds = (users || []).map(x => x.id);
     let connections = [];
-    if (userIds.length) {
-      const result = await supabase
-        .from('google_connections')
-        .select('user_id,refresh_token_enc,access_token_enc,auto_sync,last_synced_at,last_error,next_sync_at')
-        .in('user_id', userIds);
-      if (result.error) throw result.error;
-      connections = result.data || [];
-    }
-    const connectionMap = new Map(connections.map(x => [x.user_id, x]));
-    const nowMs = now.getTime();
+    let manualPayments = [];
+    let moncashPayments = [];
 
+    if (userIds.length) {
+      const [connectionsResult, manualResult, moncashResult] = await Promise.all([
+        supabase
+          .from('google_connections')
+          .select('user_id,refresh_token_enc,access_token_enc,auto_sync,last_synced_at,last_error,next_sync_at')
+          .in('user_id', userIds),
+        supabase
+          .from('vip_payment_requests')
+          .select('user_id,method,amount,currency,plan_code,status,created_at,reviewed_at')
+          .in('user_id', userIds)
+          .order('created_at', { ascending: false }),
+        supabase
+          .from('vip_moncash_orders')
+          .select('user_id,amount,currency,plan_code,status,transaction_id,created_at,paid_at')
+          .in('user_id', userIds)
+          .order('created_at', { ascending: false })
+      ]);
+      if (connectionsResult.error) throw connectionsResult.error;
+      if (manualResult.error) throw manualResult.error;
+      if (moncashResult.error) throw moncashResult.error;
+      connections = connectionsResult.data || [];
+      manualPayments = manualResult.data || [];
+      moncashPayments = moncashResult.data || [];
+    }
+
+    const connectionMap = new Map(connections.map(x => [x.user_id, x]));
+    const latestPaymentMap = new Map();
+    const paymentCandidates = [
+      ...manualPayments.map(p => ({
+        userId: p.user_id,
+        method: p.method || 'manual',
+        amount: Number(p.amount || 0),
+        currency: p.currency || 'HTG',
+        planCode: p.plan_code || '',
+        status: p.status || '',
+        paidAt: p.reviewed_at || p.created_at || null,
+        successful: p.status === 'approved'
+      })),
+      ...moncashPayments.map(p => ({
+        userId: p.user_id,
+        method: 'moncash',
+        amount: Number(p.amount || 0),
+        currency: p.currency || 'HTG',
+        planCode: p.plan_code || '',
+        status: p.status || '',
+        paidAt: p.paid_at || p.created_at || null,
+        successful: p.status === 'paid'
+      }))
+    ].filter(p => p.successful).sort((a, b) => new Date(b.paidAt || 0) - new Date(a.paidAt || 0));
+    for (const payment of paymentCandidates) {
+      if (!latestPaymentMap.has(payment.userId)) latestPaymentMap.set(payment.userId, payment);
+    }
+
+    const nowMs = now.getTime();
     const members = (users || []).map(row => {
       const c = connectionMap.get(row.id);
+      const payment = latestPaymentMap.get(row.id) || null;
       const expiryMs = row.vip_expires_at ? new Date(row.vip_expires_at).getTime() : 0;
       const daysRemaining = row.vip_plan_code === 'lifetime' ? null : Math.max(0, Math.ceil((expiryMs - nowMs) / 86400000));
       return {
@@ -112,7 +159,8 @@ module.exports = async function handler(req, res) {
         autoSync: Boolean(c?.auto_sync),
         lastSyncedAt: c?.last_synced_at || null,
         nextSyncAt: c?.next_sync_at || null,
-        hasSyncError: Boolean(c?.last_error)
+        hasSyncError: Boolean(c?.last_error),
+        lastPayment: payment
       };
     });
 
