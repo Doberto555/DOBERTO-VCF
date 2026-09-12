@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /admin-vip.html
+Disallow: /owner-access.html
+Disallow: /api/
+
+Sitemap: https://dobertovcf.online/sitemap.xml
