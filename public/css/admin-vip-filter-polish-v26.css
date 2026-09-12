@@ -1,0 +1,38 @@
+/* DOBERTO VCF — Admin VIP filter polish v26
+   Keep inactive filters dark and make the selected filter unmistakable. */
+.dv-admin-vip-tabs button,
+.dv-vip-members-tabs button{
+  width:auto!important;
+  min-width:0!important;
+  border:1px solid rgba(255,255,255,.10)!important;
+  background:#0b1110!important;
+  color:#96a39e!important;
+  box-shadow:none!important;
+}
+
+.dv-admin-vip-tabs button:hover:not(.active),
+.dv-vip-members-tabs button:hover:not(.active){
+  border-color:rgba(87,226,176,.28)!important;
+  background:#101916!important;
+  color:#d6e5de!important;
+}
+
+.dv-admin-vip-tabs button.active,
+.dv-vip-members-tabs button.active{
+  border-color:#5af0bb!important;
+  background:linear-gradient(135deg,#36e7a7,#18c98d)!important;
+  color:#03130d!important;
+  box-shadow:0 10px 26px rgba(54,231,167,.22),inset 0 1px rgba(255,255,255,.22)!important;
+  font-weight:800!important;
+}
+
+.dv-admin-vip-tabs button.active:hover,
+.dv-vip-members-tabs button.active:hover{
+  transform:translateY(-1px)!important;
+  box-shadow:0 13px 30px rgba(54,231,167,.28),inset 0 1px rgba(255,255,255,.24)!important;
+}
+
+@media(max-width:640px){
+  .dv-admin-vip-tabs button,
+  .dv-vip-members-tabs button{width:100%!important}
+}
