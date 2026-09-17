@@ -22,7 +22,7 @@
       pager_prev:'← Anvan', pager_next:'Apre →', footer_admin:'DOBERTO VCF — Zòn admin sèlman. Aksè restrenn.',
       list_title_1:'Dekouvri manm yo', list_title_2:'nan rezo a', list_desc:'Pou pwoteje vi prive chak moun, sèlman non ak peyi parèt nan anyè a.',
       dl_title:'Telechaje fichye VCF la', btn_verify:'Verifye & Telechaje', btn_verifying:'Ap verifye…',
-      msg_register_success:'Enskripsyon an fini!', err_no_connection:'Pa gen koneksyon ak sèvè a. Eseye ankò.'
+      msg_register_success:'Enskripsyon an fini!', err_no_connection:'Koneksyon an te entèwonp. Verifye entènèt ou epi eseye ankò.'
     },
     fr: {
       nav_home:'Accueil', nav_register:'Inscription', nav_list:'Membres', nav_admin:'Admin',
@@ -35,7 +35,7 @@
       pager_prev:'← Précédent', pager_next:'Suivant →', footer_admin:'DOBERTO VCF — Zone administrateur. Accès restreint.',
       list_title_1:'Découvrez les membres', list_title_2:'du réseau', list_desc:'Pour protéger la vie privée de chacun, seuls le nom et le pays apparaissent dans l’annuaire.',
       dl_title:'Télécharger le fichier VCF', btn_verify:'Vérifier & Télécharger', btn_verifying:'Vérification…',
-      msg_register_success:'Inscription terminée !', err_no_connection:'Impossible de joindre le serveur. Réessayez.'
+      msg_register_success:'Inscription terminée !', err_no_connection:'La connexion a été interrompue. Vérifiez votre accès Internet puis réessayez.'
     },
     en: {
       nav_home:'Home', nav_register:'Register', nav_list:'Members', nav_admin:'Admin',
@@ -48,7 +48,7 @@
       pager_prev:'← Previous', pager_next:'Next →', footer_admin:'DOBERTO VCF — Admin area only. Restricted access.',
       list_title_1:'Meet the members', list_title_2:'in the network', list_desc:'To protect everyone’s privacy, only names and countries appear in the directory.',
       dl_title:'Download the VCF file', btn_verify:'Verify & Download', btn_verifying:'Verifying…',
-      msg_register_success:'Registration complete!', err_no_connection:'Unable to reach the server. Try again.'
+      msg_register_success:'Registration complete!', err_no_connection:'The connection was interrupted. Check your Internet connection and try again.'
     }
   };
 
