@@ -58,6 +58,10 @@ jobs:
             echo "Retired VIP/payment or legacy bot endpoint returned to production."
             exit 1
           fi
+          if find public/js public/css -maxdepth 1 -type f \( -name '*vip*.js' -o -name '*vip*.css' \) | grep -q .; then
+            echo "Retired VIP frontend asset returned to production."
+            exit 1
+          fi
           test ! -f lib/vip-api.js
           test ! -f public/owner-access.html
           grep -q 'oauth_nonce' api/google-login-url.js
@@ -65,6 +69,10 @@ jobs:
           grep -q 'admin_login_guard_check' api/admin-login-secure.js
           grep -q 'register-secure' vercel.json
           grep -q 'feature-removed' vercel.json
+          if grep -R --line-number -E 'MonCash|MONCASH' public/admin.html public/js/admin-*.js api/admin-system-health.js; then
+            echo "Retired payment references detected in active admin surfaces."
+            exit 1
+          fi
 
       - name: Prevent secrets and insecure bridge URLs in public code
         shell: bash
@@ -89,4 +97,8 @@ jobs:
           test -f public/manifest.webmanifest
           test -f public/robots.txt
           test -f public/sitemap.xml
+          test -f public/css/register-polish-v34.css
+          test -f public/js/register-polish-v34.js
+          test -f public/css/admin-dashboard-v33.css
+          test -f public/js/admin-dashboard-v33.js
           test -f vercel.json
