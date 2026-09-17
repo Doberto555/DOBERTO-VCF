@@ -9,7 +9,7 @@ const phoneHint=document.getElementById('phoneHint');
 const form=document.getElementById('regForm');
 const msg=document.getElementById('formMsg');
 const submitBtn=document.getElementById('submitBtn');
-const WHATSAPP_GROUP_URL='https://chat.whatsapp.com/BUECpkyjH8n7pNC19smrNR';
+const WHATSAPP_GROUP_URL='https://chat.whatsapp.com/GySPeuvDlI14BnWWvdm7U4?s=sh&p=a&mlu=4&ilr=4';
 let communityPopup=null;
 
 function currentLang(){
