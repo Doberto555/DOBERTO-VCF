@@ -25,7 +25,10 @@ const protectedPaths = new Set([
 ]);
 
 function maintenanceEnabled() {
-  return String(process.env.MAINTENANCE_MODE ?? '1').trim() !== '0';
+  // Maintenance must be explicitly enabled in code before public navigation is blocked again.
+  // This prevents visitors from getting trapped on unprotected pages such as VIP while
+  // Home/Register/List are redirected away.
+  return false;
 }
 
 function ownerSecret() {
@@ -151,7 +154,6 @@ export default async function middleware(request) {
   const cookies = parseCookies(request.headers.get('cookie'));
   const token = cookies[OWNER_COOKIE] || '';
   if (await verifyOwnerToken(secret, token)) {
-    // Sliding session: chak fwa owner antre sou yon paj pwoteje, nou renouvle aksè a pou 30 jou.
     const fresh = await issueOwnerToken(secret);
     return next({ headers: { 'Set-Cookie': ownerCookie(fresh.token) } });
   }
