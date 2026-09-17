@@ -1,5 +1,5 @@
 // DOBERTO VCF — stable PWA service worker: fresh code first, safe offline fallback.
-const CACHE='doberto-vcf-v45-20260917';
+const CACHE='doberto-vcf-v46-20260917';
 const OFFLINE_URL='/offline.html';
 const APP_SHELL=[
   '/','/index.html','/register.html','/community.html','/list.html','/privacy.html','/terms.html','/mesi.html','/offline.html',
@@ -12,26 +12,11 @@ self.addEventListener('install',event=>event.waitUntil((async()=>{const cache=aw
 self.addEventListener('activate',event=>event.waitUntil((async()=>{const keys=await caches.keys();await Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)));await self.clients.claim();})()));
 self.addEventListener('fetch',event=>{
   const req=event.request;if(req.method!=='GET')return;const url=new URL(req.url);if(url.origin!==self.location.origin||url.pathname.startsWith('/api/')||url.pathname.startsWith('/push/onesignal/'))return;
-
-  // VIP is intentionally network-only. Never show an old cached VIP screen or old JS/CSS.
   const isVipPage=url.pathname==='/vip'||url.pathname==='/vip.html';
   const isVipAsset=/^\/(?:js|css)\/vip(?:-|\.)/.test(url.pathname)||url.pathname==='/js/vip.js';
-  if(isVipPage||isVipAsset){
-    event.respondWith((async()=>{
-      try{return await fetchTimeout(req,12000,{cache:'no-store'});}
-      catch(_){
-        if(req.mode==='navigate')return (await caches.match(OFFLINE_URL))||new Response('Offline',{status:503});
-        return new Response('',{status:503,statusText:'Offline'});
-      }
-    })());
-    return;
-  }
-
-  if(req.mode==='navigate'){
-    event.respondWith((async()=>{try{const r=await fetchTimeout(req,9000,{cache:'no-store'});if(r?.ok&&!r.redirected)(await caches.open(CACHE)).put(req,r.clone()).catch(()=>{});return r;}catch(_){const fallback=url.pathname==='/'?'/index.html':url.pathname;return(await caches.match(req,{ignoreSearch:true}))||(await caches.match(fallback,{ignoreSearch:true}))||(await caches.match(OFFLINE_URL));}})());return;
-  }
-  const code=/\.(?:css|js)$/.test(url.pathname);
-  if(code){event.respondWith((async()=>{try{const r=await fetchTimeout(req,9000,{cache:'no-store'});if(r?.ok&&!r.redirected)(await caches.open(CACHE)).put(req,r.clone()).catch(()=>{});return r;}catch(_){return(await caches.match(req,{ignoreSearch:true}))||new Response('',{status:503,statusText:'Offline'});}})());return;}
+  if(isVipPage||isVipAsset){event.respondWith((async()=>{try{return await fetchTimeout(req,12000,{cache:'no-store'});}catch(_){if(req.mode==='navigate')return(await caches.match(OFFLINE_URL))||new Response('Offline',{status:503});return new Response('',{status:503,statusText:'Offline'});}})());return;}
+  if(req.mode==='navigate'){event.respondWith((async()=>{try{const r=await fetchTimeout(req,9000,{cache:'no-store'});if(r?.ok&&!r.redirected)(await caches.open(CACHE)).put(req,r.clone()).catch(()=>{});return r;}catch(_){const fallback=url.pathname==='/'?'/index.html':url.pathname;return(await caches.match(req,{ignoreSearch:true}))||(await caches.match(fallback,{ignoreSearch:true}))||(await caches.match(OFFLINE_URL));}})());return;}
+  const code=/\.(?:css|js)$/.test(url.pathname);if(code){event.respondWith((async()=>{try{const r=await fetchTimeout(req,9000,{cache:'no-store'});if(r?.ok&&!r.redirected)(await caches.open(CACHE)).put(req,r.clone()).catch(()=>{});return r;}catch(_){return(await caches.match(req,{ignoreSearch:true}))||new Response('',{status:503,statusText:'Offline'});}})());return;}
   event.respondWith((async()=>{const cached=await caches.match(req,{ignoreSearch:true});const network=fetchTimeout(req,12000).then(async r=>{if(r?.ok&&!r.redirected)(await caches.open(CACHE)).put(req,r.clone()).catch(()=>{});return r;}).catch(()=>null);return cached||(await network)||new Response('',{status:503,statusText:'Offline'});})());
 });
 self.addEventListener('message',event=>{if(event.data?.type==='SKIP_WAITING')self.skipWaiting();});
