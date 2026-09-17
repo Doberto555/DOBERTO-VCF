@@ -45,9 +45,8 @@ module.exports = async function handler(req, res) {
   try {
     const page = Math.max(1, Number.parseInt(req.query?.page || '1', 10) || 1);
     const pageSize = Math.min(50, Math.max(5, Number.parseInt(req.query?.pageSize || '20', 10) || 20));
-    const filter = ['all', 'active', 'lifetime', 'expiring', 'expired'].includes(String(req.query?.filter || 'all').toLowerCase())
-      ? String(req.query?.filter || 'all').toLowerCase()
-      : 'all';
+    const requestedFilter = String(req.query?.filter || 'all').toLowerCase();
+    const filter = ['all', 'active', 'lifetime', 'expiring', 'expired'].includes(requestedFilter) ? requestedFilter : 'all';
     const search = String(req.query?.search || '').trim().slice(0, 120);
     const now = new Date();
     const nowIso = now.toISOString();
@@ -63,15 +62,10 @@ module.exports = async function handler(req, res) {
       if (safe) query = query.or(`display_name.ilike.%${safe}%,email.ilike.%${safe}%`);
     }
 
-    if (filter === 'lifetime') {
-      query = query.eq('vip_plan_code', 'lifetime');
-    } else if (filter === 'active') {
-      query = query.neq('vip_plan_code', 'lifetime').gt('vip_expires_at', sevenDaysIso);
-    } else if (filter === 'expiring') {
-      query = query.neq('vip_plan_code', 'lifetime').gt('vip_expires_at', nowIso).lte('vip_expires_at', sevenDaysIso);
-    } else if (filter === 'expired') {
-      query = query.neq('vip_plan_code', 'lifetime').or(`vip_expires_at.is.null,vip_expires_at.lte.${nowIso}`);
-    }
+    if (filter === 'lifetime') query = query.eq('vip_plan_code', 'lifetime');
+    else if (filter === 'active') query = query.neq('vip_plan_code', 'lifetime').gt('vip_expires_at', sevenDaysIso);
+    else if (filter === 'expiring') query = query.neq('vip_plan_code', 'lifetime').gt('vip_expires_at', nowIso).lte('vip_expires_at', sevenDaysIso);
+    else if (filter === 'expired') query = query.neq('vip_plan_code', 'lifetime').or(`vip_expires_at.is.null,vip_expires_at.lte.${nowIso}`);
 
     const from = (page - 1) * pageSize;
     const to = from + pageSize - 1;
@@ -81,16 +75,11 @@ module.exports = async function handler(req, res) {
     if (error) throw error;
 
     const userIds = (users || []).map(x => x.id);
-    let connections = [];
     let manualPayments = [];
     let moncashPayments = [];
 
     if (userIds.length) {
-      const [connectionsResult, manualResult, moncashResult] = await Promise.all([
-        supabase
-          .from('google_connections')
-          .select('user_id,refresh_token_enc,access_token_enc,auto_sync,last_synced_at,last_error,next_sync_at')
-          .in('user_id', userIds),
+      const [manualResult, moncashResult] = await Promise.all([
         supabase
           .from('vip_payment_requests')
           .select('user_id,method,amount,currency,plan_code,status,created_at,reviewed_at')
@@ -102,15 +91,12 @@ module.exports = async function handler(req, res) {
           .in('user_id', userIds)
           .order('created_at', { ascending: false })
       ]);
-      if (connectionsResult.error) throw connectionsResult.error;
       if (manualResult.error) throw manualResult.error;
       if (moncashResult.error) throw moncashResult.error;
-      connections = connectionsResult.data || [];
       manualPayments = manualResult.data || [];
       moncashPayments = moncashResult.data || [];
     }
 
-    const connectionMap = new Map(connections.map(x => [x.user_id, x]));
     const latestPaymentMap = new Map();
     const paymentCandidates = [
       ...manualPayments.map(p => ({
@@ -134,13 +120,13 @@ module.exports = async function handler(req, res) {
         successful: p.status === 'paid'
       }))
     ].filter(p => p.successful).sort((a, b) => new Date(b.paidAt || 0) - new Date(a.paidAt || 0));
+
     for (const payment of paymentCandidates) {
       if (!latestPaymentMap.has(payment.userId)) latestPaymentMap.set(payment.userId, payment);
     }
 
     const nowMs = now.getTime();
     const members = (users || []).map(row => {
-      const c = connectionMap.get(row.id);
       const payment = latestPaymentMap.get(row.id) || null;
       const expiryMs = row.vip_expires_at ? new Date(row.vip_expires_at).getTime() : 0;
       const daysRemaining = row.vip_plan_code === 'lifetime' ? null : Math.max(0, Math.ceil((expiryMs - nowMs) / 86400000));
@@ -155,11 +141,6 @@ module.exports = async function handler(req, res) {
         lastLoginAt: row.last_login_at || null,
         state: memberState(row, nowMs),
         daysRemaining,
-        contactsConnected: Boolean(c && (c.refresh_token_enc || c.access_token_enc)),
-        autoSync: Boolean(c?.auto_sync),
-        lastSyncedAt: c?.last_synced_at || null,
-        nextSyncAt: c?.next_sync_at || null,
-        hasSyncError: Boolean(c?.last_error),
         lastPayment: payment
       };
     });
