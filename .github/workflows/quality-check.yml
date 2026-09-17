@@ -22,6 +22,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Check high severity dependency vulnerabilities
+        run: npm audit --omit=dev --audit-level=high
+
       - name: Check JavaScript syntax
         shell: bash
         run: |
@@ -46,6 +49,35 @@ jobs:
             exit 1
           fi
           grep -q "scope: 'openid email profile'" lib/google-sync.js
+
+      - name: Verify removed and insecure surfaces stay removed
+        shell: bash
+        run: |
+          set -e
+          if find api -maxdepth 1 -type f \( -name 'vip-*.js' -o -name 'admin-vip-*.js' -o -name 'vcf-bot-notify.js' \) | grep -q .; then
+            echo "Retired VIP/payment or legacy bot endpoint returned to production."
+            exit 1
+          fi
+          test ! -f lib/vip-api.js
+          test ! -f public/owner-access.html
+          grep -q 'oauth_nonce' api/google-login-url.js
+          grep -q 'oauth_nonce' api/google-callback.js
+          grep -q 'admin_login_guard_check' api/admin-login-secure.js
+          grep -q 'register-secure' vercel.json
+          grep -q 'feature-removed' vercel.json
+
+      - name: Prevent secrets and insecure bridge URLs in public code
+        shell: bash
+        run: |
+          set -e
+          if grep -R --line-number -E 'SUPABASE_SERVICE_ROLE_KEY|ONESIGNAL_REST_API_KEY|GOOGLE_CLIENT_SECRET|ADMIN_PASSWORD|JWT_SECRET' public; then
+            echo "Server secret identifier found in public assets."
+            exit 1
+          fi
+          if grep -R --line-number -E 'http://([0-9]{1,3}\.){3}[0-9]{1,3}' api lib public server.js middleware.js; then
+            echo "Insecure direct-IP HTTP endpoint found in runtime code."
+            exit 1
+          fi
 
       - name: Verify required production files
         shell: bash
