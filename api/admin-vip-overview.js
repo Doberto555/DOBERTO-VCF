@@ -42,11 +42,22 @@ function sumByCurrency(rows) {
   return totals;
 }
 
+async function expireAbandonedMoncash() {
+  const cutoff = new Date(Date.now() - 20 * 60 * 1000).toISOString();
+  const { error } = await supabase
+    .from('vip_moncash_orders')
+    .update({ status: 'expired', updated_at: new Date().toISOString() })
+    .in('status', ['created', 'redirected'])
+    .lt('created_at', cutoff);
+  if (error) throw error;
+}
+
 module.exports = async function handler(req, res) {
   if (!verifyAdmin(req, res)) return;
   if (req.method !== 'GET') return send(res, 405, { error: 'Method not allowed' });
 
   try {
+    await expireAbandonedMoncash();
     const now = new Date();
     const inSevenDays = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
     const moncashMode = String(process.env.MONCASH_MODE || 'sandbox').trim().toLowerCase() === 'live' ? 'live' : 'sandbox';
