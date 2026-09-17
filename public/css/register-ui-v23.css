@@ -15,3 +15,13 @@
 html.dv-register-resolved .register-session-loader{display:none!important}
 @media(max-width:680px){.register-session-loader{padding:18px 0 0}.register-loader-account{grid-template-columns:40px 1fr;padding:14px}.register-loader-avatar{width:40px;height:40px}.register-loader-button{display:none}.register-loader-card{height:148px}}
 @media(prefers-reduced-motion:reduce){.register-loader-account:after,.register-loader-card span{animation:none}}
+
+/* Critical state guard: these elements have display:* !important rules in older layers.
+   Keep the native hidden attribute authoritative so unauthenticated visitors never see
+   the account/logout or completed-registration cards at the same time as Google login. */
+body.register-v17 #googleAuthGate[hidden],
+body.register-v17 #googleAccountBar[hidden],
+body.register-v17 #regForm[hidden],
+body.register-v17 #registeredDone[hidden],
+body.register-v17 #registeredRedirectStatus[hidden],
+body.register-v17 .already-member[hidden]{display:none!important}
