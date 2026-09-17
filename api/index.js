@@ -1,6 +1,6 @@
 // Vercel serverless entrypoint — main API logic stays in server.js.
-// Google is now used only for sign-in/registration. Legacy Google Contacts
-// endpoints are blocked here so production cannot request or use Contacts access.
+// Google is used only for sign-in/registration. Legacy Google Contacts and VIP
+// endpoints are blocked here so removed features cannot be called in production.
 const crypto = require('crypto');
 
 const serviceRole = String(process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
@@ -24,7 +24,7 @@ if (currentAdminPassword.length < 8 && hasUsableServiceRole) {
 
 const app = require('../server.js');
 
-const removedPaths = new Set([
+const removedGooglePaths = new Set([
   '/api/google/status',
   '/api/google/sync',
   '/api/google/auto-sync',
@@ -36,7 +36,12 @@ module.exports = (req, res) => {
   try { parsed = new URL(req.url || '/', 'https://dobertovcf.online'); }
   catch (_) { parsed = { pathname: req.url || '/', searchParams: new URLSearchParams() }; }
 
-  if (removedPaths.has(parsed.pathname)) {
+  if (parsed.pathname.startsWith('/api/vip/') || parsed.pathname.startsWith('/api/admin/vip/')) {
+    res.setHeader('Cache-Control', 'no-store');
+    return res.status(410).json({ code: 'feature_removed', error: 'Sistèm VIP la retire nan DOBERTO VCF.' });
+  }
+
+  if (removedGooglePaths.has(parsed.pathname)) {
     res.setHeader('Cache-Control', 'no-store');
     return res.status(410).json({
       code: 'feature_removed',
