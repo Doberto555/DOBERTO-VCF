@@ -55,20 +55,18 @@ module.exports = async function handler(req, res) {
 
     const { data: user, error: userError } = await supabase
       .from('app_users')
-      .select('id,email,display_name,plan,vip_plan_code,vip_started_at,vip_expires_at')
+      .select('id,plan,vip_plan_code,vip_started_at,vip_expires_at')
       .eq('id', userId)
       .maybeSingle();
     if (userError) throw userError;
     if (!user) return send(res, 404, { error: 'Manm sa a pa egziste.' });
 
-    const now = Date.now();
     if (action === 'revoke') {
       const { error } = await supabase
         .from('app_users')
         .update({ plan: 'free', vip_plan_code: null, vip_started_at: null, vip_expires_at: null })
         .eq('id', userId);
       if (error) throw error;
-      await supabase.from('google_connections').update({ next_sync_at: null, updated_at: new Date().toISOString() }).eq('user_id', userId);
       return send(res, 200, { ok: true, action: 'revoke', userId });
     }
 
@@ -76,11 +74,13 @@ module.exports = async function handler(req, res) {
       return send(res, 400, { error: 'Plan VIP la pa valid.' });
     }
 
+    const now = Date.now();
     let expiresAt = null;
     if (planCode !== 'lifetime') {
       const months = planCode === 'monthly' ? 1 : planCode === 'quarterly' ? 3 : 12;
       const currentExpiry = user.vip_expires_at ? new Date(user.vip_expires_at).getTime() : 0;
-      expiresAt = addMonthsISO(Math.max(now, Number.isFinite(currentExpiry) ? currentExpiry : 0), months);
+      const base = Math.max(now, Number.isFinite(currentExpiry) ? currentExpiry : 0);
+      expiresAt = addMonthsISO(base, months);
     }
 
     const { error: updateError } = await supabase
@@ -93,11 +93,6 @@ module.exports = async function handler(req, res) {
       })
       .eq('id', userId);
     if (updateError) throw updateError;
-
-    await supabase
-      .from('google_connections')
-      .update({ next_sync_at: new Date().toISOString(), updated_at: new Date().toISOString() })
-      .eq('user_id', userId);
 
     return send(res, 200, { ok: true, action: 'extend', userId, planCode, expiresAt });
   } catch (error) {
