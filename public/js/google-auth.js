@@ -43,10 +43,8 @@
     if(busy){event?.preventDefault();return}
     busy=true;
     clearLegacyState();
-    if(login instanceof HTMLAnchorElement)login.href=LOGIN_URL;
     setButtonBusy(login,true);
-    // Do not prevent the default action. The native anchor navigation is the
-    // reliable path on Android/iOS and still works even if another script fails.
+    try{location.assign(LOGIN_URL)}catch(_){location.href=LOGIN_URL}
   }
 
   async function finishLogin(code,state){
@@ -88,8 +86,13 @@
   async function boot(){
     const login=document.getElementById('googleLoginBtn');
     const logoutBtn=document.getElementById('googleLogoutBtn');
-    if(login instanceof HTMLAnchorElement)login.href=LOGIN_URL;
-    login?.addEventListener('click',prepareLogin);
+    if(login instanceof HTMLAnchorElement){
+      // Native href only: never cancel/intercept the tap. This is the most reliable
+      // Google Sign-In path on Android Chrome, WebView and installed PWA mode.
+      login.href=LOGIN_URL;
+    }else{
+      login?.addEventListener('click',prepareLogin);
+    }
     logoutBtn?.addEventListener('click',logout);
     clearLegacyState();
     const params=new URLSearchParams(location.search);
