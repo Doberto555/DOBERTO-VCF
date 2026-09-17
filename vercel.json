@@ -2,6 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
     { "source": "/api/vip/status", "destination": "/api/vip-status" },
+    { "source": "/api/vip/catalog", "destination": "/api/vip-catalog" },
     { "source": "/api/vip/methods", "destination": "/api/vip-methods" },
     { "source": "/api/vip/payment/request", "destination": "/api/vip-payment-request" },
     { "source": "/api/vip/moncash/create", "destination": "/api/vip-moncash-create" },
