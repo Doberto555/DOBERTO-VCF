@@ -21,9 +21,19 @@ function verifyAdmin(req,res){
   }
 }
 
+async function expireAbandonedMoncash(){
+  const cutoff=new Date(Date.now()-20*60*1000).toISOString();
+  const {error}=await supabase.from('vip_moncash_orders')
+    .update({status:'expired',updated_at:new Date().toISOString()})
+    .in('status',['created','redirected'])
+    .lt('created_at',cutoff);
+  if(error)throw error;
+}
+
 async function getPayments(req,res){
   if(!verifyAdmin(req,res))return;
   try{
+    await expireAbandonedMoncash();
     const [{data:manual,error:manualError},{data:moncash,error:moncashError}]=await Promise.all([
       supabase.from('vip_payment_requests')
         .select('id,user_id,method,amount,currency,duration_days,plan_code,transaction_ref,note,status,created_at,reviewed_at,review_note')
