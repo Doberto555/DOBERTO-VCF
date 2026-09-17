@@ -1,10 +1,10 @@
 // DOBERTO VCF — stable PWA service worker: fresh code first, safe offline fallback.
-const CACHE='doberto-vcf-v44-20260916';
+const CACHE='doberto-vcf-v45-20260917';
 const OFFLINE_URL='/offline.html';
 const APP_SHELL=[
-  '/','/index.html','/register.html','/community.html','/list.html','/vip.html','/privacy.html','/terms.html','/mesi.html','/offline.html',
-  '/css/style.css','/css/pro-v3.css','/css/brand-v7.css','/css/site-v10.css','/css/site-v11.css','/css/site-v13.css','/css/site-v14.css','/css/site-v15.css','/css/site-v16.css','/css/register-v17.css','/css/register-v18.css','/css/register-ui-v23.css','/css/list-v19.css','/css/list-v20.css','/css/vip-v17.css','/css/vip-v21.css','/css/polish-v18.css','/css/payment-brands-v20.css','/css/prompt-premium.css',
-  '/js/stability.js','/js/ui-l10n-v18.js','/js/home-v10.js','/js/i18n.js','/js/i18n-v12.js','/js/countries.js','/js/country-picker.js','/js/icons.js','/js/app.js','/js/list.js','/js/mesi.js','/js/push.js','/js/install-prompt.js','/js/tour.js','/js/pro-v3.js','/js/google-auth.js','/js/register-v18.js','/js/register-ui-v23.js','/js/vip.js','/js/vip-no-google-v31.js','/js/vip-moncash-health-v22.js','/js/vip-stability-v21.js','/js/payment-brands-v20.js',
+  '/','/index.html','/register.html','/community.html','/list.html','/privacy.html','/terms.html','/mesi.html','/offline.html',
+  '/css/style.css','/css/pro-v3.css','/css/brand-v7.css','/css/site-v10.css','/css/site-v11.css','/css/site-v13.css','/css/site-v14.css','/css/site-v15.css','/css/site-v16.css','/css/register-v17.css','/css/register-v18.css','/css/register-ui-v23.css','/css/list-v19.css','/css/list-v20.css','/css/polish-v18.css','/css/payment-brands-v20.css','/css/prompt-premium.css',
+  '/js/stability.js','/js/ui-l10n-v18.js','/js/home-v10.js','/js/i18n.js','/js/i18n-v12.js','/js/countries.js','/js/country-picker.js','/js/icons.js','/js/app.js','/js/list.js','/js/mesi.js','/js/push.js','/js/install-prompt.js','/js/tour.js','/js/pro-v3.js','/js/google-auth.js','/js/register-v18.js','/js/register-ui-v23.js','/js/payment-brands-v20.js',
   '/icons/doberto-vcf-192.png','/icons/doberto-vcf-512.png','/icons/doberto-vcf-maskable-512.png','/icons/doberto-vcf-mark.svg','/icons/natcash.svg'
 ];
 async function fetchTimeout(request,timeout=10000,options={}){const c=new AbortController();const t=setTimeout(()=>c.abort(),timeout);try{return await fetch(request,{...options,signal:c.signal});}finally{clearTimeout(t);}}
@@ -12,6 +12,21 @@ self.addEventListener('install',event=>event.waitUntil((async()=>{const cache=aw
 self.addEventListener('activate',event=>event.waitUntil((async()=>{const keys=await caches.keys();await Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)));await self.clients.claim();})()));
 self.addEventListener('fetch',event=>{
   const req=event.request;if(req.method!=='GET')return;const url=new URL(req.url);if(url.origin!==self.location.origin||url.pathname.startsWith('/api/')||url.pathname.startsWith('/push/onesignal/'))return;
+
+  // VIP is intentionally network-only. Never show an old cached VIP screen or old JS/CSS.
+  const isVipPage=url.pathname==='/vip'||url.pathname==='/vip.html';
+  const isVipAsset=/^\/(?:js|css)\/vip(?:-|\.)/.test(url.pathname)||url.pathname==='/js/vip.js';
+  if(isVipPage||isVipAsset){
+    event.respondWith((async()=>{
+      try{return await fetchTimeout(req,12000,{cache:'no-store'});}
+      catch(_){
+        if(req.mode==='navigate')return (await caches.match(OFFLINE_URL))||new Response('Offline',{status:503});
+        return new Response('',{status:503,statusText:'Offline'});
+      }
+    })());
+    return;
+  }
+
   if(req.mode==='navigate'){
     event.respondWith((async()=>{try{const r=await fetchTimeout(req,9000,{cache:'no-store'});if(r?.ok&&!r.redirected)(await caches.open(CACHE)).put(req,r.clone()).catch(()=>{});return r;}catch(_){const fallback=url.pathname==='/'?'/index.html':url.pathname;return(await caches.match(req,{ignoreSearch:true}))||(await caches.match(fallback,{ignoreSearch:true}))||(await caches.match(OFFLINE_URL));}})());return;
   }
