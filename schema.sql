@@ -44,6 +44,17 @@ create index if not exists registrations_created_at_idx
 create index if not exists registrations_country_name_idx
   on registrations (country_name);
 
+-- Paramèt owner/admin yo ka chanje san redeploy. Sa sèvi pou link group WhatsApp la.
+create table if not exists app_settings (
+  key text primary key,
+  value text not null,
+  updated_at timestamptz not null default now()
+);
+
+insert into app_settings (key, value)
+values ('whatsapp_group_url', 'https://chat.whatsapp.com/GySPeuvDlI14BnWWvdm7U4?s=sh&p=a&mlu=4&ilr=4')
+on conflict (key) do nothing;
+
 -- Eta kanpay notifikasyon/email unlock la.
 create table if not exists notification_campaigns (
   campaign_key text primary key,
@@ -57,6 +68,7 @@ create table if not exists notification_campaigns (
 alter table registrations enable row level security;
 alter table notification_campaigns enable row level security;
 alter table app_users enable row level security;
+alter table app_settings enable row level security;
 
 -- Google Contacts/Auto-Sync retire nèt. Pa gen refresh token oswa People API done nan schema sa a.
 -- Pa ajoute public policies: backend service-role la sèlman dwe gen aksè dirèk.
