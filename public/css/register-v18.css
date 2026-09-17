@@ -1,9 +1,7 @@
 /* DOBERTO VCF — registration v18 mobile polish */
 
-/* Never let component display rules override the native hidden attribute. */
 body.register-v17 [hidden]{display:none!important}
 
-/* Registration progress: clear current step without decorative clutter. */
 body.register-v17 .flow-step{transition:color .18s ease!important}
 body.register-v17 .flow-step b{transition:background .18s ease,border-color .18s ease,color .18s ease,box-shadow .18s ease!important}
 body.register-v17 .flow-step.complete{color:#9fb3aa!important}
@@ -13,127 +11,25 @@ body.register-v17 .flow-step.active b{box-shadow:0 0 0 3px rgba(94,230,184,.07)!
 body.register-v17 .flow-line{transition:background .18s ease!important}
 body.register-v17 .flow-line.complete{background:rgba(94,230,184,.36)!important}
 
-/* Stable signed-in Google account card on desktop and mobile. */
 body.register-v17 .google-account-bar{
-  display:grid!important;
-  grid-template-columns:48px minmax(0,1fr) auto!important;
-  align-items:center!important;
-  gap:12px!important;
-  width:100%!important;
-  margin:0 0 18px!important;
-  padding:14px!important;
-  border:1px solid rgba(255,255,255,.08)!important;
-  border-radius:14px!important;
-  background:rgba(255,255,255,.018)!important;
-  overflow:hidden!important;
+  display:grid!important;grid-template-columns:48px minmax(0,1fr) auto!important;align-items:center!important;gap:12px!important;width:100%!important;margin:0 0 18px!important;padding:14px!important;border:1px solid rgba(255,255,255,.08)!important;border-radius:14px!important;background:rgba(255,255,255,.018)!important;overflow:hidden!important
 }
-body.register-v17 .google-account-bar>img{
-  display:block!important;
-  width:48px!important;
-  min-width:48px!important;
-  max-width:48px!important;
-  height:48px!important;
-  min-height:48px!important;
-  max-height:48px!important;
-  margin:0!important;
-  padding:0!important;
-  border-radius:50%!important;
-  object-fit:cover!important;
-  background:#111923!important;
-}
+body.register-v17 .google-account-bar>img{display:block!important;width:48px!important;min-width:48px!important;max-width:48px!important;height:48px!important;min-height:48px!important;max-height:48px!important;margin:0!important;padding:0!important;border-radius:50%!important;object-fit:cover!important;background:#111923!important}
 body.register-v17 .google-account-bar>div{display:flex!important;flex-direction:column!important;justify-content:center!important;min-width:0!important;gap:3px!important}
 body.register-v17 #googleName,body.register-v17 #googleEmail{display:block!important;min-width:0!important;max-width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
 body.register-v17 #googleName{color:#eef4f7!important;font-size:13px!important;font-weight:750!important;line-height:1.25!important}
 body.register-v17 #googleEmail{color:#7f8b99!important;font-size:10.5px!important;line-height:1.3!important}
 body.register-v17 #googleLogoutBtn{width:auto!important;min-width:120px!important;max-width:170px!important;min-height:42px!important;margin:0!important;padding:0 15px!important;border-radius:10px!important;font-size:10.5px!important;white-space:nowrap!important}
 
-/* Compact Google sign-in: no oversized logo/card on mobile browsers. */
 body.register-v17 .clean-auth{overflow:hidden!important}
-body.register-v17 .google-auth-button{
-  display:flex!important;
-  flex-direction:row!important;
-  align-items:center!important;
-  justify-content:center!important;
-  gap:11px!important;
-  width:100%!important;
-  min-width:0!important;
-  max-width:none!important;
-  min-height:52px!important;
-  height:52px!important;
-  margin:18px 0 0!important;
-  padding:0 18px!important;
-  border:1px solid rgba(255,255,255,.13)!important;
-  border-radius:12px!important;
-  background:#f8fafc!important;
-  color:#111827!important;
-  box-shadow:0 10px 24px rgba(0,0,0,.16)!important;
-  font-size:13px!important;
-  font-weight:700!important;
-  line-height:1!important;
-  letter-spacing:-.01em!important;
-}
+body.register-v17 .google-auth-button{display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:center!important;gap:11px!important;width:100%!important;min-width:0!important;max-width:none!important;min-height:52px!important;height:52px!important;margin:18px 0 0!important;padding:0 18px!important;border:1px solid rgba(255,255,255,.13)!important;border-radius:12px!important;background:#f8fafc!important;color:#111827!important;box-shadow:0 10px 24px rgba(0,0,0,.16)!important;font-size:13px!important;font-weight:700!important;line-height:1!important;letter-spacing:-.01em!important}
 body.register-v17 .google-auth-button:hover{transform:translateY(-1px)!important;background:#fff!important}
-body.register-v17 .google-auth-button svg{
-  display:block!important;
-  flex:0 0 21px!important;
-  width:21px!important;
-  min-width:21px!important;
-  max-width:21px!important;
-  height:21px!important;
-  min-height:21px!important;
-  max-height:21px!important;
-  margin:0!important;
-  padding:0!important;
-  border:0!important;
-  border-radius:0!important;
-  background:transparent!important;
-  box-shadow:none!important;
-}
+body.register-v17 .google-auth-button svg{display:block!important;flex:0 0 21px!important;width:21px!important;min-width:21px!important;max-width:21px!important;height:21px!important;min-height:21px!important;max-height:21px!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
 body.register-v17 .google-auth-button span{display:inline!important;width:auto!important;margin:0!important;padding:0!important;color:#111827!important;font-size:13px!important;font-weight:700!important}
 
-/* Custom consent control so Android/Samsung cannot stretch the native checkbox. */
-body.register-v17 .privacy-consent{
-  position:relative!important;
-  display:grid!important;
-  grid-template-columns:20px minmax(0,1fr)!important;
-  align-items:start!important;
-  gap:11px!important;
-  margin:20px 0 18px!important;
-  padding:14px!important;
-}
-body.register-v17 .privacy-consent>input[type="checkbox"]{
-  position:absolute!important;
-  width:1px!important;
-  min-width:1px!important;
-  max-width:1px!important;
-  height:1px!important;
-  min-height:1px!important;
-  max-height:1px!important;
-  margin:0!important;
-  padding:0!important;
-  opacity:0!important;
-  pointer-events:none!important;
-}
-body.register-v17 .privacy-box{
-  display:grid!important;
-  place-items:center!important;
-  width:19px!important;
-  min-width:19px!important;
-  max-width:19px!important;
-  height:19px!important;
-  min-height:19px!important;
-  max-height:19px!important;
-  margin-top:1px!important;
-  border:1px solid rgba(255,255,255,.20)!important;
-  border-radius:5px!important;
-  background:#0b1118!important;
-  color:transparent!important;
-  font-size:0!important;
-  line-height:0!important;
-  box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)!important;
-  overflow:hidden!important;
-  transition:.16s ease!important;
-}
+body.register-v17 .privacy-consent{position:relative!important;display:grid!important;grid-template-columns:20px minmax(0,1fr)!important;align-items:start!important;gap:11px!important;margin:20px 0 18px!important;padding:14px!important}
+body.register-v17 .privacy-consent>input[type="checkbox"]{position:absolute!important;width:1px!important;min-width:1px!important;max-width:1px!important;height:1px!important;min-height:1px!important;max-height:1px!important;margin:0!important;padding:0!important;opacity:0!important;pointer-events:none!important}
+body.register-v17 .privacy-box{display:grid!important;place-items:center!important;width:19px!important;min-width:19px!important;max-width:19px!important;height:19px!important;min-height:19px!important;max-height:19px!important;margin-top:1px!important;border:1px solid rgba(255,255,255,.20)!important;border-radius:5px!important;background:#0b1118!important;color:transparent!important;font-size:0!important;line-height:0!important;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)!important;overflow:hidden!important;transition:.16s ease!important}
 body.register-v17 .privacy-box>*{display:none!important}
 body.register-v17 .privacy-box::after{content:"✓";color:#03140d!important;font-size:12px!important;font-weight:900!important;line-height:1!important;opacity:0!important;transform:scale(.65)!important;transition:.16s ease!important}
 body.register-v17 .privacy-consent>input[type="checkbox"]:checked + .privacy-box{border-color:#5ee6b8!important;background:#5ee6b8!important;box-shadow:0 0 0 3px rgba(94,230,184,.10)!important}
@@ -141,12 +37,31 @@ body.register-v17 .privacy-consent>input[type="checkbox"]:checked + .privacy-box
 body.register-v17 .privacy-consent>input[type="checkbox"]:focus-visible + .privacy-box{outline:2px solid rgba(102,168,255,.85)!important;outline-offset:3px!important}
 body.register-v17 .privacy-copy,body.register-v17 .group-announcement-copy{display:block!important;min-width:0!important;color:#9aa6b4!important;font-size:11.5px!important;line-height:1.55!important;font-weight:450!important;overflow-wrap:anywhere!important}
 
+/* Completed account state */
+body.register-v17 .registered-success{position:relative;overflow:hidden;display:grid!important;grid-template-columns:52px minmax(0,1fr);gap:14px;padding:20px;border:1px solid rgba(94,230,184,.16);border-radius:18px;background:linear-gradient(145deg,rgba(94,230,184,.07),rgba(255,255,255,.018));box-shadow:0 16px 42px rgba(0,0,0,.18)}
+body.register-v17 .registered-success::before{content:"";position:absolute;right:-60px;top:-80px;width:190px;height:190px;border-radius:50%;background:radial-gradient(circle,rgba(94,230,184,.10),transparent 68%);pointer-events:none}
+body.register-v17 .registered-success-icon{position:relative;z-index:1;display:grid;place-items:center;width:52px;height:52px;border-radius:15px;background:linear-gradient(145deg,#5ee6b8,#75edc7);color:#04150e;font-size:22px;font-weight:900;box-shadow:0 10px 28px rgba(94,230,184,.16)}
+body.register-v17 .registered-success-copy{position:relative;z-index:1;min-width:0;padding-top:2px}
+body.register-v17 .registered-success-kicker{display:block;margin-bottom:5px;color:#70e8c0;font-size:9px;font-weight:850;letter-spacing:.12em}
+body.register-v17 .registered-success h2{margin:0;color:#f1f7f4;font-size:22px;line-height:1.15;letter-spacing:-.025em}
+body.register-v17 .registered-success p{margin:7px 0 0;color:#87978f;font-size:11.5px;line-height:1.6}
+body.register-v17 .registered-group-btn{position:relative;z-index:1;grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:54px;margin-top:3px;padding:0 16px;border:1px solid rgba(94,230,184,.24);border-radius:13px;background:linear-gradient(135deg,#5ee6b8,#74edc8);color:#04140d;text-decoration:none!important;font-size:12px;font-weight:850;box-shadow:0 12px 30px rgba(94,230,184,.12);transition:transform .18s ease,filter .18s ease}
+body.register-v17 .registered-group-btn:hover{transform:translateY(-1px);filter:brightness(1.03)}
+body.register-v17 .registered-group-btn:active{transform:scale(.99)}
+body.register-v17 .registered-redirect-status{position:relative;z-index:1;grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:1px;color:#7f9188;font-size:9.5px}
+body.register-v17 .registered-pulse{width:7px;height:7px;border-radius:50%;background:#5ee6b8;box-shadow:0 0 0 0 rgba(94,230,184,.28);animation:dv-pulse 1.35s infinite}
+@keyframes dv-pulse{70%{box-shadow:0 0 0 7px rgba(94,230,184,0)}100%{box-shadow:0 0 0 0 rgba(94,230,184,0)}}
+body.register-v17.dv-registered .registration-layout{grid-template-columns:minmax(0,760px)!important;justify-content:center!important}
+body.register-v17.dv-registered .registration-side{display:none!important}
+body.register-v17.dv-registered .registration-main{padding:20px!important}
+body.register-v17.dv-registered .registration-intro{max-width:760px;margin-left:auto;margin-right:auto}
+
 body.register-v17:not(.dv-session-ready) .registration-main{min-height:0!important}
 
 @media(max-width:680px){
-  body.register-v17 .registration-shell{padding-top:20px!important}
+  body.register-v17 .registration-shell{padding-top:16px!important}
   body.register-v17 .registration-intro{display:none!important}
-  body.register-v17 .registration-main{padding:15px!important}
+  body.register-v17 .registration-main{padding:14px!important}
   body.register-v17 .flow-steps{margin-bottom:14px!important;padding-bottom:14px!important}
   body.register-v17 .flow-step b{width:28px!important;height:28px!important;font-size:10px!important}
   body.register-v17 .flow-step.complete b{font-size:0!important}
@@ -160,4 +75,10 @@ body.register-v17:not(.dv-session-ready) .registration-main{min-height:0!importa
   body.register-v17 .google-account-bar{grid-template-columns:46px minmax(0,1fr)!important;gap:11px!important;padding:13px!important}
   body.register-v17 .google-account-bar>img{width:46px!important;min-width:46px!important;max-width:46px!important;height:46px!important;min-height:46px!important;max-height:46px!important}
   body.register-v17 #googleLogoutBtn{grid-column:1/-1!important;width:100%!important;max-width:none!important;margin-top:2px!important}
+  body.register-v17 .registered-success{grid-template-columns:44px minmax(0,1fr);gap:12px;padding:16px;border-radius:16px}
+  body.register-v17 .registered-success-icon{width:44px;height:44px;border-radius:13px;font-size:18px}
+  body.register-v17 .registered-success h2{font-size:19px}
+  body.register-v17 .registered-success p{font-size:11px}
+  body.register-v17 .registered-group-btn{min-height:52px;font-size:11.5px}
+  body.register-v17.dv-registered .registration-main{padding:14px!important}
 }
