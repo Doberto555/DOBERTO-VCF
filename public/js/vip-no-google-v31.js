@@ -6,6 +6,20 @@
     en:{heroTitle:'VIP status. More benefits.',heroDesc:'Choose your VIP plan to get VIP status and exclusive DOBERTO VCF benefits.',b1:'VIP status',b1d:'Your account shows VIP status while your plan is active.',b2:'Exclusive access',b2d:'Get access to benefits and features reserved for VIP members.',b3:'Secure payment',b3d:'MonCash is verified automatically. NatCash uses the transaction reference.',standard:'You are on the Standard plan.',confirmed:'Payment confirmed. Your VIP is now active.'}
   };
   function lang(){const s=document.getElementById('langSelect');return s&&copy[s.value]?s.value:'ht'}
-  function patch(){const c=copy[lang()];document.querySelector('[data-vip-key="heroTitle"]')?.replaceChildren(document.createTextNode(c.heroTitle));document.querySelector('[data-vip-key="heroDesc"]')?.replaceChildren(document.createTextNode(c.heroDesc));['b1','b1d','b2','b2d','b3','b3d'].forEach(k=>document.querySelector(`[data-vip-key="${k}"]`)?.replaceChildren(document.createTextNode(c[k])));const status=document.getElementById('vipStatus');if(status){const t=status.textContent||'';if(/Auto-Sync|sync|synchron/i.test(t))status.textContent=/active|actif|aktif/i.test(t)?c.confirmed:c.standard}document.querySelectorAll('.vip-plan-desc').forEach(el=>{if(/Google|sync|synchron/i.test(el.textContent||''))el.textContent=lang()==='fr'?'Accès VIP et avantages exclusifs.':lang()==='en'?'VIP access and exclusive benefits.':'Aksè VIP ak avantaj eksklizif.'})}
-  let queued=false;const observer=new MutationObserver(()=>{if(queued)return;queued=true;setTimeout(()=>{queued=false;patch()},0)});if(document.body)observer.observe(document.body,{subtree:true,childList:true,characterData:true});document.getElementById('langSelect')?.addEventListener('change',()=>setTimeout(patch,20));[0,100,400,1000].forEach(ms=>setTimeout(patch,ms));
+  function setText(el,text){if(el&&el.textContent!==text)el.textContent=text}
+  function patch(){
+    const c=copy[lang()];
+    setText(document.querySelector('[data-vip-key="heroTitle"]'),c.heroTitle);
+    setText(document.querySelector('[data-vip-key="heroDesc"]'),c.heroDesc);
+    ['b1','b1d','b2','b2d','b3','b3d'].forEach(k=>setText(document.querySelector(`[data-vip-key="${k}"]`),c[k]));
+    const status=document.getElementById('vipStatus');
+    if(status){const t=status.textContent||'';if(/Auto-Sync|sync|synchron/i.test(t))setText(status,/active|actif|aktif/i.test(t)?c.confirmed:c.standard)}
+    const desc=lang()==='fr'?'Accès VIP et avantages exclusifs.':lang()==='en'?'VIP access and exclusive benefits.':'Aksè VIP ak avantaj eksklizif.';
+    document.querySelectorAll('.vip-plan-desc').forEach(el=>{if(/Google|sync|synchron/i.test(el.textContent||''))setText(el,desc)});
+  }
+  let queued=false;
+  const observer=new MutationObserver(()=>{if(queued)return;queued=true;setTimeout(()=>{queued=false;patch()},0)});
+  if(document.body)observer.observe(document.body,{subtree:true,childList:true,characterData:true});
+  document.getElementById('langSelect')?.addEventListener('change',()=>setTimeout(patch,20));
+  [0,100,400,1000].forEach(ms=>setTimeout(patch,ms));
 })();
