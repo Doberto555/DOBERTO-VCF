@@ -13,6 +13,40 @@ body.register-v17 .flow-step.active b{box-shadow:0 0 0 3px rgba(94,230,184,.07)!
 body.register-v17 .flow-line{transition:background .18s ease!important}
 body.register-v17 .flow-line.complete{background:rgba(94,230,184,.36)!important}
 
+/* Stable signed-in Google account card on desktop and mobile. */
+body.register-v17 .google-account-bar{
+  display:grid!important;
+  grid-template-columns:48px minmax(0,1fr) auto!important;
+  align-items:center!important;
+  gap:12px!important;
+  width:100%!important;
+  margin:0 0 18px!important;
+  padding:14px!important;
+  border:1px solid rgba(255,255,255,.08)!important;
+  border-radius:14px!important;
+  background:rgba(255,255,255,.018)!important;
+  overflow:hidden!important;
+}
+body.register-v17 .google-account-bar>img{
+  display:block!important;
+  width:48px!important;
+  min-width:48px!important;
+  max-width:48px!important;
+  height:48px!important;
+  min-height:48px!important;
+  max-height:48px!important;
+  margin:0!important;
+  padding:0!important;
+  border-radius:50%!important;
+  object-fit:cover!important;
+  background:#111923!important;
+}
+body.register-v17 .google-account-bar>div{display:flex!important;flex-direction:column!important;justify-content:center!important;min-width:0!important;gap:3px!important}
+body.register-v17 #googleName,body.register-v17 #googleEmail{display:block!important;min-width:0!important;max-width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+body.register-v17 #googleName{color:#eef4f7!important;font-size:13px!important;font-weight:750!important;line-height:1.25!important}
+body.register-v17 #googleEmail{color:#7f8b99!important;font-size:10.5px!important;line-height:1.3!important}
+body.register-v17 #googleLogoutBtn{width:auto!important;min-width:120px!important;max-width:170px!important;min-height:42px!important;margin:0!important;padding:0 15px!important;border-radius:10px!important;font-size:10.5px!important;white-space:nowrap!important}
+
 /* Compact Google sign-in: no oversized logo/card on mobile browsers. */
 body.register-v17 .clean-auth{overflow:hidden!important}
 body.register-v17 .google-auth-button{
@@ -100,15 +134,13 @@ body.register-v17 .privacy-box{
   overflow:hidden!important;
   transition:.16s ease!important;
 }
-/* Defensive rule: the visual checkbox must never render translated consent HTML. */
 body.register-v17 .privacy-box>*{display:none!important}
 body.register-v17 .privacy-box::after{content:"✓";color:#03140d!important;font-size:12px!important;font-weight:900!important;line-height:1!important;opacity:0!important;transform:scale(.65)!important;transition:.16s ease!important}
 body.register-v17 .privacy-consent>input[type="checkbox"]:checked + .privacy-box{border-color:#5ee6b8!important;background:#5ee6b8!important;box-shadow:0 0 0 3px rgba(94,230,184,.10)!important}
 body.register-v17 .privacy-consent>input[type="checkbox"]:checked + .privacy-box::after{opacity:1!important;transform:scale(1)!important}
 body.register-v17 .privacy-consent>input[type="checkbox"]:focus-visible + .privacy-box{outline:2px solid rgba(102,168,255,.85)!important;outline-offset:3px!important}
-body.register-v17 .privacy-copy{display:block!important;min-width:0!important;color:#9aa6b4!important;font-size:11.5px!important;line-height:1.55!important;font-weight:450!important;overflow-wrap:anywhere!important}
+body.register-v17 .privacy-copy,body.register-v17 .group-announcement-copy{display:block!important;min-width:0!important;color:#9aa6b4!important;font-size:11.5px!important;line-height:1.55!important;font-weight:450!important;overflow-wrap:anywhere!important}
 
-/* Keep the unauthenticated state focused: only Google card is visible. */
 body.register-v17:not(.dv-session-ready) .registration-main{min-height:0!important}
 
 @media(max-width:680px){
@@ -125,4 +157,7 @@ body.register-v17:not(.dv-session-ready) .registration-main{min-height:0!importa
   body.register-v17 .google-auth-button{height:50px!important;min-height:50px!important;margin-top:16px!important}
   body.register-v17 .registration-side{margin-top:2px!important}
   body.register-v17 .privacy-consent{padding:13px!important}
+  body.register-v17 .google-account-bar{grid-template-columns:46px minmax(0,1fr)!important;gap:11px!important;padding:13px!important}
+  body.register-v17 .google-account-bar>img{width:46px!important;min-width:46px!important;max-width:46px!important;height:46px!important;min-height:46px!important;max-height:46px!important}
+  body.register-v17 #googleLogoutBtn{grid-column:1/-1!important;width:100%!important;max-width:none!important;margin-top:2px!important}
 }
