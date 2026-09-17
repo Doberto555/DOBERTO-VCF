@@ -1,7 +1,7 @@
 (() => {
   'use strict';
-  if (window.__DOBERTO_STABILITY_V33__) return;
-  window.__DOBERTO_STABILITY_V33__ = true;
+  if (window.__DOBERTO_STABILITY_V34__) return;
+  window.__DOBERTO_STABILITY_V34__ = true;
 
   const nativeAlert = window.alert.bind(window);
 
@@ -39,10 +39,28 @@
   }
 
   const ICONS={
-    home:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 10.4 12 3.5l8.5 6.9v9.1a1 1 0 0 1-1 1h-5.2v-6.1H9.7v6.1H4.5a1 1 0 0 1-1-1z"/></svg>',
-    register:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3.8 19.5c.5-3.1 2.3-5 5.2-5 1.4 0 2.6.4 3.5 1.2M17.5 10.5v7m-3.5-3.5h7"/></svg>',
-    list:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="8" r="2.8"/><circle cx="16.5" cy="9" r="2.2"/><path d="M3.7 19c.5-3.4 2-5.3 4.3-5.3s3.8 1.9 4.3 5.3M13.7 15c.7-.8 1.6-1.2 2.8-1.2 2.1 0 3.4 1.6 3.8 4.4"/></svg>'
+    home:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3.5 10.4 12 3.5l8.5 6.9v9.1a1 1 0 0 1-1 1h-5.2v-6.1H9.7v6.1H4.5a1 1 0 0 1-1-1z"/></svg>',
+    register:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3.8 19.5c.5-3.1 2.3-5 5.2-5 1.4 0 2.6.4 3.5 1.2M17.5 10.5v7m-3.5-3.5h7"/></svg>',
+    list:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="2.8"/><circle cx="16.5" cy="9" r="2.2"/><path d="M3.7 19c.5-3.4 2-5.3 4.3-5.3s3.8 1.9 4.3 5.3M13.7 15c.7-.8 1.6-1.2 2.8-1.2 2.1 0 3.4 1.6 3.8 4.4"/></svg>'
   };
+
+  function ensureCriticalDockStyles(){
+    if(document.getElementById('dv-critical-dock-style'))return;
+    const style=document.createElement('style');
+    style.id='dv-critical-dock-style';
+    style.textContent=`
+      .dv-mobile-dock{display:none!important}
+      @media(max-width:680px){
+        body.site-v10{padding-bottom:96px!important}
+        .dv-mobile-dock{position:fixed!important;left:50%!important;bottom:max(12px,env(safe-area-inset-bottom))!important;z-index:999!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;width:min(360px,calc(100% - 28px))!important;padding:6px!important;transform:translateX(-50%)!important;border:1px solid rgba(255,255,255,.11)!important;border-radius:20px!important;background:rgba(8,12,17,.96)!important;box-shadow:0 18px 55px rgba(0,0,0,.46)!important;box-sizing:border-box!important}
+        .dv-mobile-dock a{display:flex!important;min-width:0!important;min-height:54px!important;align-items:center!important;justify-content:center!important;flex-direction:column!important;gap:4px!important;padding:4px!important;border-radius:14px!important;color:#778598!important;text-decoration:none!important;font-size:9px!important;font-weight:650!important;line-height:1.15!important;box-sizing:border-box!important}
+        .dv-mobile-dock a svg{display:block!important;width:20px!important;height:20px!important;min-width:20px!important;max-width:20px!important;min-height:20px!important;max-height:20px!important;stroke:currentColor!important;stroke-width:1.8!important;fill:none!important;overflow:visible!important}
+        .dv-mobile-dock a.active{color:#05130e!important;background:linear-gradient(135deg,#5ee6b8,#7cefd0)!important}
+        .dv-mobile-dock a span{display:block!important;white-space:nowrap!important}
+      }
+    `;
+    document.head.appendChild(style);
+  }
 
   function section(){
     const p=location.pathname.replace(/\/$/,'')||'/';
@@ -66,6 +84,7 @@
     if(!document.body.classList.contains('site-v10'))return;
     const active=section();
     if(!active)return;
+    ensureCriticalDockStyles();
     let dock=document.querySelector('.dv-mobile-dock');
     if(!dock){
       dock=document.createElement('nav');
@@ -135,7 +154,7 @@
   if('serviceWorker'in navigator){
     window.addEventListener('load',async()=>{
       try{
-        const reg=await navigator.serviceWorker.register('/sw.js?v=20260917-9',{updateViaCache:'none'});
+        const reg=await navigator.serviceWorker.register('/sw.js?v=20260917-10',{updateViaCache:'none'});
         await reg.update().catch(()=>{});
       }catch(_){}
     },{once:true});
