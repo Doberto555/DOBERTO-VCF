@@ -2,11 +2,8 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
     { "source": "/api/auth/google/url", "destination": "/api/google-login-url" },
-    { "source": "/api/google/status", "destination": "/api/google-disabled" },
-    { "source": "/api/google/sync", "destination": "/api/google-disabled" },
-    { "source": "/api/google/auto-sync", "destination": "/api/google-disabled" },
-    { "source": "/api/cron/google-sync", "destination": "/api/google-disabled" },
-    { "source": "/api/vip/trigger-sync", "destination": "/api/google-disabled" },
+    { "source": "/api/settings/public", "destination": "/api/public-settings" },
+    { "source": "/api/admin/community/settings", "destination": "/api/admin-community-settings" },
     { "source": "/api/vip/status", "destination": "/api/vip-status" },
     { "source": "/api/vip/catalog", "destination": "/api/vip-catalog" },
     { "source": "/api/vip/methods", "destination": "/api/vip-methods" },
