@@ -16,38 +16,41 @@
   function notify(text,type='info'){if(window.DobertoUI?.toast)window.DobertoUI.toast(text,type);else if(text)alert(text)}
   function clearOAuthQuery(){try{const u=new URL(location.href);['code','state','scope','authuser','prompt','hd','iss','error','error_description'].forEach(k=>u.searchParams.delete(k));history.replaceState({},'',u.pathname+u.search+u.hash)}catch(_){}}
   function clearLegacyState(){remove(sessionStorage,LEGACY_STATE_KEY);remove(localStorage,LEGACY_STATE_KEY)}
+  function defaultLoginLabel(){
+    try{const translated=window.DVRegisterI18n?.t?.('login');if(translated&&translated!=='login')return translated}catch(_){}
+    return lang()==='fr'?'Continuer avec Google':lang()==='en'?'Continue with Google':'Kontinye ak Google';
+  }
 
   function setButtonBusy(button,on){
     if(!button)return;
     const label=button.querySelector('[data-google-copy="login"]')||button.querySelector('span:last-child');
-    if(label&&!label.dataset.defaultLabel)label.dataset.defaultLabel=label.textContent.trim();
-    if(label)label.textContent=on?(lang()==='fr'?'Connexion…':lang()==='en'?'Connecting…':'Koneksyon…'):(label.dataset.defaultLabel||label.textContent);
+    if(label)label.textContent=on?(lang()==='fr'?'Connexion…':lang()==='en'?'Connecting…':'Koneksyon…'):defaultLoginLabel();
     button.classList.toggle('is-busy',on);
     button.setAttribute('aria-busy',on?'true':'false');
     if(button instanceof HTMLButtonElement)button.disabled=on;
-    else if(on)button.setAttribute('aria-disabled','true');
     else button.removeAttribute('aria-disabled');
   }
 
   function resetLoginButton(){
     busy=false;
-    setButtonBusy(document.getElementById('googleLoginBtn'),false);
+    const login=document.getElementById('googleLoginBtn');
+    if(login instanceof HTMLAnchorElement)login.href=LOGIN_URL;
+    setButtonBusy(login,false);
   }
 
-  function startLogin(event){
-    if(event)event.preventDefault();
-    if(busy)return;
+  function prepareLogin(event){
+    const login=event?.currentTarget||document.getElementById('googleLoginBtn');
+    if(busy){event?.preventDefault();return}
     busy=true;
     clearLegacyState();
-    const btn=document.getElementById('googleLoginBtn');
-    setButtonBusy(btn,true);
-    try{location.assign(LOGIN_URL)}catch(_){location.href=LOGIN_URL}
+    if(login instanceof HTMLAnchorElement)login.href=LOGIN_URL;
+    setButtonBusy(login,true);
+    // Do not prevent the default action. The native anchor navigation is the
+    // reliable path on Android/iOS and still works even if another script fails.
   }
 
   async function finishLogin(code,state){
     // The signed OAuth state + HttpOnly browser nonce are verified server-side.
-    // Client-side state storage was intentionally removed because stale state in
-    // local/session storage could incorrectly reject a valid Google return.
     const r=await fetch('/api/auth/google/callback',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code,state}),cache:'no-store'});
     const d=await r.json().catch(()=>({}));
     if(!r.ok||!d.token)throw new Error(d.error||'Koneksyon Google la pa t fini.');
@@ -76,6 +79,7 @@
     const nameInput=document.getElementById('name'),emailInput=document.getElementById('email');if(nameInput&&!nameInput.value)nameInput.value=session.registration?.name||session.user.name||'';if(emailInput)emailInput.value=session.user.email||'';
     const registered=Boolean(session.registered);document.body?.classList.toggle('dv-registered',registered);if(form)form.hidden=registered;if(done)done.hidden=!registered;
     window.DVRegisterI18n?.apply?.();
+    resetLoginButton();
   }
 
   function registrationCompleted(registration){session=session||{};session.registered=true;session.registration=registration||session.registration||null;set(localStorage,'dv_registered','1');render()}
@@ -84,7 +88,8 @@
   async function boot(){
     const login=document.getElementById('googleLoginBtn');
     const logoutBtn=document.getElementById('googleLogoutBtn');
-    login?.addEventListener('click',startLogin);
+    if(login instanceof HTMLAnchorElement)login.href=LOGIN_URL;
+    login?.addEventListener('click',prepareLogin);
     logoutBtn?.addEventListener('click',logout);
     clearLegacyState();
     const params=new URLSearchParams(location.search);
@@ -95,7 +100,6 @@
     }
     await loadSession();
     render();
-    resetLoginButton();
     window.DVRegisterI18n?.updateFlow?.();
   }
 
