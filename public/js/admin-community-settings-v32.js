@@ -1,0 +1,17 @@
+(()=>{
+'use strict';
+const COPY={
+ ht:{k:'WHATSAPP GROUP',t:'Link group prensipal la',d:'Chanje link la isit la si group WhatsApp la reset oswa ou kreye yon nouvo group. Nouvo enskripsyon yo ap itilize link sa otomatikman.',save:'Sove link group la',saving:'Ap sove…',ok:'Link group WhatsApp la sove.',load:'Nou pa ka chaje link group la.',bad:'Mete yon link group WhatsApp valid.'},
+ fr:{k:'GROUPE WHATSAPP',t:'Lien du groupe principal',d:'Modifiez ce lien si le groupe WhatsApp est réinitialisé ou remplacé. Les nouvelles inscriptions utiliseront automatiquement le nouveau lien.',save:'Enregistrer le lien',saving:'Enregistrement…',ok:'Le lien du groupe WhatsApp est enregistré.',load:'Impossible de charger le lien du groupe.',bad:'Saisissez un lien de groupe WhatsApp valide.'},
+ en:{k:'WHATSAPP GROUP',t:'Main group link',d:'Change this link if the WhatsApp group is reset or replaced. New registrations will automatically use the new link.',save:'Save group link',saving:'Saving…',ok:'WhatsApp group link saved.',load:'Could not load the group link.',bad:'Enter a valid WhatsApp group link.'}
+};
+function lang(){const s=document.getElementById('langSelect');return s&&COPY[s.value]?s.value:'ht'}
+function c(){return COPY[lang()]||COPY.ht}
+function token(){try{return sessionStorage.getItem('doberto_admin_token')||''}catch(_){return ''}}
+function msg(text,ok){const el=document.getElementById('groupSettingMsg');if(!el)return;el.textContent=text;el.className='msg show '+(ok?'ok':'err')}
+function apply(){const x=c();const map={groupSettingKicker:x.k,groupSettingTitle:x.t,groupSettingDesc:x.d,saveGroupUrlBtn:x.save};Object.entries(map).forEach(([id,v])=>{const el=document.getElementById(id);if(el&&!el.disabled)el.textContent=v})}
+async function load(){if(!token())return;try{const r=await fetch('/api/admin/community/settings',{headers:{Authorization:`Bearer ${token()}`},cache:'no-store'});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error();const input=document.getElementById('groupUrlInput');if(input)input.value=d.whatsappGroupUrl||'';}catch(_){msg(c().load,false)}}
+async function save(){const input=document.getElementById('groupUrlInput');const btn=document.getElementById('saveGroupUrlBtn');const value=(input?.value||'').trim();if(!/^https:\/\/chat\.whatsapp\.com\//i.test(value)){msg(c().bad,false);return}btn.disabled=true;btn.textContent=c().saving;try{const r=await fetch('/api/admin/community/settings',{method:'PUT',headers:{'Content-Type':'application/json',Authorization:`Bearer ${token()}`},body:JSON.stringify({whatsappGroupUrl:value})});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||c().bad);msg(c().ok,true);input.value=d.whatsappGroupUrl||value;}catch(e){msg(e.message||c().bad,false)}finally{btn.disabled=false;apply()}}
+function boot(){apply();document.getElementById('saveGroupUrlBtn')?.addEventListener('click',save);document.getElementById('langSelect')?.addEventListener('change',()=>setTimeout(apply,0));const panel=document.getElementById('adminPanel');if(panel&&'MutationObserver'in window){new MutationObserver(()=>{if(panel.style.display!=='none')load()}).observe(panel,{attributes:true,attributeFilter:['style']})}if(panel&&panel.style.display!=='none')load();}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
