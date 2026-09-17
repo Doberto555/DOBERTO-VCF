@@ -1,5 +1,5 @@
 // DOBERTO VCF — current PWA service worker.
-const CACHE='doberto-vcf-v47-20260917';
+const CACHE='doberto-vcf-v48-20260917';
 const OFFLINE_URL='/offline.html';
 const APP_SHELL=[
   '/','/index.html','/register.html','/community.html','/list.html','/privacy.html','/terms.html','/mesi.html','/offline.html',
