@@ -135,7 +135,7 @@
   if('serviceWorker'in navigator){
     window.addEventListener('load',async()=>{
       try{
-        const reg=await navigator.serviceWorker.register('/sw.js?v=20260917-7',{updateViaCache:'none'});
+        const reg=await navigator.serviceWorker.register('/sw.js?v=20260917-9',{updateViaCache:'none'});
         await reg.update().catch(()=>{});
       }catch(_){}
     },{once:true});
