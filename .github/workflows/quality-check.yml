@@ -41,6 +41,10 @@ jobs:
             echo "Deprecated Google Contacts scope detected in runtime code."
             exit 1
           fi
+          if grep -R --line-number --fixed-strings "google_connections" api lib public/js server.js; then
+            echo "Removed Google Contacts storage detected in runtime code."
+            exit 1
+          fi
           grep -q "scope: 'openid email profile'" lib/google-sync.js
 
       - name: Verify required production files
