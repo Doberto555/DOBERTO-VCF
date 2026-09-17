@@ -2,7 +2,8 @@
   'use strict';
 
   const TOKEN_KEY='dv_auth_token';
-  const STATE_KEY='dv_google_oauth_state';
+  const LEGACY_STATE_KEY='dv_google_oauth_state';
+  const LOGIN_URL='/api/auth/google/url?flow=login&redirect=1';
   let session=null;
   let busy=false;
 
@@ -14,11 +15,49 @@
   function lang(){const el=document.getElementById('langSelect');return el&&['ht','fr','en'].includes(el.value)?el.value:'ht'}
   function notify(text,type='info'){if(window.DobertoUI?.toast)window.DobertoUI.toast(text,type);else if(text)alert(text)}
   function clearOAuthQuery(){try{const u=new URL(location.href);['code','state','scope','authuser','prompt','hd','iss','error','error_description'].forEach(k=>u.searchParams.delete(k));history.replaceState({},'',u.pathname+u.search+u.hash)}catch(_){}}
-  function setButtonBusy(button,on){if(!button)return;if(!button.dataset.label)button.dataset.label=button.textContent.trim();button.disabled=on;button.textContent=on?(lang()==='fr'?'Connexion…':lang()==='en'?'Connecting…':'Koneksyon…'):button.dataset.label}
+  function clearLegacyState(){remove(sessionStorage,LEGACY_STATE_KEY);remove(localStorage,LEGACY_STATE_KEY)}
 
-  async function startLogin(){if(busy)return;busy=true;const btn=document.getElementById('googleLoginBtn');setButtonBusy(btn,true);try{const r=await fetch('/api/auth/google/url?flow=login',{cache:'no-store'});const d=await r.json().catch(()=>({}));if(!r.ok||!d.url)throw new Error(d.error||'Google OAuth pa disponib.');const state=new URL(d.url).searchParams.get('state')||'';set(sessionStorage,STATE_KEY,state);set(localStorage,STATE_KEY,state);location.assign(d.url)}catch(e){busy=false;setButtonBusy(btn,false);notify(e?.message||'Koneksyon Google la pa mache.','error')}}
+  function setButtonBusy(button,on){
+    if(!button)return;
+    const label=button.querySelector('[data-google-copy="login"]')||button.querySelector('span:last-child');
+    if(label&&!label.dataset.defaultLabel)label.dataset.defaultLabel=label.textContent.trim();
+    if(label)label.textContent=on?(lang()==='fr'?'Connexion…':lang()==='en'?'Connecting…':'Koneksyon…'):(label.dataset.defaultLabel||label.textContent);
+    button.classList.toggle('is-busy',on);
+    button.setAttribute('aria-busy',on?'true':'false');
+    if(button instanceof HTMLButtonElement)button.disabled=on;
+    else if(on)button.setAttribute('aria-disabled','true');
+    else button.removeAttribute('aria-disabled');
+  }
 
-  async function finishLogin(code,state){const expected=get(sessionStorage,STATE_KEY)||get(localStorage,STATE_KEY);if(expected&&state&&expected!==state)throw new Error('Sesyon Google la pa valid ankò. Eseye ankò.');const r=await fetch('/api/auth/google/callback',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code,state})});const d=await r.json().catch(()=>({}));if(!r.ok||!d.token)throw new Error(d.error||'Koneksyon Google la pa t fini.');set(localStorage,TOKEN_KEY,d.token);remove(sessionStorage,STATE_KEY);remove(localStorage,STATE_KEY);clearOAuthQuery();session=d;if(d.registered){set(localStorage,'dv_registered','1');set(localStorage,'dv_member_name',d.registration?.name||d.user?.name||'');set(localStorage,'dv_member_dial',d.registration?.dial_code||'');set(localStorage,'dv_member_phone',d.registration?.phone||'')}return d}
+  function resetLoginButton(){
+    busy=false;
+    setButtonBusy(document.getElementById('googleLoginBtn'),false);
+  }
+
+  function startLogin(event){
+    if(event)event.preventDefault();
+    if(busy)return;
+    busy=true;
+    clearLegacyState();
+    const btn=document.getElementById('googleLoginBtn');
+    setButtonBusy(btn,true);
+    try{location.assign(LOGIN_URL)}catch(_){location.href=LOGIN_URL}
+  }
+
+  async function finishLogin(code,state){
+    // The signed OAuth state + HttpOnly browser nonce are verified server-side.
+    // Client-side state storage was intentionally removed because stale state in
+    // local/session storage could incorrectly reject a valid Google return.
+    const r=await fetch('/api/auth/google/callback',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code,state}),cache:'no-store'});
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok||!d.token)throw new Error(d.error||'Koneksyon Google la pa t fini.');
+    set(localStorage,TOKEN_KEY,d.token);
+    clearLegacyState();
+    clearOAuthQuery();
+    session=d;
+    if(d.registered){set(localStorage,'dv_registered','1');set(localStorage,'dv_member_name',d.registration?.name||d.user?.name||'');set(localStorage,'dv_member_dial',d.registration?.dial_code||'');set(localStorage,'dv_member_phone',d.registration?.phone||'')}
+    return d;
+  }
 
   async function loadSession(){if(!token()){session=null;return null}try{const r=await fetch('/api/auth/session',{headers:authHeaders(false),cache:'no-store'});if(!r.ok){remove(localStorage,TOKEN_KEY);session=null;return null}session=await r.json();if(session.registered){set(localStorage,'dv_registered','1');if(session.registration){set(localStorage,'dv_member_name',session.registration.name||'');set(localStorage,'dv_member_dial',session.registration.dial_code||'');set(localStorage,'dv_member_phone',session.registration.phone||'')}}return session}catch(_){return session}}
 
@@ -42,8 +81,26 @@
   function registrationCompleted(registration){session=session||{};session.registered=true;session.registration=registration||session.registration||null;set(localStorage,'dv_registered','1');render()}
   function logout(){remove(localStorage,TOKEN_KEY);remove(localStorage,'dv_registered');session=null;render()}
 
-  async function boot(){const login=document.getElementById('googleLoginBtn');const logoutBtn=document.getElementById('googleLogoutBtn');login?.addEventListener('click',startLogin);logoutBtn?.addEventListener('click',logout);const params=new URLSearchParams(location.search);if(params.get('error')){notify(params.get('error_description')||params.get('error'),'error');clearOAuthQuery()}if(params.get('code')&&params.get('state')){try{await finishLogin(params.get('code'),params.get('state'))}catch(e){notify(e?.message||'Koneksyon Google la pa t fini.','error');clearOAuthQuery()}}await loadSession();render();window.DVRegisterI18n?.updateFlow?.()}
+  async function boot(){
+    const login=document.getElementById('googleLoginBtn');
+    const logoutBtn=document.getElementById('googleLogoutBtn');
+    login?.addEventListener('click',startLogin);
+    logoutBtn?.addEventListener('click',logout);
+    clearLegacyState();
+    const params=new URLSearchParams(location.search);
+    if(params.get('error')){notify(params.get('error_description')||params.get('error'),'error');clearOAuthQuery()}
+    if(params.get('code')&&params.get('state')){
+      try{await finishLogin(params.get('code'),params.get('state'))}
+      catch(e){notify(e?.message||'Koneksyon Google la pa t fini.','error');clearOAuthQuery()}
+    }
+    await loadSession();
+    render();
+    resetLoginButton();
+    window.DVRegisterI18n?.updateFlow?.();
+  }
 
+  window.addEventListener('pageshow',()=>setTimeout(resetLoginButton,0));
+  window.addEventListener('pagehide',()=>{busy=false});
   window.DobertoGoogle={authHeaders,registrationCompleted,currentSession:()=>session,loadSession,logout};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
