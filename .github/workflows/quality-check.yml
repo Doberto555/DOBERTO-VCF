@@ -30,7 +30,6 @@ jobs:
         run: |
           set -e
           node --check server.js
-          node --check middleware.js
           find api lib public/js -type f -name '*.js' -print0 | while IFS= read -r -d '' file; do
             echo "Checking $file"
             node --check "$file"
@@ -64,6 +63,7 @@ jobs:
           fi
           test ! -f lib/vip-api.js
           test ! -f public/owner-access.html
+          test ! -f middleware.js
           grep -q 'oauth_nonce' api/google-login-url.js
           grep -q 'oauth_nonce' api/google-callback.js
           grep -q 'admin_login_guard_check' api/admin-login-secure.js
@@ -82,7 +82,7 @@ jobs:
             echo "Server secret identifier found in public assets."
             exit 1
           fi
-          if grep -R --line-number -E 'http://([0-9]{1,3}\.){3}[0-9]{1,3}' api lib public server.js middleware.js; then
+          if grep -R --line-number -E 'http://([0-9]{1,3}\.){3}[0-9]{1,3}' api lib public server.js; then
             echo "Insecure direct-IP HTTP endpoint found in runtime code."
             exit 1
           fi
