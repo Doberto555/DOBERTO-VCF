@@ -1,7 +1,7 @@
 (()=>{
 'use strict';
 const COPY={
- ht:{k:'WHATSAPP GROUP',t:'Link group prensipal la',d:'Chanje link la isit la si group WhatsApp la reset oswa ou kreye yon nouvo group. Tout nouvo enskripsyon yo ap itilize nouvo link la touswit.',save:'Sove link group la',test:'Teste link la',saving:'Ap sove…',ok:'Link group WhatsApp la sove epi li aktif pou nouvo enskripsyon yo.',load:'Nou pa ka chaje link group la.',bad:'Mete yon link group WhatsApp valid.'},
+ ht:{k:'GWOUP WHATSAPP',t:'Link gwoup prensipal la',d:'Chanje link la isit la si gwoup WhatsApp la reset oswa ou kreye yon nouvo gwoup. Tout nouvo enskripsyon yo ap itilize nouvo link la touswit.',save:'Sove link gwoup la',test:'Teste link la',saving:'Ap sove…',ok:'Link gwoup WhatsApp la sove epi li aktif pou nouvo enskripsyon yo.',load:'Nou pa ka chaje link gwoup la.',bad:'Mete yon link gwoup WhatsApp valid.'},
  fr:{k:'GROUPE WHATSAPP',t:'Lien du groupe principal',d:'Modifiez ce lien si le groupe WhatsApp est réinitialisé ou remplacé. Toutes les nouvelles inscriptions utiliseront immédiatement le nouveau lien.',save:'Enregistrer le lien',test:'Tester le lien',saving:'Enregistrement…',ok:'Le lien du groupe WhatsApp est enregistré et actif pour les nouvelles inscriptions.',load:'Impossible de charger le lien du groupe.',bad:'Saisissez un lien de groupe WhatsApp valide.'},
  en:{k:'WHATSAPP GROUP',t:'Main group link',d:'Change this link if the WhatsApp group is reset or replaced. All new registrations will immediately use the new link.',save:'Save group link',test:'Test link',saving:'Saving…',ok:'WhatsApp group link saved and active for new registrations.',load:'Could not load the group link.',bad:'Enter a valid WhatsApp group link.'}
 };
