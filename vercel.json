@@ -1,6 +1,12 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
+    { "source": "/api/auth/google/url", "destination": "/api/google-login-url" },
+    { "source": "/api/google/status", "destination": "/api/google-disabled" },
+    { "source": "/api/google/sync", "destination": "/api/google-disabled" },
+    { "source": "/api/google/auto-sync", "destination": "/api/google-disabled" },
+    { "source": "/api/cron/google-sync", "destination": "/api/google-disabled" },
+    { "source": "/api/vip/trigger-sync", "destination": "/api/google-disabled" },
     { "source": "/api/vip/status", "destination": "/api/vip-status" },
     { "source": "/api/vip/catalog", "destination": "/api/vip-catalog" },
     { "source": "/api/vip/methods", "destination": "/api/vip-methods" },
@@ -9,7 +15,6 @@
     { "source": "/api/vip/moncash/verify", "destination": "/api/vip-moncash-verify" },
     { "source": "/api/vip/moncash/return", "destination": "/api/vip-moncash-return" },
     { "source": "/api/vip/moncash/health", "destination": "/api/vip-moncash-health" },
-    { "source": "/api/vip/trigger-sync", "destination": "/api/vip-trigger-sync" },
     { "source": "/api/admin/vip/methods", "destination": "/api/admin-vip-methods" },
     { "source": "/api/admin/vip/payments", "destination": "/api/admin-vip-payments" },
     { "source": "/api/admin/vip/members", "destination": "/api/admin-vip-members" },
