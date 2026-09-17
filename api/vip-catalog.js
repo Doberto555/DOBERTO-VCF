@@ -4,6 +4,10 @@ const { createClient } = require('@supabase/supabase-js');
 const SUPABASE_URL = String(process.env.SUPABASE_URL || '').trim();
 const SERVICE_KEY = String(process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
 const supabase = createClient(SUPABASE_URL || 'https://example.supabase.co', SERVICE_KEY || 'missing');
+const moncashConfigured = () => Boolean(
+  String(process.env.MONCASH_CLIENT_ID || '').trim() &&
+  String(process.env.MONCASH_CLIENT_SECRET || '').trim()
+);
 
 module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'public, max-age=30, s-maxage=60, stale-while-revalidate=300');
@@ -45,7 +49,7 @@ module.exports = async (req, res) => {
         method: m.method,
         displayName: m.display_name || m.method,
         enabled: Boolean(m.enabled),
-        configured: Boolean(m.enabled && String(m.recipient_value || '').trim())
+        configured: Boolean(m.enabled && (m.method === 'moncash' ? moncashConfigured() : String(m.recipient_value || '').trim()))
       }))
     });
   } catch (error) {
