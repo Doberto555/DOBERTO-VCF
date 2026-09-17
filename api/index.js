@@ -1,10 +1,6 @@
-// Vercel serverless entrypoint — tout API logic rete nan server.js pou pa gen doublon.
-//
-// Production compatibility:
-// Si JWT_SECRET / ADMIN_PASSWORD poko mete nan Vercel, nou derive valè server-side
-// apati SUPABASE_SERVICE_ROLE_KEY la. Sa pèmèt verifikasyon/download VCF la mache
-// san nou pa mete okenn secret reyèl nan GitHub. Lè ou mete vrè ADMIN_PASSWORD ak
-// JWT_SECRET nan Vercel, valè Vercel yo toujou gen priyorite.
+// Vercel serverless entrypoint — main API logic stays in server.js.
+// Google is now used only for sign-in/registration. Legacy Google Contacts
+// endpoints are blocked here so production cannot request or use Contacts access.
 const crypto = require('crypto');
 
 const serviceRole = String(process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
@@ -19,10 +15,6 @@ if (currentJwt.length < 32 && hasUsableServiceRole) {
     .digest('hex');
 }
 
-// server.js egzije ADMIN_PASSWORD ansanm ak JWT_SECRET anvan li pèmèt download.
-// Fallback sa a se yon valè entèn ki soti nan service-role secret la; li pa ekspoze
-// yon modpas admin piblik. Pou konekte nan paj Admin lan, mete ADMIN_PASSWORD pa w
-// nan Vercel Project Settings > Environment Variables.
 if (currentAdminPassword.length < 8 && hasUsableServiceRole) {
   process.env.ADMIN_PASSWORD = crypto
     .createHash('sha256')
@@ -30,4 +22,35 @@ if (currentAdminPassword.length < 8 && hasUsableServiceRole) {
     .digest('hex');
 }
 
-module.exports = require('../server.js');
+const app = require('../server.js');
+
+const removedPaths = new Set([
+  '/api/google/status',
+  '/api/google/sync',
+  '/api/google/auto-sync',
+  '/api/cron/google-sync'
+]);
+
+module.exports = (req, res) => {
+  let parsed;
+  try { parsed = new URL(req.url || '/', 'https://dobertovcf.online'); }
+  catch (_) { parsed = { pathname: req.url || '/', searchParams: new URLSearchParams() }; }
+
+  if (removedPaths.has(parsed.pathname)) {
+    res.setHeader('Cache-Control', 'no-store');
+    return res.status(410).json({
+      code: 'feature_removed',
+      error: 'Google Contacts te retire. Google sèvi sèlman pou koneksyon ak enskripsyon.'
+    });
+  }
+
+  if (parsed.pathname === '/api/auth/google/url' && parsed.searchParams.get('flow') === 'contacts') {
+    res.setHeader('Cache-Control', 'no-store');
+    return res.status(410).json({
+      code: 'google_contacts_removed',
+      error: 'Google Contacts te retire. Sèl OAuth flow ki disponib se Google Sign-In.'
+    });
+  }
+
+  return app(req, res);
+};
