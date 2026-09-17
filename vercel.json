@@ -3,6 +3,7 @@
   "rewrites": [
     { "source": "/api/auth/google/url", "destination": "/api/google-login-url" },
     { "source": "/api/settings/public", "destination": "/api/public-settings" },
+    { "source": "/api/community/announce", "destination": "/api/community-announce" },
     { "source": "/api/admin/community/settings", "destination": "/api/admin-community-settings" },
     { "source": "/api/vip/status", "destination": "/api/vip-status" },
     { "source": "/api/vip/catalog", "destination": "/api/vip-catalog" },
