@@ -9,6 +9,8 @@ const phoneHint=document.getElementById('phoneHint');
 const form=document.getElementById('regForm');
 const msg=document.getElementById('formMsg');
 const submitBtn=document.getElementById('submitBtn');
+const WHATSAPP_GROUP_URL='https://chat.whatsapp.com/BUECpkyjH8n7pNC19smrNR';
+let communityPopup=null;
 
 function currentLang(){
   const select=document.getElementById('langSelect');
@@ -16,9 +18,9 @@ function currentLang(){
 }
 
 const COPY={
-  ht:{headline:'Antre nan rezo a',lead:'Konekte kont Google ou, ajoute nimewo WhatsApp ou epi aktive Google Contacts. Apre sa sistèm nan pran swen senkronizasyon an.',submit:'Fini enskripsyon an',success:'Enskripsyon fini. Kounye a aktive Google Contacts pou kòmanse Auto-Sync.',consent:'Mwen dakò ak <a href="privacy.html" target="_blank" rel="noopener">Politik konfidansyalite</a> ak <a href="terms.html" target="_blank" rel="noopener">Kondisyon itilizasyon</a>.'},
-  fr:{headline:'Rejoignez le réseau',lead:'Connectez votre compte Google, ajoutez votre numéro WhatsApp puis activez Google Contacts. Ensuite la synchronisation fonctionne automatiquement.',submit:'Terminer l’inscription',success:'Inscription terminée. Activez maintenant Google Contacts pour démarrer la synchronisation automatique.',consent:'J’accepte la <a href="privacy.html" target="_blank" rel="noopener">Politique de confidentialité</a> et les <a href="terms.html" target="_blank" rel="noopener">Conditions d’utilisation</a>.'},
-  en:{headline:'Join the network',lead:'Connect your Google account, add your WhatsApp number, then enable Google Contacts. Sync runs automatically after that.',submit:'Complete registration',success:'Registration complete. Enable Google Contacts now to start automatic sync.',consent:'I agree to the <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a> and <a href="terms.html" target="_blank" rel="noopener">Terms of Use</a>.'}
+  ht:{headline:'Antre nan rezo a',lead:'Konekte kont Google ou, ajoute nimewo WhatsApp ou epi fini enskripsyon an. Apre sa n ap mennen w nan kominote WhatsApp DOBERTO VCF la.',submit:'Fini enskripsyon an',success:'Enskripsyon fini. N ap ouvri group WhatsApp la epi mennen w sou paj kominote a…',consent:'Mwen dakò ak <a href="privacy.html" target="_blank" rel="noopener">Politik konfidansyalite</a> ak <a href="terms.html" target="_blank" rel="noopener">Kondisyon itilizasyon</a>.'},
+  fr:{headline:'Rejoignez le réseau',lead:'Connectez votre compte Google, ajoutez votre numéro WhatsApp puis terminez l’inscription. Ensuite, nous vous dirigeons vers la communauté WhatsApp DOBERTO VCF.',submit:'Terminer l’inscription',success:'Inscription terminée. Nous ouvrons le groupe WhatsApp puis la page communauté…',consent:'J’accepte la <a href="privacy.html" target="_blank" rel="noopener">Politique de confidentialité</a> et les <a href="terms.html" target="_blank" rel="noopener">Conditions d’utilisation</a>.'},
+  en:{headline:'Join the network',lead:'Connect your Google account, add your WhatsApp number, and complete registration. Then we’ll take you to the DOBERTO VCF WhatsApp community.',submit:'Complete registration',success:'Registration complete. Opening the WhatsApp group and community page…',consent:'I agree to the <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a> and <a href="terms.html" target="_blank" rel="noopener">Terms of Use</a>.'}
 };
 
 function applyCopy(){
@@ -77,6 +79,27 @@ function rememberRegistration(registration){
   }catch(_){}
 }
 
+function prepareCommunityPopup(){
+  try{
+    communityPopup=window.open('about:blank','dobertoVcfCommunity');
+    if(communityPopup){
+      communityPopup.document.open();
+      communityPopup.document.write('<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>DOBERTO VCF</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#06100c;color:#dff7ed;font:600 14px Arial,sans-serif}.box{text-align:center;padding:28px}.dot{width:34px;height:34px;margin:0 auto 16px;border:3px solid rgba(80,230,175,.18);border-top-color:#50e6af;border-radius:50%;animation:s .8s linear infinite}@keyframes s{to{transform:rotate(360deg)}}</style></head><body><div class="box"><div class="dot"></div>DOBERTO VCF<br><small>N ap fini enskripsyon an…</small></div></body></html>');
+      communityPopup.document.close();
+    }else{
+      sessionStorage.setItem('dv_group_popup_blocked','1');
+    }
+  }catch(_){
+    communityPopup=null;
+    try{sessionStorage.setItem('dv_group_popup_blocked','1')}catch(__){}
+  }
+}
+
+function cancelCommunityPopup(){
+  try{if(communityPopup && !communityPopup.closed)communityPopup.close()}catch(_){}
+  communityPopup=null;
+}
+
 function finishRegistration(registration){
   const normalized={
     name:registration.name||'',
@@ -89,11 +112,15 @@ function finishRegistration(registration){
   triggerVipInstantSync();
   markStep(3);
   showMsg(COPY[currentLang()].success,true);
-  const syncPanel=document.getElementById('googleSyncPanel');
-  if(syncPanel){
-    syncPanel.hidden=false;
-    window.setTimeout(()=>syncPanel.scrollIntoView({behavior:'smooth',block:'center'}),120);
-  }
+  try{sessionStorage.setItem('dv_community_new','1')}catch(_){}
+  try{
+    if(communityPopup && !communityPopup.closed){
+      communityPopup.location.replace(WHATSAPP_GROUP_URL);
+    }else{
+      sessionStorage.setItem('dv_group_popup_blocked','1');
+    }
+  }catch(_){try{sessionStorage.setItem('dv_group_popup_blocked','1')}catch(__){}}
+  window.setTimeout(()=>location.assign('community.html?welcome=1'),420);
 }
 
 async function reconcileRegistration(fallback){
@@ -123,6 +150,7 @@ if(form) form.addEventListener('submit',async(e)=>{
   if(rule.exact && phone.length!==rule.exact){showMsg(t('hint_exact',{n:rule.exact}),false);return;}
   if(!rule.exact && (phone.length<rule.min || phone.length>rule.max)){showMsg(t('hint_generic'),false);return;}
 
+  prepareCommunityPopup();
   submitBtn.disabled=true;
   submitBtn.textContent=t('btn_sending');
   try{
@@ -134,12 +162,13 @@ if(form) form.addEventListener('submit',async(e)=>{
     const data=await res.json().catch(()=>({}));
     if(!res.ok){
       if((res.status>=500 || res.status===409) && await reconcileRegistration(registration)) return;
+      cancelCommunityPopup();
       showMsg(typeof errT==='function'?errT(data):(data.error||'Enskripsyon an pa fini.'),false);
       return;
     }
     finishRegistration(registration);
   }catch(err){
-    if(!(await reconcileRegistration(registration))) showMsg(t('err_no_connection'),false);
+    if(!(await reconcileRegistration(registration))){cancelCommunityPopup();showMsg(t('err_no_connection'),false);}
   }
   finally{submitBtn.disabled=false;applyCopy();}
 });
