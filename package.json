@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "2.116.0",
-    "@vercel/functions": "3.9.7",
     "cors": "2.8.6",
     "dotenv": "16.6.1",
     "express": "4.22.2",
