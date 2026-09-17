@@ -82,8 +82,11 @@ jobs:
             echo "Server secret identifier found in public assets."
             exit 1
           fi
-          if grep -R --line-number -E 'http://([0-9]{1,3}\.){3}[0-9]{1,3}' api lib public server.js; then
-            echo "Insecure direct-IP HTTP endpoint found in runtime code."
+          matches="$(grep -R --line-number -E 'http://([0-9]{1,3}\.){3}[0-9]{1,3}' api lib public server.js || true)"
+          bad="$(printf '%s\n' "$matches" | grep -v -E 'http://127\.0\.0\.1(:[0-9]+)?' | sed '/^$/d' || true)"
+          if [ -n "$bad" ]; then
+            printf '%s\n' "$bad"
+            echo "Insecure non-loopback direct-IP HTTP endpoint found in runtime code."
             exit 1
           fi
 
