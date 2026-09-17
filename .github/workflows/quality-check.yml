@@ -33,6 +33,16 @@ jobs:
             node --check "$file"
           done
 
+      - name: Verify Google stays sign-in only
+        shell: bash
+        run: |
+          set -e
+          if grep -R --line-number --fixed-strings "https://www.googleapis.com/auth/contacts" api lib public/js server.js; then
+            echo "Deprecated Google Contacts scope detected in runtime code."
+            exit 1
+          fi
+          grep -q "scope: 'openid email profile'" lib/google-sync.js
+
       - name: Verify required production files
         shell: bash
         run: |
