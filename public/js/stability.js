@@ -151,13 +151,52 @@
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup,{once:true});
   else setup();
 
-  if('serviceWorker'in navigator){
-    window.addEventListener('load',async()=>{
-      try{
-        const reg=await navigator.serviceWorker.register('/sw.js?v=20260917-10',{updateViaCache:'none'});
-        await reg.update().catch(()=>{});
-      }catch(_){}
+  async function purgeLegacyRootCache(){
+    try{
+      if('caches'in window){
+        const keys=await caches.keys();
+        await Promise.all(keys.filter(k=>k.startsWith('doberto-vcf-')).map(k=>caches.delete(k)));
+      }
+    }catch(_){}
+    try{
+      if('serviceWorker'in navigator){
+        const regs=await navigator.serviceWorker.getRegistrations();
+        await Promise.all(regs.map(async reg=>{
+          try{
+            const active=reg.active||reg.waiting||reg.installing;
+            const script=active?.scriptURL||'';
+            const scopePath=new URL(reg.scope).pathname;
+            if(scopePath==='/'||/\/sw\.js(?:\?|$)/.test(script))await reg.unregister();
+          }catch(_){}
+        }));
+      }
+    }catch(_){}
+  }
+
+  if('serviceWorker'in navigator||'caches'in window){
+    window.addEventListener('load',()=>{
+      purgeLegacyRootCache().then(()=>{
+        try{
+          const isRegister=/^\/register(?:\.html)?$/.test(location.pathname);
+          const controlled=Boolean(navigator.serviceWorker?.controller);
+          const already=sessionStorage.getItem('dv_auth_cache_purged')==='1';
+          if(isRegister&&controlled&&!already){
+            sessionStorage.setItem('dv_auth_cache_purged','1');
+            location.replace('/register.html?fresh=1');
+          }
+        }catch(_){}
+      });
     },{once:true});
+    navigator.serviceWorker?.addEventListener?.('message',event=>{
+      if(event.data?.type==='DOBERTO_ROOT_SW_RETIRED'){
+        try{
+          if(/^\/register(?:\.html)?$/.test(location.pathname)&&sessionStorage.getItem('dv_auth_cache_purged')!=='1'){
+            sessionStorage.setItem('dv_auth_cache_purged','1');
+            location.replace('/register.html?fresh=1');
+          }
+        }catch(_){}
+      }
+    });
   }
 
   window.__DOBERTO_NATIVE_ALERT__=nativeAlert;
