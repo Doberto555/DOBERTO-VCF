@@ -23,10 +23,11 @@
     if(!gate||!account||!form||!done)return;
     const hasUser=Boolean(session?.user);
     const registered=Boolean(hasUser&&session?.registered);
-    gate.hidden=hasUser;
-    account.hidden=!hasUser;
-    form.hidden=!hasUser||registered;
-    done.hidden=!registered;
+    const setHidden=(el,value)=>{if(el.hidden!==value)el.hidden=value};
+    setHidden(gate,hasUser);
+    setHidden(account,!hasUser);
+    setHidden(form,!hasUser||registered);
+    setHidden(done,!registered);
     document.body.classList.toggle('dv-registered',registered);
   }
 
@@ -39,7 +40,7 @@
     const root=document.querySelector('.registration-main');
     if(root&&'MutationObserver'in window){
       let queued=false;
-      new MutationObserver(()=>{if(queued)return;queued=true;queueMicrotask(()=>{queued=false;normalizeState()})}).observe(root,{subtree:true,attributes:true,attributeFilter:['hidden']});
+      new MutationObserver(()=>{if(queued)return;queued=true;setTimeout(()=>{queued=false;normalizeState()},0)}).observe(root,{subtree:true,attributes:true,attributeFilter:['hidden']});
     }
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
