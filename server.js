@@ -911,7 +911,7 @@ app.get('/api/admin/export-csv', adminActionLimiter, verifyAdmin, requireDatabas
 app.post('/api/admin/push-send', pushSendLimiter, verifyAdmin, async (req, res) => {
   try {
     if (!pushNotificationsConfigured()) {
-      return res.status(503).json({ error: 'OneSignal poko configure. Mete ONESIGNAL_APP_ID ak ONESIGNAL_REST_API_KEY sou Vercel.' });
+      return res.status(503).json({ error: 'OneSignal poko configure. Mete ONESIGNAL_APP_ID ak ONESIGNAL_REST_API_KEY sou server la.' });
     }
     const title = String(req.body && req.body.title || 'DOBERTO VCF').trim().slice(0, 80);
     const message = String(req.body && req.body.message || '').trim().slice(0, 220);
@@ -933,6 +933,21 @@ app.post('/api/admin/unlock-campaign/retry', pushSendLimiter, verifyAdmin, requi
     console.error(err);
     res.status(500).json({ error: 'Kanpay unlock la pa t fini. Verifye Resend/OneSignal ak schema Supabase la.' });
   }
+});
+
+// ---------- Health check ----------
+app.get('/api/health', (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
+  res.json({
+    ok: true,
+    service: 'DOBERTO VCF',
+    databaseConfigured,
+    securityConfigured,
+    googleConfigured: Boolean(GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET),
+    emailConfigured: emailNotificationsConfigured(),
+    pushConfigured: pushNotificationsConfigured(),
+    uptimeSeconds: Math.round(process.uptime())
+  });
 });
 
 // ---------- 404 API ----------
