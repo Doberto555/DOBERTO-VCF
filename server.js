@@ -480,10 +480,17 @@ app.get('/api/auth/google/url', publicReadLimiter, (req, res) => {
   try {
     if (!requireSecurity(res)) return;
     const flow = req.query.flow === 'contacts' ? 'contacts' : 'login';
+    const redirect = String(req.query.redirect || '') === '1';
+
     if (flow === 'contacts') return verifyUser(req, res, () => {
-      res.json({ ok: true, url: googleSync.authUrl('contacts', req.user) });
+      const url = googleSync.authUrl('contacts', req.user);
+      if (redirect) return res.redirect(302, url);
+      res.json({ ok: true, url });
     });
-    res.json({ ok: true, url: googleSync.authUrl('login') });
+
+    const url = googleSync.authUrl('login');
+    if (redirect) return res.redirect(302, url);
+    res.json({ ok: true, url });
   } catch (err) {
     res.status(503).json({ code: err.code || 'google_oauth_error', error: err.message });
   }
