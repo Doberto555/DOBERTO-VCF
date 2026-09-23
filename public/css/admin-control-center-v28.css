@@ -17,3 +17,43 @@
 @media(max-width:820px){.dv-admin-viewbar{top:74px;overflow-x:auto;scrollbar-width:none;justify-content:flex-start}.dv-admin-viewbar::-webkit-scrollbar{display:none}.dv-admin-viewbar button{flex:0 0 auto;padding:10px 12px!important}}
 @media(max-width:560px){.dv-admin-viewbar{margin:14px -4px 20px;padding:6px;border-radius:14px}.dv-admin-viewbar button{font-size:11px!important;padding:9px 10px!important}.dv-admin-viewbar .dv-admin-view-icon{display:none}}
 @media(prefers-reduced-motion:reduce){#adminPanel .dv-admin-view-content{animation:none}}
+/* Admin mobile header: keep navigation readable without clipping. */
+@media(max-width:640px){
+  body.admin-v11 .topbar{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    align-items:stretch!important;
+    gap:10px!important;
+    min-height:0!important;
+    padding:12px!important;
+  }
+  body.admin-v11 .topbar .brand{
+    min-width:0!important;
+    justify-content:flex-start!important;
+  }
+  body.admin-v11 .topbar-right{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) 58px!important;
+    align-items:center!important;
+    gap:8px!important;
+    width:100%!important;
+    min-width:0!important;
+  }
+  body.admin-v11 .topbar .nav-links{
+    width:100%!important;
+    max-width:none!important;
+    min-width:0!important;
+    overflow-x:auto!important;
+    overscroll-behavior-x:contain!important;
+    -webkit-overflow-scrolling:touch!important;
+  }
+  body.admin-v11 .topbar .nav-links a{
+    flex:0 0 auto!important;
+    white-space:nowrap!important;
+  }
+  body.admin-v11 .topbar .lang-select{
+    width:58px!important;
+    min-width:58px!important;
+    margin:0!important;
+  }
+}
