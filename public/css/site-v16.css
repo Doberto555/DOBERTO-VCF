@@ -74,3 +74,10 @@
     line-height:1.55!important;
   }
 }
+
+/* Homepage headline cleanup: prevent legacy decorative punctuation. */
+.home-title span::before,
+.home-title span::after{
+  content:none!important;
+  display:none!important;
+}
