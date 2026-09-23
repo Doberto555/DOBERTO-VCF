@@ -7,6 +7,10 @@ const jwt = require('jsonwebtoken');
 const rateLimit = require('express-rate-limit');
 const { createClient } = require('@supabase/supabase-js');
 const { createGoogleSync } = require('./lib/google-sync');
+const publicSettingsHandler = require('./api/public-settings');
+const communityAnnounceHandler = require('./api/community-announce');
+const adminCommunitySettingsHandler = require('./api/admin-community-settings');
+const adminSystemHealthHandler = require('./api/admin-system-health');
 
 const app = express();
 app.disable('x-powered-by');
@@ -941,6 +945,12 @@ app.post('/api/admin/unlock-campaign/retry', pushSendLimiter, verifyAdmin, requi
     res.status(500).json({ error: 'Kanpay unlock la pa t fini. Verifye Resend/OneSignal ak schema Supabase la.' });
   }
 });
+
+// ---------- VPS compatibility routes for former Vercel rewrites ----------
+app.get('/api/settings/public', (req, res) => publicSettingsHandler(req, res));
+app.post('/api/community/announce', (req, res) => communityAnnounceHandler(req, res));
+app.all('/api/admin/community/settings', (req, res) => adminCommunitySettingsHandler(req, res));
+app.get('/api/admin/system/health', (req, res) => adminSystemHealthHandler(req, res));
 
 // ---------- Health check ----------
 app.get('/api/health', (req, res) => {
