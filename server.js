@@ -943,7 +943,7 @@ app.get('/api/health', (req, res) => {
     service: 'DOBERTO VCF',
     databaseConfigured,
     securityConfigured,
-    googleConfigured: Boolean(GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET),
+    googleConfigured: Boolean(googleSync && googleSync.configured),
     emailConfigured: emailNotificationsConfigured(),
     pushConfigured: pushNotificationsConfigured(),
     uptimeSeconds: Math.round(process.uptime())
