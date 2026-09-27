@@ -114,3 +114,46 @@ Sou Vercel, push sou `main` oswa redeploy pwojè a apre environment variables yo
 - Static + API responses gen security headers.
 - Supabase service-role key rete backend sèlman.
 - Google OAuth pa mande sensitive Contacts scope ankò.
+
+
+## VPS deployment
+
+Repo a gen yon config PM2 ak yon template Nginx pou `dobertovcf.online`.
+
+Default VPS port:
+
+`127.0.0.1:3200`
+
+Premye deploy:
+
+```bash
+cd /var/www
+git clone https://github.com/Doberto555/DOBERTO-VCF.git
+cd DOBERTO-VCF
+cp .env.example .env
+npm ci --omit=dev
+pm2 start ecosystem.config.cjs
+pm2 save
+```
+
+Apre ou fin mete secrets production yo nan `.env`, verifye:
+
+```bash
+curl -s http://127.0.0.1:3200/api/health
+```
+
+Pou Nginx:
+
+```bash
+cp deploy/nginx-dobertovcf.conf.example /etc/nginx/sites-available/dobertovcf
+ln -s /etc/nginx/sites-available/dobertovcf /etc/nginx/sites-enabled/dobertovcf
+nginx -t
+systemctl reload nginx
+certbot --nginx -d dobertovcf.online -d www.dobertovcf.online
+```
+
+Pou mizajou pita:
+
+```bash
+bash deploy/update-vps.sh
+```
