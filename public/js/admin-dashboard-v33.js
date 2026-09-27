@@ -76,16 +76,30 @@
     const auth=token(),root=document.getElementById('adminPanel');
     if(!auth||!root||root.style.display==='none')return;
     loading=true;render();
-    const headers={Authorization:`Bearer ${auth}`};
+    const headers={Authorization:`Bearer ${auth}`,Accept:'application/json'};
     try{
-      const [statsRes,listRes,communityRes]=await Promise.all([
+      const results=await Promise.allSettled([
         fetch('/api/admin/stats',{headers,cache:'no-store'}),
         fetch('/api/admin/list?page=1',{headers,cache:'no-store'}),
         fetch('/api/admin/community/settings',{headers,cache:'no-store'})
       ]);
-      if([statsRes,listRes,communityRes].some(r=>r.status===401)){document.getElementById('logoutBtn')?.click();return;}
-      if(!statsRes.ok||!listRes.ok||!communityRes.ok)throw new Error('dashboard');
-      payload={stats:await statsRes.json(),list:await listRes.json(),community:await communityRes.json()};
+      const responses=results.map(x=>x.status==='fulfilled'?x.value:null);
+      if(responses.some(r=>r&&r.status===401)){document.getElementById('logoutBtn')?.click();return;}
+
+      const readJson=async(r,fallback)=>{
+        if(!r||!r.ok)return fallback;
+        try{return await r.json()}catch(_){return fallback}
+      };
+      const stats=await readJson(responses[0],null);
+      const list=await readJson(responses[1],{page:1,pageSize:100,total:0,list:[]});
+      const community=await readJson(responses[2],{ok:false,whatsappGroupUrl:'',botConfigured:false});
+
+      if(!stats&&!responses[1]?.ok)throw new Error('dashboard');
+      payload={
+        stats:stats||{total:Number(list?.total||0),today:0,downloadCount:0,remaining:0},
+        list,
+        community
+      };
     }catch(_){payload=null}finally{loading=false;render()}
   }
 
