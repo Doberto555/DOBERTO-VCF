@@ -100,6 +100,8 @@ function renderAdminList() {
     body.appendChild(tr);
   });
   document.getElementById('aPageInfo').textContent = t('page_info', { page: aPage, total: aTotalPages, count: lastAdminData.total });
+  const totalBadge = document.getElementById('adminTotalCount');
+  if (totalBadge) totalBadge.textContent = `${Number(lastAdminData.total || 0).toLocaleString()} manm`;
   document.getElementById('aPrev').disabled = aPage <= 1;
   document.getElementById('aNext').disabled = aPage >= aTotalPages;
 
