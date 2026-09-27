@@ -7,7 +7,33 @@
   };
   const select=document.getElementById('langSelect');let lang='ht';try{const s=localStorage.getItem('doberto_lang');if(COPY[s])lang=s}catch(_){}if(select)select.value=lang;
   function apply(){const c=COPY[lang];document.documentElement.lang=lang;document.querySelectorAll('[data-home-key]').forEach(el=>{const k=el.dataset.homeKey;if(c[k]!=null){let value=c[k];if(k==='title1'||k==='title2')value=String(value).replace(/[.。]+$/,'');el.textContent=value}});document.title=lang==='fr'?'DOBERTO VCF — Accueil':lang==='en'?'DOBERTO VCF — Home':'DOBERTO VCF — Akèy'}
-  async function loadStats(){try{const r=await fetch('/api/stats',{cache:'no-store'});if(!r.ok)return;const s=await r.json();const total=Number(s.total||0),max=Number(s.maxInFile||50000),pct=Math.min(100,max?(total/max)*100:0);const n=document.getElementById('homeMemberCount'),m=document.getElementById('homeMaxCount'),p=document.getElementById('homeProgressPct'),f=document.getElementById('homeProgressFill');if(n)n.textContent=total.toLocaleString(lang==='en'?'en-US':'fr-FR');if(m)m.textContent=max.toLocaleString(lang==='en'?'en-US':'fr-FR');if(p)p.textContent=`${pct.toFixed(pct<1?1:0)}%`;if(f)f.style.width=`${pct}%`}catch(_){}}
+  async function loadStats(){
+    const setStats=(s)=>{
+      const total=Number(s?.total||0),max=Number(s?.maxInFile||50000),pct=Math.min(100,max?(total/max)*100:0);
+      const n=document.getElementById('homeMemberCount'),m=document.getElementById('homeMaxCount'),p=document.getElementById('homeProgressPct'),f=document.getElementById('homeProgressFill');
+      if(n)n.textContent=total.toLocaleString(lang==='en'?'en-US':'fr-FR');
+      if(m)m.textContent=max.toLocaleString(lang==='en'?'en-US':'fr-FR');
+      if(p)p.textContent=`${pct.toFixed(pct<1?1:0)}%`;
+      if(f)f.style.width=`${pct}%`;
+    };
+    try{
+      const r=await fetch('/api/stats',{cache:'no-store',headers:{Accept:'application/json'}});
+      if(!r.ok)throw new Error('stats_unavailable');
+      const s=await r.json();
+      if(!Number.isFinite(Number(s?.total)))throw new Error('stats_invalid');
+      setStats(s);
+      return;
+    }catch(_){}
+    try{
+      const r=await fetch('/api/public-list?page=1',{cache:'no-store',headers:{Accept:'application/json'}});
+      if(!r.ok)throw new Error('list_unavailable');
+      const s=await r.json();
+      setStats({total:Number(s?.total||0),maxInFile:50000});
+    }catch(_){
+      const n=document.getElementById('homeMemberCount');
+      if(n)n.textContent='—';
+    }
+  }
   select?.addEventListener('change',()=>{lang=COPY[select.value]?select.value:'ht';try{localStorage.setItem('doberto_lang',lang)}catch(_){}apply();loadStats()});
   apply();loadStats();window.addEventListener('pageshow',loadStats);
 })();
