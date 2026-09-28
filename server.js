@@ -1,5 +1,6 @@
 require('dotenv').config({ override: true });
 const path = require('path');
+const fs = require('fs');
 const crypto = require('crypto');
 const express = require('express');
 const cors = require('cors');
@@ -32,6 +33,15 @@ const ONESIGNAL_APP_ID = String(process.env.ONESIGNAL_APP_ID || '').trim();
 const ONESIGNAL_REST_API_KEY = String(process.env.ONESIGNAL_REST_API_KEY || '').trim();
 const CRON_SECRET = String(process.env.CRON_SECRET || '').trim();
 const DOWNLOAD_METRIC_PREFIX = 'vcf_download_user_';
+const ADS_SETTINGS_FILE = path.join(__dirname, '.runtime', 'site-ads.json');
+const DEFAULT_AD_SETTINGS = Object.freeze({
+  enabled:false,
+  bannerEnabled:false,bannerCode:'',
+  nativeEnabled:false,nativeCode:'',
+  popunderEnabled:false,popunderCode:'',
+  socialBarEnabled:false,socialBarCode:'',
+  directLinkEnabled:false,directLinkUrl:'',directLinkLabel:'Sponsored'
+});
 
 const ALLOWED_ICONS = ['', 'star', 'crown', 'check', 'fire', 'heart', 'ninja', 'vip', 'flag'];
 
@@ -94,7 +104,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.json({ limit: '32kb', strict: true }));
+app.use(express.json({ limit: '256kb', strict: true }));
 app.use(express.static(path.join(__dirname, 'public'), {
   etag: true,
   maxAge: 0,
@@ -115,6 +125,39 @@ const pushSendLimiter = rateLimit({ ...limiterDefaults, windowMs: 60 * 60 * 1000
 const publicReadLimiter = rateLimit({ ...limiterDefaults, windowMs: 60 * 1000, limit: 300 });
 
 // ---------- Itilitè ----------
+function normalizeAdSettings(input = {}) {
+  const code = value => String(value || '').slice(0, 50000);
+  let directLinkUrl = String(input.directLinkUrl || '').trim().slice(0, 2048);
+  if (directLinkUrl && !/^https:\/\//i.test(directLinkUrl)) directLinkUrl = '';
+  return {
+    enabled: input.enabled === true,
+    bannerEnabled: input.bannerEnabled === true, bannerCode: code(input.bannerCode),
+    nativeEnabled: input.nativeEnabled === true, nativeCode: code(input.nativeCode),
+    popunderEnabled: input.popunderEnabled === true, popunderCode: code(input.popunderCode),
+    socialBarEnabled: input.socialBarEnabled === true, socialBarCode: code(input.socialBarCode),
+    directLinkEnabled: input.directLinkEnabled === true,
+    directLinkUrl,
+    directLinkLabel: String(input.directLinkLabel || 'Sponsored').trim().slice(0,80) || 'Sponsored'
+  };
+}
+function readAdSettings() {
+  try {
+    if (!fs.existsSync(ADS_SETTINGS_FILE)) return { ...DEFAULT_AD_SETTINGS };
+    return normalizeAdSettings(JSON.parse(fs.readFileSync(ADS_SETTINGS_FILE,'utf8')));
+  } catch (err) {
+    console.error('[DOBERTO VCF] ad settings read error:', err);
+    return { ...DEFAULT_AD_SETTINGS };
+  }
+}
+function writeAdSettings(input) {
+  const clean=normalizeAdSettings(input);
+  fs.mkdirSync(path.dirname(ADS_SETTINGS_FILE),{recursive:true});
+  const tmp=ADS_SETTINGS_FILE+'.tmp';
+  fs.writeFileSync(tmp,JSON.stringify(clean,null,2),'utf8');
+  fs.renameSync(tmp,ADS_SETTINGS_FILE);
+  return clean;
+}
+
 function onlyDigits(str) {
   return String(str || '').replace(/\D/g, '');
 }
@@ -800,6 +843,11 @@ app.get('/api/download-vcf', downloadLimiter, requireDatabase, async (req, res) 
   }
 });
 
+app.get('/api/ads/public', publicReadLimiter, (req,res) => {
+  res.setHeader('Cache-Control','public, max-age=20, stale-while-revalidate=40');
+  res.json({ok:true,ads:readAdSettings()});
+});
+
 // ---------- Admin ----------
 app.post('/api/admin/login', adminLoginLimiter, (req, res) => {
   if (!requireSecurity(res)) return;
@@ -811,6 +859,22 @@ app.post('/api/admin/login', adminLoginLimiter, (req, res) => {
     algorithm: 'HS256', expiresIn: '12h', issuer: 'doberto-vcf', audience: 'doberto-vcf-admin'
   });
   res.json({ ok: true, token });
+});
+
+app.get('/api/admin/ads', adminActionLimiter, verifyAdmin, (req,res) => {
+  res.setHeader('Cache-Control','private, no-store');
+  res.json({ok:true,ads:readAdSettings()});
+});
+
+app.put('/api/admin/ads', adminActionLimiter, verifyAdmin, (req,res) => {
+  try {
+    const ads=writeAdSettings(req.body||{});
+    res.setHeader('Cache-Control','private, no-store');
+    res.json({ok:true,ads});
+  } catch (err) {
+    console.error('[DOBERTO VCF] ad settings write error:',err);
+    res.status(500).json({error:'Nou pa ka sove konfigirasyon pub la.'});
+  }
 });
 
 app.get('/api/admin/stats', adminActionLimiter, verifyAdmin, requireDatabase, async (req, res) => {
