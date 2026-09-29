@@ -31,29 +31,61 @@
 
   async function requestPermission() {
     await ready;
-    if (!state.configured || !state.instance) {
-      return { ok: false, configured: false, reason: 'not_configured' };
+
+    if (typeof Notification !== 'undefined' && Notification.permission === 'denied') {
+      return { ok: false, configured: Boolean(state.configured), reason: 'denied' };
     }
+
+    if (!state.configured) {
+      return { ok: false, configured: false, reason: 'not_configured', error: state.error || null };
+    }
+
+    if (!state.instance) {
+      return {
+        ok: false,
+        configured: true,
+        reason: state.status === 'error' ? 'sdk_error' : 'sdk_not_ready',
+        error: state.error || null
+      };
+    }
+
     try {
       const OneSignal = state.instance;
       if (!OneSignal.Notifications.isPushSupported()) {
         return { ok: false, configured: true, reason: 'unsupported' };
       }
+
       await OneSignal.Notifications.requestPermission();
+
+      if (typeof Notification !== 'undefined' && Notification.permission === 'denied') {
+        return { ok: false, configured: true, reason: 'denied' };
+      }
+
       if (OneSignal.Notifications.permission) {
         await OneSignal.User.PushSubscription.optIn();
       }
+
       sync(OneSignal);
+
       return {
         ok: Boolean(OneSignal.Notifications.permission && OneSignal.User.PushSubscription.optedIn),
         configured: true,
+        reason: OneSignal.User.PushSubscription.optedIn ? 'subscribed' : 'not_subscribed',
         permission: Boolean(OneSignal.Notifications.permission),
-        subscribed: Boolean(OneSignal.User.PushSubscription.optedIn)
+        browserPermission: typeof Notification !== 'undefined' ? Notification.permission : 'unknown',
+        subscribed: Boolean(OneSignal.User.PushSubscription.optedIn),
+        subscriptionId: OneSignal.User.PushSubscription.id || null
       };
     } catch (error) {
       state.error = String(error && error.message || error);
       emit();
-      return { ok: false, configured: true, reason: 'error', error: state.error };
+      return {
+        ok: false,
+        configured: true,
+        reason: 'error',
+        error: state.error,
+        browserPermission: typeof Notification !== 'undefined' ? Notification.permission : 'unknown'
+      };
     }
   }
 
