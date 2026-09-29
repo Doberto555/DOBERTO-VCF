@@ -28,7 +28,7 @@ function pushConfigured(){
 }
 async function settingMap(supabase){
   const {data,error}=await supabase.from('app_settings').select('key,value,updated_at').in('key',[
-    'whatsapp_group_url','group_migration_active','group_migration_group_url','group_migration_started_at','group_migration_last_push_at'
+    'whatsapp_group_url','group_migration_active','group_migration_group_url','group_migration_started_at','group_migration_last_push_at','group_migration_last_push_recipients','group_migration_last_push_id'
   ]);
   if(error) throw error;
   return Object.fromEntries((data||[]).map(row=>[row.key,row]));
@@ -55,6 +55,8 @@ async function state(supabase){
     currentGroupUrl:String(map.whatsapp_group_url?.value||''),
     startedAt:map.group_migration_started_at?.value||null,
     lastPushAt:map.group_migration_last_push_at?.value||null,
+    lastPushRecipients:Number(map.group_migration_last_push_recipients?.value||0)||0,
+    lastPushId:map.group_migration_last_push_id?.value||null,
     pushConfigured:pushConfigured(),
     stats
   };
@@ -142,7 +144,10 @@ module.exports=async(req,res)=>{
       const settings=[
         {key:'group_migration_active',value:'true',updated_at:now},
         {key:'group_migration_group_url',value:current.currentGroupUrl,updated_at:now},
-        {key:'group_migration_started_at',value:now,updated_at:now}
+        {key:'group_migration_started_at',value:now,updated_at:now},
+        {key:'group_migration_last_push_at',value:'',updated_at:now},
+        {key:'group_migration_last_push_recipients',value:'0',updated_at:now},
+        {key:'group_migration_last_push_id',value:'',updated_at:now}
       ];
       const {error:settingError}=await supabase.from('app_settings').upsert(settings,{onConflict:'key'});
       if(settingError) throw settingError;
@@ -163,10 +168,15 @@ module.exports=async(req,res)=>{
       if(!current.active) return res.status(409).json({error:'Kòmanse migration lan anvan ou voye envitasyon.'});
       const push=await sendPush();
       const now=new Date().toISOString();
-      await supabase.from('app_settings').upsert([
-        {key:'group_migration_last_push_at',value:now,updated_at:now}
+      const recipients=Number(push.recipients||0)||0;
+      const pushId=String(push.id||'');
+      const {error:pushSettingError}=await supabase.from('app_settings').upsert([
+        {key:'group_migration_last_push_at',value:now,updated_at:now},
+        {key:'group_migration_last_push_recipients',value:String(recipients),updated_at:now},
+        {key:'group_migration_last_push_id',value:pushId,updated_at:now}
       ],{onConflict:'key'});
-      return res.json({...(await state(supabase)),push:{id:push.id||null,recipients:push.recipients??null}});
+      if(pushSettingError) throw pushSettingError;
+      return res.json({...(await state(supabase)),push:{id:pushId||null,recipients}});
     }
 
     return res.status(400).json({error:'Aksyon migration lan pa valid.'});
