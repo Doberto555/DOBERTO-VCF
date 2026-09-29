@@ -731,8 +731,8 @@ app.get('/api/push/config', publicReadLimiter, (req, res) => {
   res.json({
     enabled: pushNotificationsConfigured(),
     appId: pushNotificationsConfigured() ? ONESIGNAL_APP_ID : null,
-    workerPath: 'push/onesignal/OneSignalSDKWorker.js',
-    workerScope: '/push/onesignal/'
+    workerPath: 'OneSignalSDKWorker.js',
+    workerScope: '/'
   });
 });
 
