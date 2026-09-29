@@ -130,8 +130,8 @@
         try {
           await OneSignal.init({
             appId: config.appId,
-            serviceWorkerPath: config.workerPath || 'push/onesignal/OneSignalSDKWorker.js',
-            serviceWorkerParam: { scope: config.workerScope || '/push/onesignal/' },
+            serviceWorkerPath: config.workerPath || 'OneSignalSDKWorker.js',
+            serviceWorkerParam: { scope: config.workerScope || '/' },
             notifyButton: { enable: false },
             autoResubscribe: true,
             allowLocalhostAsSecureOrigin: true
