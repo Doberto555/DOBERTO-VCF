@@ -16,6 +16,7 @@ const COPY={
     pushOk:'Push envitasyon an voye bay {n} destinatè OneSignal.',
     startConfirm:'Sa ap pran tout moun ki deja enskri kounye a epi mete yo nan kanpay migration nouvo gwoup la. Kontinye?',
     stopConfirm:'Fèmen migration lan? Moun ki poko konfime yo pap wè rapèl migration lan ankò.',
+    totalLabel:'Ansyen manm',pendingLabel:'Ap tann',openedLabel:'Ouvri link',joinedLabel:'Konfime antre',pushRecipientsLabel:'Destinatè push',groupMeta:'Gwoup migration',startedMeta:'Kòmanse',lastPushMeta:'Dènye push',
     err:'Operasyon migration lan pa reyisi.'
   },
   fr:{
@@ -32,6 +33,7 @@ const COPY={
     pushOk:'La notification a été ciblée vers {n} destinataire(s) OneSignal.',
     startConfirm:'Tous les membres déjà inscrits seront ajoutés à la campagne de migration vers le nouveau groupe. Continuer ?',
     stopConfirm:'Arrêter la migration ? Les membres non confirmés ne verront plus le rappel.',
+    totalLabel:'Anciens membres',pendingLabel:'En attente',openedLabel:'Lien ouvert',joinedLabel:'Entrée confirmée',pushRecipientsLabel:'Destinataires push',groupMeta:'Groupe de migration',startedMeta:'Démarrée',lastPushMeta:'Dernier push',
     err:'La migration n’a pas pu être mise à jour.'
   },
   en:{
@@ -48,6 +50,7 @@ const COPY={
     pushOk:'Invite notification targeted {n} OneSignal recipient(s).',
     startConfirm:'All members already registered now will be added to the new-group migration campaign. Continue?',
     stopConfirm:'Stop the migration? Members who have not confirmed will no longer see the migration reminder.',
+    totalLabel:'Existing members',pendingLabel:'Pending',openedLabel:'Link opened',joinedLabel:'Joined confirmed',pushRecipientsLabel:'Push recipients',groupMeta:'Migration group',startedMeta:'Started',lastPushMeta:'Last push',
     err:'Could not update the migration.'
   }
 };
@@ -138,7 +141,21 @@ async function push(){
 
 function applyCopy(){
   const x=c();
-  const map={migrationStatusLabel:x.status,startMigrationBtn:x.start,stopMigrationBtn:x.stop,refreshMigrationBtn:x.refresh,pushMigrationBtn:x.push};
+  const map={
+    migrationStatusLabel:x.status,
+    startMigrationBtn:x.start,
+    stopMigrationBtn:x.stop,
+    refreshMigrationBtn:x.refresh,
+    pushMigrationBtn:x.push,
+    migrationTotalLabel:x.totalLabel,
+    migrationPendingLabel:x.pendingLabel,
+    migrationOpenedLabel:x.openedLabel,
+    migrationJoinedLabel:x.joinedLabel,
+    migrationPushRecipientsLabel:x.pushRecipientsLabel,
+    migrationGroupMetaLabel:x.groupMeta,
+    migrationStartedMetaLabel:x.startedMeta,
+    migrationLastPushMetaLabel:x.lastPushMeta
+  };
   Object.entries(map).forEach(([id,v])=>{const el=document.getElementById(id);if(el)el.textContent=v});
   const tip=document.getElementById('migrationTip');if(tip)tip.textContent=x.ready;
 }
