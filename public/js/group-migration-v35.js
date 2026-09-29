@@ -46,11 +46,11 @@ function render(data){
   host.innerHTML=`<span class="dv-migration-kicker">${x.k}</span><h2>${x.t}</h2><p>${x.d}</p><div class="dv-migration-actions"><a href="#" class="dv-migration-join" id="dvMigrationJoin">${x.join} ↗</a><button type="button" class="dv-migration-confirm" id="dvMigrationConfirm">${x.done}</button></div><p class="dv-migration-meta">DOBERTO VCF · Migration de groupe</p>`;
   host.hidden=false;
   const join=document.getElementById('dvMigrationJoin');
-  join?.addEventListener('click',async e=>{
+  join?.addEventListener('click',e=>{
     e.preventDefault();
-    try{await update('opened')}catch(_){}
     const u=String(data.groupUrl||'');
     if(/^https:\/\/chat\.whatsapp\.com\//i.test(u))window.open(u,'_blank','noopener,noreferrer');
+    update('opened').catch(()=>{});
   });
   document.getElementById('dvMigrationConfirm')?.addEventListener('click',async()=>{
     const b=document.getElementById('dvMigrationConfirm');if(b)b.disabled=true;
