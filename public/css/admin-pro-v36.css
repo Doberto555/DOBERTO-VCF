@@ -273,6 +273,7 @@ body.admin-v11 .topbar{max-width:1180px!important}
   background:rgba(255,255,255,.018)!important
 }
 #migrationSettingPanel .migration-admin-grid{
+  grid-template-columns:repeat(5,minmax(0,1fr))!important;
   gap:8px!important;
   margin:12px 0!important
 }
@@ -284,6 +285,11 @@ body.admin-v11 .topbar{max-width:1180px!important}
 }
 #migrationSettingPanel .migration-stat strong{font-size:23px!important}
 #migrationSettingPanel .migration-stat span{font-size:8px!important}
+#migrationSettingPanel .migration-stat.push-target{
+  border-color:rgba(53,223,164,.22)!important;
+  background:linear-gradient(145deg,rgba(53,223,164,.07),rgba(255,255,255,.018))!important
+}
+#migrationSettingPanel .migration-stat.push-target strong{color:#67eab7!important}
 #migrationSettingPanel .migration-actions{
   gap:7px!important;
   margin-top:14px!important;
@@ -302,6 +308,7 @@ body.admin-v11 .topbar{max-width:1180px!important}
   #adminPanel .dv-admin-viewbar button{flex:0 0 auto!important}
   #adsSettingPanel .ads-control-row{grid-template-columns:1fr!important}
   #adsSettingPanel .ads-control-head{padding:2px!important}
+  #migrationSettingPanel .migration-admin-grid{grid-template-columns:repeat(3,1fr)!important}
 }
 @media(max-width:680px){
   #adminPanel.admin-shell{padding:16px!important;border-radius:18px!important}
