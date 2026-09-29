@@ -13,7 +13,7 @@ const COPY={
     inactive:'Pa gen migration aktif.',
     started:'Migration lan kòmanse pou {n} ansyen manm.',
     stopped:'Migration lan fèmen.',
-    pushOk:'Push envitasyon an voye bay abonnés ki aktive notifikasyon yo.',
+    pushOk:'Push envitasyon an voye bay {n} destinatè OneSignal.',
     startConfirm:'Sa ap pran tout moun ki deja enskri kounye a epi mete yo nan kanpay migration nouvo gwoup la. Kontinye?',
     stopConfirm:'Fèmen migration lan? Moun ki poko konfime yo pap wè rapèl migration lan ankò.',
     err:'Operasyon migration lan pa reyisi.'
@@ -29,7 +29,7 @@ const COPY={
     inactive:'Aucune migration active.',
     started:'Migration démarrée pour {n} anciens membres.',
     stopped:'Migration arrêtée.',
-    pushOk:'La notification a été envoyée aux abonnés ayant activé les notifications.',
+    pushOk:'La notification a été ciblée vers {n} destinataire(s) OneSignal.',
     startConfirm:'Tous les membres déjà inscrits seront ajoutés à la campagne de migration vers le nouveau groupe. Continuer ?',
     stopConfirm:'Arrêter la migration ? Les membres non confirmés ne verront plus le rappel.',
     err:'La migration n’a pas pu être mise à jour.'
@@ -45,7 +45,7 @@ const COPY={
     inactive:'No active migration.',
     started:'Migration started for {n} existing members.',
     stopped:'Migration stopped.',
-    pushOk:'Invite notification sent to subscribers who enabled notifications.',
+    pushOk:'Invite notification targeted {n} OneSignal recipient(s).',
     startConfirm:'All members already registered now will be added to the new-group migration campaign. Continue?',
     stopConfirm:'Stop the migration? Members who have not confirmed will no longer see the migration reminder.',
     err:'Could not update the migration.'
@@ -78,6 +78,7 @@ function render(d){
   set('migrationPending',s.pending||0);
   set('migrationOpened',s.opened||0);
   set('migrationJoined',s.joined||0);
+  set('migrationPushRecipients',d?.lastPushRecipients||0);
 
   const badge=document.getElementById('migrationStateBadge');
   if(badge){
@@ -89,6 +90,8 @@ function render(d){
 
   const started=document.getElementById('migrationStartedAt');
   if(started)started.textContent=d.startedAt?fmt(d.startedAt):'—';
+  const lastPush=document.getElementById('migrationLastPushAt');
+  if(lastPush)lastPush.textContent=d.lastPushAt?fmt(d.lastPushAt):'—';
 
   const link=document.getElementById('migrationGroupUrl');
   if(link){link.textContent=d.groupUrl||d.currentGroupUrl||'—';link.title=d.groupUrl||d.currentGroupUrl||''}
@@ -128,7 +131,7 @@ async function stop(){
 
 async function push(){
   const b=document.getElementById('pushMigrationBtn');b.disabled=true;
-  try{const d=await api({action:'push'});render(d);message(c().pushOk)}
+  try{const d=await api({action:'push'});render(d);message(c().pushOk.replace('{n}',Number(d?.push?.recipients??d?.lastPushRecipients??0).toLocaleString()))}
   catch(e){message(e.message||c().err,false)}
   finally{b.disabled=false}
 }
