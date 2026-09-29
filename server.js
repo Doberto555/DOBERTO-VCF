@@ -12,6 +12,8 @@ const publicSettingsHandler = require('./api/public-settings');
 const communityAnnounceHandler = require('./api/community-announce');
 const adminCommunitySettingsHandler = require('./api/admin-community-settings');
 const adminSystemHealthHandler = require('./api/admin-system-health');
+const groupMigrationHandler = require('./api/group-migration');
+const adminGroupMigrationHandler = require('./api/admin-group-migration');
 
 const app = express();
 app.disable('x-powered-by');
@@ -1012,8 +1014,10 @@ app.post('/api/admin/unlock-campaign/retry', pushSendLimiter, verifyAdmin, requi
 
 // ---------- VPS compatibility routes for former Vercel rewrites ----------
 app.get('/api/settings/public', (req, res) => publicSettingsHandler(req, res));
+app.all('/api/group-migration', (req, res) => groupMigrationHandler(req, res));
 app.post('/api/community/announce', (req, res) => communityAnnounceHandler(req, res));
 app.all('/api/admin/community/settings', (req, res) => adminCommunitySettingsHandler(req, res));
+app.all('/api/admin/group-migration', (req, res) => adminGroupMigrationHandler(req, res));
 app.get('/api/admin/system/health', (req, res) => adminSystemHealthHandler(req, res));
 
 // ---------- Health check ----------
