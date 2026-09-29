@@ -81,6 +81,7 @@ async function sendPush(){
     },
     body:JSON.stringify({
       app_id:ONESIGNAL_APP_ID,
+      target_channel:'push',
       included_segments:['Subscribed Users'],
       headings:{en:'DOBERTO VCF',fr:'DOBERTO VCF'},
       contents:{
@@ -119,6 +120,10 @@ module.exports=async(req,res)=>{
 
       const ids=await listRegistrationIds(supabase);
       if(!ids.length) return res.status(400).json({error:'Pa gen ansyen manm pou migrate.'});
+
+      // Reset only previous group-migration markers so a new migration is a clean snapshot.
+      const clear=await supabase.from('notification_campaigns').delete().like('campaign_key',PREFIX+'%');
+      if(clear.error) throw clear.error;
 
       const now=new Date().toISOString();
       for(let i=0;i<ids.length;i+=400){
