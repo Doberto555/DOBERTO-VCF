@@ -157,3 +157,20 @@ Pou mizajou pita:
 ```bash
 bash deploy/update-vps.sh
 ```
+
+
+## WhatsApp group migration
+
+Lè yon ansyen gwoup WhatsApp ranplase, Admin la ka sove nouvo `whatsapp_group_url` la epi kòmanse yon migration pou tout manm ki te deja enskri nan moman sa a.
+
+Migration lan:
+
+- pran yon snapshot tout ansyen registrations yo;
+- montre yon rapèl sou Akèy, paj Kominote ak paj Enskripsyon pou manm ki konekte yo;
+- louvri nouvo invitation link la nan WhatsApp;
+- pèmèt manm nan konfime li antre;
+- montre estatistik `Ap tann`, `Ouvri link` ak `Konfime antre` nan Admin;
+- ka voye yon OneSignal push bay abonnés ki aktive notifications yo;
+- pa bezwen nouvo tablo SQL; li itilize `notification_campaigns` ak `app_settings` ki deja egziste.
+
+WhatsApp toujou mande itilizatè a aksepte invitation lan; sit la pa fòse ajoute moun nan yon gwoup.
