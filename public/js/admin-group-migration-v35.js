@@ -13,7 +13,7 @@ const COPY={
     inactive:'Pa gen migration aktif.',
     started:'Migration lan kòmanse pou {n} ansyen manm.',
     stopped:'Migration lan fèmen.',
-    pushOk:'Push envitasyon an voye bay {n} destinatè OneSignal.',
+    pushOk:'Push envitasyon an voye bay {n} destinatè OneSignal.',pushZero:'OneSignal aksepte push la, men poko gen okenn browser ki abòne. Moun yo dwe aktive notifications sou sit la anvan.',
     startConfirm:'Sa ap pran tout moun ki deja enskri kounye a epi mete yo nan kanpay migration nouvo gwoup la. Kontinye?',
     stopConfirm:'Fèmen migration lan? Moun ki poko konfime yo pap wè rapèl migration lan ankò.',
     totalLabel:'Ansyen manm',pendingLabel:'Ap tann',openedLabel:'Ouvri link',joinedLabel:'Konfime antre',pushRecipientsLabel:'Destinatè push',groupMeta:'Gwoup migration',startedMeta:'Kòmanse',lastPushMeta:'Dènye push',
@@ -30,7 +30,7 @@ const COPY={
     inactive:'Aucune migration active.',
     started:'Migration démarrée pour {n} anciens membres.',
     stopped:'Migration arrêtée.',
-    pushOk:'La notification a été ciblée vers {n} destinataire(s) OneSignal.',
+    pushOk:'La notification a été ciblée vers {n} destinataire(s) OneSignal.',pushZero:'OneSignal a accepté la notification, mais aucun navigateur n’est encore abonné. Les membres doivent d’abord activer les notifications sur le site.',
     startConfirm:'Tous les membres déjà inscrits seront ajoutés à la campagne de migration vers le nouveau groupe. Continuer ?',
     stopConfirm:'Arrêter la migration ? Les membres non confirmés ne verront plus le rappel.',
     totalLabel:'Anciens membres',pendingLabel:'En attente',openedLabel:'Lien ouvert',joinedLabel:'Entrée confirmée',pushRecipientsLabel:'Destinataires push',groupMeta:'Groupe de migration',startedMeta:'Démarrée',lastPushMeta:'Dernier push',
@@ -47,7 +47,7 @@ const COPY={
     inactive:'No active migration.',
     started:'Migration started for {n} existing members.',
     stopped:'Migration stopped.',
-    pushOk:'Invite notification targeted {n} OneSignal recipient(s).',
+    pushOk:'Invite notification targeted {n} OneSignal recipient(s).',pushZero:'OneSignal accepted the notification, but no browser is subscribed yet. Members must enable notifications on the site first.',
     startConfirm:'All members already registered now will be added to the new-group migration campaign. Continue?',
     stopConfirm:'Stop the migration? Members who have not confirmed will no longer see the migration reminder.',
     totalLabel:'Existing members',pendingLabel:'Pending',openedLabel:'Link opened',joinedLabel:'Joined confirmed',pushRecipientsLabel:'Push recipients',groupMeta:'Migration group',startedMeta:'Started',lastPushMeta:'Last push',
@@ -134,7 +134,7 @@ async function stop(){
 
 async function push(){
   const b=document.getElementById('pushMigrationBtn');b.disabled=true;
-  try{const d=await api({action:'push'});render(d);message(c().pushOk.replace('{n}',Number(d?.push?.recipients??d?.lastPushRecipients??0).toLocaleString()))}
+  try{const d=await api({action:'push'});render(d);const n=Number(d?.push?.recipients??d?.lastPushRecipients??0);message(n>0?c().pushOk.replace('{n}',n.toLocaleString()):c().pushZero,n>0)}
   catch(e){message(e.message||c().err,false)}
   finally{b.disabled=false}
 }
