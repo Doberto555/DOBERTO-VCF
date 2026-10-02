@@ -239,3 +239,19 @@
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start,{once:true});
   else start();
 })();
+;(()=>{
+  if(window.__dobertoCopyCleanV1)return;
+  window.__dobertoCopyCleanV1=true;
+  const blocked=new Set(['SCRIPT','STYLE','CODE','PRE','TEXTAREA']);
+  function cleanValue(value){
+    if(!value||!/[.,]/.test(value))return value;
+    const saved=[];
+    const masked=value.replace(/(https?:\/\/[^\s<]+|www\.[^\s<]+|[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}|\b(?:[A-Za-z0-9-]+\.)+[A-Za-z]{2,}\b|\bv?\d+\.\d+(?:\.\d+)?\b)/gi,m=>{saved.push(m);return '§'+(saved.length-1)+'§'});
+    const cleaned=masked.replace(/[.,]/g,'');
+    return cleaned.replace(/§(\d+)§/g,(_,i)=>saved[Number(i)]||'');
+  }
+  function cleanText(node){const p=node.parentElement;if(!p||blocked.has(p.tagName))return;const next=cleanValue(node.nodeValue||'');if(next!==node.nodeValue)node.nodeValue=next}
+  function cleanTree(root=document.body){if(!root)return;if(root.nodeType===Node.TEXT_NODE){cleanText(root);return}const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;while((n=w.nextNode()))cleanText(n)}
+  const start=()=>{cleanTree(document.body);new MutationObserver(ms=>{for(const m of ms){if(m.type==='characterData')cleanText(m.target);for(const n of m.addedNodes||[])cleanTree(n)}}).observe(document.body,{subtree:true,childList:true,characterData:true})};
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+})();
