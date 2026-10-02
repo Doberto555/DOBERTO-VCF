@@ -201,3 +201,41 @@
 
   window.__DOBERTO_NATIVE_ALERT__=nativeAlert;
 })();
+;(()=>{
+  'use strict';
+  if(window.__DOBERTO_COPY_CLEAN_V1__) return;
+  window.__DOBERTO_COPY_CLEAN_V1__=true;
+  const blocked=new Set(['SCRIPT','STYLE','CODE','PRE','TEXTAREA']);
+  const protectedPattern=/(https?:\/\/[^\s<]+|www\.[^\s<]+|[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}|\b(?:[A-Za-z0-9-]+\.)+[A-Za-z]{2,}\b|\bv?\d+\.\d+(?:\.\d+)?\b)/gi;
+  function cleanValue(value){
+    if(!value||!/[.,]/.test(value)) return value;
+    const saved=[];
+    const masked=value.replace(protectedPattern,m=>{saved.push(m);return '\uE000'+(saved.length-1)+'\uE001'});
+    const cleaned=masked.replace(/[.,]/g,'');
+    return cleaned.replace(/\uE000(\d+)\uE001/g,(_,i)=>saved[Number(i)]||'');
+  }
+  function cleanTextNode(node){
+    const p=node.parentElement;
+    if(!p||blocked.has(p.tagName)) return;
+    const next=cleanValue(node.nodeValue||'');
+    if(next!==node.nodeValue) node.nodeValue=next;
+  }
+  function cleanTree(root=document.body){
+    if(!root) return;
+    if(root.nodeType===Node.TEXT_NODE){cleanTextNode(root);return}
+    const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+    let n;while((n=walker.nextNode())) cleanTextNode(n);
+  }
+  const start=()=>{
+    cleanTree(document.body);
+    const obs=new MutationObserver(ms=>{
+      for(const m of ms){
+        if(m.type==='characterData') cleanTextNode(m.target);
+        for(const n of m.addedNodes||[]) cleanTree(n);
+      }
+    });
+    obs.observe(document.body,{subtree:true,childList:true,characterData:true});
+  };
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start,{once:true});
+  else start();
+})();
