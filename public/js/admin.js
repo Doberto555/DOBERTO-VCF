@@ -151,9 +151,9 @@ document.getElementById('exportBtn').addEventListener('click', async () => {
 });
 
 const ADMIN_PUSH_COPY = {
-  ht: { kicker:'PUSH CENTER', title:'Voye notifikasyon bay manm yo', desc:'Voye yon alèt reyèl bay tout aparèy ki aktive notifikasyon DOBERTO VCF.', fieldTitle:'Tit', fieldMessage:'Mesaj', fieldUrl:'Lyen lè moun klike', send:'Voye notifikasyon', retry:'Relanse kanpay VCF pare', ok:'Notifikasyon an voye bay OneSignal.', retryOk:'Kanpay unlock la relanse.', error:'Notifikasyon an pa t voye. Verifye OneSignal sou Vercel.' },
-  fr: { kicker:'CENTRE PUSH', title:'Envoyer une notification aux membres', desc:'Envoyez une vraie alerte aux appareils abonnés aux notifications DOBERTO VCF.', fieldTitle:'Titre', fieldMessage:'Message', fieldUrl:'Lien au clic', send:'Envoyer la notification', retry:'Relancer la campagne VCF disponible', ok:'Notification envoyée à OneSignal.', retryOk:'Campagne de déblocage relancée.', error:'Échec de l’envoi. Vérifiez OneSignal sur Vercel.' },
-  en: { kicker:'PUSH CENTER', title:'Send a notification to members', desc:'Send a real alert to devices subscribed to DOBERTO VCF notifications.', fieldTitle:'Title', fieldMessage:'Message', fieldUrl:'Click URL', send:'Send notification', retry:'Retry VCF-ready campaign', ok:'Notification sent to OneSignal.', retryOk:'Unlock campaign retried.', error:'Notification failed. Check OneSignal on Vercel.' }
+  ht: { kicker:'PUSH CENTER', title:'Voye notifikasyon bay manm yo', desc:'Voye yon alèt reyèl bay tout aparèy ki aktive notifikasyon DOBERTO VCF.', fieldTitle:'Tit', fieldMessage:'Mesaj', fieldUrl:'Lyen lè moun klike', send:'Voye notifikasyon', retry:'Relanse kanpay VCF pare', ok:'Notifikasyon an voye bay OneSignal.', retryOk:'Kanpay unlock la relanse.', error:'Notifikasyon an pa t voye. Verifye OneSignal sou VPS la.', ready:'OneSignal pare', notReady:'OneSignal poko configure sou VPS la', checking:'Ap verifye OneSignal' },
+  fr: { kicker:'CENTRE PUSH', title:'Envoyer une notification aux membres', desc:'Envoyez une vraie alerte aux appareils abonnés aux notifications DOBERTO VCF.', fieldTitle:'Titre', fieldMessage:'Message', fieldUrl:'Lien au clic', send:'Envoyer la notification', retry:'Relancer la campagne VCF disponible', ok:'Notification envoyée à OneSignal.', retryOk:'Campagne de déblocage relancée.', error:'Échec de l’envoi. Vérifiez OneSignal sur le VPS.', ready:'OneSignal prêt', notReady:'OneSignal n’est pas configuré sur le VPS', checking:'Vérification de OneSignal' },
+  en: { kicker:'PUSH CENTER', title:'Send a notification to members', desc:'Send a real alert to devices subscribed to DOBERTO VCF notifications.', fieldTitle:'Title', fieldMessage:'Message', fieldUrl:'Click URL', send:'Send notification', retry:'Retry VCF-ready campaign', ok:'Notification sent to OneSignal.', retryOk:'Unlock campaign retried.', error:'Notification failed. Check OneSignal on the VPS.', ready:'OneSignal ready', notReady:'OneSignal is not configured on the VPS', checking:'Checking OneSignal' }
 };
 function adminUiLang(){ const el=document.getElementById('langSelect'); return el && ADMIN_PUSH_COPY[el.value] ? el.value : 'ht'; }
 function adminPushText(){ return ADMIN_PUSH_COPY[adminUiLang()] || ADMIN_PUSH_COPY.ht; }
@@ -165,7 +165,7 @@ function ensureAdminPushPanel(){
   const panel=document.createElement('section');
   panel.id='adminPushPanel'; panel.className='dv-admin-push';
   panel.innerHTML=`
-    <div class="dv-admin-push-head"><div><span id="pushKicker"></span><h3 id="pushTitle"></h3><p id="pushDesc"></p></div><span class="dv-live-dot">LIVE</span></div>
+    <div class="dv-admin-push-head"><div><span id="pushKicker"></span><h3 id="pushTitle"></h3><p id="pushDesc"></p></div><span class="dv-live-dot" id="pushServiceStatus">CHECK</span></div>
     <div class="dv-push-grid"><label><span id="pushLabelTitle"></span><input id="pushTitleInput" maxlength="80" value="DOBERTO VCF"></label><label><span id="pushLabelUrl"></span><input id="pushUrlInput" maxlength="300" value="/"></label></div>
     <label><span id="pushLabelMessage"></span><textarea id="pushMessageInput" maxlength="220" rows="3" placeholder="DOBERTO VCF..."></textarea></label>
     <div class="dv-push-actions"><button type="button" id="pushSendBtn"></button><button type="button" class="secondary" id="pushRetryBtn"></button></div>
@@ -173,6 +173,7 @@ function ensureAdminPushPanel(){
   exportBtn.insertAdjacentElement('afterend',panel);
   document.getElementById('pushSendBtn').addEventListener('click',sendAdminPush);
   document.getElementById('pushRetryBtn').addEventListener('click',retryUnlockCampaign);
+  checkPushService();
 }
 
 function renderAdminPushCopy(){
@@ -181,18 +182,44 @@ function renderAdminPushCopy(){
   Object.entries(values).forEach(([id,text])=>{const el=document.getElementById(id);if(el)el.textContent=text;});
 }
 
+async function checkPushService(){
+  const c=adminPushText();
+  const badge=document.getElementById('pushServiceStatus');
+  const btn=document.getElementById('pushSendBtn');
+  if(badge) badge.textContent=c.checking;
+  try{
+    const res=await fetch('/api/health',{cache:'no-store',headers:{Accept:'application/json'}});
+    const data=await res.json().catch(()=>({}));
+    const ready=Boolean(res.ok&&data.pushConfigured);
+    if(badge){
+      badge.textContent=ready?c.ready:c.notReady;
+      badge.classList.toggle('is-offline',!ready);
+    }
+    if(btn) btn.disabled=!ready;
+    return ready;
+  }catch(_){
+    if(badge){badge.textContent=c.notReady;badge.classList.add('is-offline');}
+    if(btn) btn.disabled=true;
+    return false;
+  }
+}
+
 async function sendAdminPush(){
   const c=adminPushText(); const msg=document.getElementById('pushAdminMsg'); const btn=document.getElementById('pushSendBtn');
   const title=document.getElementById('pushTitleInput').value.trim(); const message=document.getElementById('pushMessageInput').value.trim(); const url=document.getElementById('pushUrlInput').value.trim()||'/';
   if(!message){msg.textContent=c.error;msg.className='msg show err';return;}
   btn.disabled=true; msg.className='msg';
   try{
+    const ready=await checkPushService();
+    if(!ready) throw new Error(c.notReady);
     const res=await fetch('/api/admin/push-send',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${adminToken}`},body:JSON.stringify({title,message,url})});
-    const data=await res.json(); if(res.status===401){document.getElementById('logoutBtn').click();return;}
-    if(!res.ok) throw new Error(data.error||'push_failed');
+    const raw=await res.text();
+    let data={}; try{data=raw?JSON.parse(raw):{}}catch(_){}
+    if(res.status===401){document.getElementById('logoutBtn').click();return;}
+    if(!res.ok) throw new Error(data.error||c.error);
     msg.textContent=c.ok;msg.className='msg show ok';document.getElementById('pushMessageInput').value='';
-  }catch(e){msg.textContent=(e&&e.message&&e.message!=='push_failed')?e.message:c.error;msg.className='msg show err';}
-  finally{btn.disabled=false;}
+  }catch(e){msg.textContent=(e&&e.message)||c.error;msg.className='msg show err';}
+  finally{await checkPushService();}
 }
 
 async function retryUnlockCampaign(){
