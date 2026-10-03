@@ -440,7 +440,14 @@ async function sendOneSignalPush({ title, message, url = '/', campaignName = 'do
     })
   });
   const payload = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(`OneSignal failed (${response.status}): ${JSON.stringify(payload).slice(0, 300)}`);
+  if (!response.ok || payload?.errors) {
+    const detail = JSON.stringify(payload || {}).slice(0, 500);
+    const error = new Error(`OneSignal failed (${response.status}): ${detail}`);
+    error.code = 'onesignal_send_failed';
+    error.providerStatus = response.status;
+    error.providerDetail = detail;
+    throw error;
+  }
   return { ok: true, id: payload.id || null, recipients: payload.recipients ?? null };
 }
 
@@ -997,8 +1004,13 @@ app.post('/api/admin/push-send', pushSendLimiter, verifyAdmin, async (req, res) 
     const result = await sendOneSignalPush({ title, message, url, campaignName: `admin-${Date.now()}` });
     res.json({ ok: true, result });
   } catch (err) {
-    console.error(err);
-    res.status(502).json({ code: 'onesignal_send_failed', error: 'OneSignal pa t aksepte notifikasyon an. Verifye App ID ak REST API Key sou VPS la.' });
+    console.error('[DOBERTO VCF] OneSignal send failed:', err);
+    res.status(502).json({
+      code: 'onesignal_send_failed',
+      error: 'OneSignal pa t aksepte notifikasyon an.',
+      providerStatus: Number(err && err.providerStatus || 0) || null,
+      providerDetail: String(err && err.providerDetail || err && err.message || '').slice(0, 500)
+    });
   }
 });
 
