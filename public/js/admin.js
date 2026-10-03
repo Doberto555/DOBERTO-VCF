@@ -216,7 +216,10 @@ async function sendAdminPush(){
     const raw=await res.text();
     let data={}; try{data=raw?JSON.parse(raw):{}}catch(_){}
     if(res.status===401){document.getElementById('logoutBtn').click();return;}
-    if(!res.ok) throw new Error(data.error||c.error);
+    if(!res.ok){
+      const detail=[data.error,data.providerStatus?('HTTP '+data.providerStatus):'',data.providerDetail].filter(Boolean).join(' — ');
+      throw new Error(detail||c.error);
+    }
     msg.textContent=c.ok;msg.className='msg show ok';document.getElementById('pushMessageInput').value='';
   }catch(e){msg.textContent=(e&&e.message)||c.error;msg.className='msg show err';}
   finally{await checkPushService();}
