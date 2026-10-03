@@ -442,8 +442,12 @@ async function sendOneSignalPush({ title, message, url = '/', campaignName = 'do
   const payload = await response.json().catch(() => ({}));
   if (!response.ok || payload?.errors) {
     const detail = JSON.stringify(payload || {}).slice(0, 500);
-    const error = new Error(`OneSignal failed (${response.status}): ${detail}`);
-    error.code = 'onesignal_send_failed';
+    const noSubscribers = Array.isArray(payload && payload.errors) &&
+      payload.errors.some((item) => /not subscribed/i.test(String(item || '')));
+    const error = new Error(noSubscribers
+      ? 'Pa gen okenn aparèy ki abòne ak notifications yo ankò.'
+      : `OneSignal failed (${response.status}): ${detail}`);
+    error.code = noSubscribers ? 'onesignal_no_subscribers' : 'onesignal_send_failed';
     error.providerStatus = response.status;
     error.providerDetail = detail;
     throw error;
@@ -1005,9 +1009,12 @@ app.post('/api/admin/push-send', pushSendLimiter, verifyAdmin, async (req, res) 
     res.json({ ok: true, result });
   } catch (err) {
     console.error('[DOBERTO VCF] OneSignal send failed:', err);
-    res.status(502).json({
-      code: 'onesignal_send_failed',
-      error: 'OneSignal pa t aksepte notifikasyon an.',
+    const noSubscribers = err && err.code === 'onesignal_no_subscribers';
+    res.status(noSubscribers ? 409 : 502).json({
+      code: noSubscribers ? 'onesignal_no_subscribers' : 'onesignal_send_failed',
+      error: noSubscribers
+        ? 'Pa gen okenn aparèy ki abòne ak notifications DOBERTO VCF yo ankò.'
+        : 'OneSignal pa t aksepte notifikasyon an.',
       providerStatus: Number(err && err.providerStatus || 0) || null,
       providerDetail: String(err && err.providerDetail || err && err.message || '').slice(0, 500)
     });
