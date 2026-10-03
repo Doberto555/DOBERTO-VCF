@@ -36,6 +36,7 @@ function showAdminPanel() {
   adminPanel.style.display = 'block';
   ensureAdminPushPanel();
   renderAdminPushCopy();
+  renderAdminVcfCopy();
   loadAdminList(1);
 }
 
@@ -127,6 +128,60 @@ document.getElementById('searchBox').addEventListener('input', (e) => {
     searchTerm = e.target.value.trim();
     loadAdminList(1);
   }, 300);
+});
+
+const ADMIN_VCF_COPY = {
+  ht: { button:'Telechaje fichye VCF', loading:'Ap prepare VCF...', ok:'Fichye VCF la telechaje. Ou ka voye li bay moun yo.', error:'Nou pa ka telechaje fichye VCF la kounye a.' },
+  fr: { button:'Télécharger le fichier VCF', loading:'Préparation du VCF...', ok:'Le fichier VCF est téléchargé. Vous pouvez maintenant le partager.', error:'Impossible de télécharger le fichier VCF pour le moment.' },
+  en: { button:'Download VCF file', loading:'Preparing VCF...', ok:'The VCF file was downloaded. You can now share it.', error:'Unable to download the VCF file right now.' }
+};
+
+function renderAdminVcfCopy(){
+  const lang=adminUiLang();
+  const copy=ADMIN_VCF_COPY[lang]||ADMIN_VCF_COPY.ht;
+  const btn=document.getElementById('downloadVcfBtn');
+  if(btn && !btn.disabled) btn.textContent=copy.button;
+}
+
+document.getElementById('downloadVcfBtn')?.addEventListener('click', async () => {
+  const btn=document.getElementById('downloadVcfBtn');
+  const msg=document.getElementById('downloadVcfMsg');
+  const copy=ADMIN_VCF_COPY[adminUiLang()]||ADMIN_VCF_COPY.ht;
+  btn.disabled=true;
+  btn.textContent=copy.loading;
+  if(msg){msg.className='msg';msg.textContent='';}
+
+  try{
+    const res=await fetch('/api/admin/download-vcf',{
+      headers:{Authorization:`Bearer ${adminToken}`},
+      cache:'no-store'
+    });
+    if(res.status===401){document.getElementById('logoutBtn').click();return;}
+    if(!res.ok){
+      const data=await res.json().catch(()=>({}));
+      throw new Error(data.error||copy.error);
+    }
+
+    const blob=await res.blob();
+    const disposition=String(res.headers.get('Content-Disposition')||'');
+    const match=disposition.match(/filename="?([^";]+)"?/i);
+    const filename=match?.[1]||'DOBERTO-VCF.vcf';
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;
+    a.download=filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1500);
+
+    if(msg){msg.textContent=copy.ok;msg.className='msg show ok';}
+  }catch(error){
+    if(msg){msg.textContent=error?.message||copy.error;msg.className='msg show err';}
+  }finally{
+    btn.disabled=false;
+    renderAdminVcfCopy();
+  }
 });
 
 document.getElementById('exportBtn').addEventListener('click', async () => {
@@ -238,6 +293,7 @@ async function retryUnlockCampaign(){
 function onLangChange() {
   renderAdminList();
   renderAdminPushCopy();
+  renderAdminVcfCopy();
 }
 
 if (adminToken) showAdminPanel();
