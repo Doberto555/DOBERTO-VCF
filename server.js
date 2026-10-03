@@ -988,7 +988,7 @@ app.get('/api/admin/export-csv', adminActionLimiter, verifyAdmin, requireDatabas
 app.post('/api/admin/push-send', pushSendLimiter, verifyAdmin, async (req, res) => {
   try {
     if (!pushNotificationsConfigured()) {
-      return res.status(503).json({ error: 'OneSignal poko configure. Mete ONESIGNAL_APP_ID ak ONESIGNAL_REST_API_KEY sou server la.' });
+      return res.status(503).json({ code: 'onesignal_not_configured', error: 'OneSignal poko configure sou VPS la. Mete ONESIGNAL_APP_ID ak ONESIGNAL_REST_API_KEY nan environment DOBERTO VCF la.' });
     }
     const title = String(req.body && req.body.title || 'DOBERTO VCF').trim().slice(0, 80);
     const message = String(req.body && req.body.message || '').trim().slice(0, 220);
@@ -998,7 +998,7 @@ app.post('/api/admin/push-send', pushSendLimiter, verifyAdmin, async (req, res) 
     res.json({ ok: true, result });
   } catch (err) {
     console.error(err);
-    res.status(502).json({ error: 'OneSignal pa t aksepte notifikasyon an. Verifye App ID/API Key yo.' });
+    res.status(502).json({ code: 'onesignal_send_failed', error: 'OneSignal pa t aksepte notifikasyon an. Verifye App ID ak REST API Key sou VPS la.' });
   }
 });
 
