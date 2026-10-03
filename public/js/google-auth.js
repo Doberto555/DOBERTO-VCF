@@ -74,7 +74,7 @@
     if(gate)gate.hidden=true;if(account)account.hidden=false;if(already?.parentElement)already.parentElement.hidden=true;
     const avatar=document.getElementById('googleAvatar');if(avatar){avatar.src=session.user.avatarUrl||'icons/doberto-vcf-192.png';avatar.alt=session.user.name||'';avatar.onerror=()=>{avatar.onerror=null;avatar.src='icons/doberto-vcf-192.png'}}
     const name=document.getElementById('googleName'),email=document.getElementById('googleEmail');if(name)name.textContent=session.user.name||'';if(email)email.textContent=session.user.email||'';
-    const nameInput=document.getElementById('name'),emailInput=document.getElementById('email');if(nameInput&&!nameInput.value)nameInput.value=session.registration?.name||session.user.name||'';if(emailInput)emailInput.value=session.user.email||'';
+    const nameInput=document.getElementById('name');if(nameInput&&!nameInput.value)nameInput.value=session.registration?.name||session.user.name||'';
     const registered=Boolean(session.registered);document.body?.classList.toggle('dv-registered',registered);if(form)form.hidden=registered;if(done)done.hidden=!registered;
     window.DVRegisterI18n?.apply?.();
     resetLoginButton();
