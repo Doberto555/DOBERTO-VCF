@@ -81,3 +81,92 @@
   content:none!important;
   display:none!important;
 }
+
+
+/* Coming soon VCF choices */
+.coming-choice{
+  margin:28px 0 18px;
+  padding:24px;
+  border:1px solid rgba(94,230,184,.16);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at top right,rgba(94,230,184,.08),transparent 38%),
+    rgba(12,16,22,.72);
+  box-shadow:0 18px 50px rgba(0,0,0,.16);
+}
+.coming-choice-head{
+  display:flex;
+  align-items:flex-start;
+  gap:16px;
+  margin-bottom:18px;
+}
+.coming-choice-head h2{
+  margin:0 0 6px;
+  font-size:clamp(22px,3.2vw,34px);
+  line-height:1.08;
+}
+.coming-choice-head p{
+  margin:0;
+  color:#98a5b4;
+  line-height:1.6;
+}
+.coming-badge,
+.coming-state{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(94,230,184,.22);
+  border-radius:999px;
+  background:rgba(94,230,184,.08);
+  color:#8cebc9;
+  font-size:11px;
+  font-weight:800;
+  white-space:nowrap;
+}
+.coming-badge{padding:8px 10px}
+.coming-state{padding:7px 10px;align-self:flex-start}
+.coming-choice-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+}
+.coming-option{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:flex-start;
+  gap:14px;
+  padding:18px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  background:rgba(255,255,255,.025);
+}
+.coming-option-index{
+  width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  border-radius:10px;
+  border:1px solid rgba(94,230,184,.16);
+  background:rgba(94,230,184,.06);
+  color:#8cebc9;
+  font-size:10px;
+  font-weight:800;
+}
+.coming-option h3{
+  margin:1px 0 7px;
+  font-size:16px;
+}
+.coming-option p{
+  margin:0;
+  color:#95a1b0;
+  line-height:1.55;
+  font-size:13px;
+}
+@media(max-width:760px){
+  .coming-choice{padding:17px;margin-top:20px;border-radius:18px}
+  .coming-choice-head{display:block}
+  .coming-badge{margin-bottom:12px}
+  .coming-choice-grid{grid-template-columns:1fr}
+  .coming-option{grid-template-columns:34px 1fr}
+  .coming-state{grid-column:2;margin-top:3px}
+}
