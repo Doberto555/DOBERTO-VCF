@@ -120,3 +120,19 @@
   #adminPushPanel .dv-push-actions{display:grid!important;grid-template-columns:1fr!important}
   #adminPushPanel .dv-push-actions button{width:100%!important;min-width:0!important}
 }
+
+
+#adminPushPanel #pushServiceStatus{
+  max-width:220px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+#adminPushPanel #pushServiceStatus.is-offline{
+  border-color:rgba(255,103,103,.28)!important;
+  background:rgba(255,85,85,.08)!important;
+  color:#ff8f8f!important;
+}
+#adminPushPanel #pushSendBtn:disabled{
+  opacity:.45!important;
+  cursor:not-allowed!important;
+}
