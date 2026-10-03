@@ -996,6 +996,47 @@ app.get('/api/admin/export-csv', adminActionLimiter, verifyAdmin, requireDatabas
   res.send('\ufeff' + csv);
 });
 
+app.get('/api/admin/download-vcf', adminActionLimiter, verifyAdmin, requireDatabase, async (req, res) => {
+  try {
+    const { data, error } = await supabase.from('registrations')
+      .select('name, full_number')
+      .order('created_at', { ascending: true })
+      .limit(MAX_IN_FILE);
+    if (error) throw error;
+
+    const rows = data || [];
+    if (!rows.length) {
+      return res.status(404).json({ code: 'no_contacts', error: 'Pa gen okenn kontak pou mete nan fichye VCF la.' });
+    }
+
+    const escapeVcard = (value) => String(value || '')
+      .replace(/\\/g, '\\\\')
+      .replace(/\r?\n/g, '\\n')
+      .replace(/;/g, '\\;')
+      .replace(/,/g, '\\,');
+
+    const vcf = rows.map((row) => [
+      'BEGIN:VCARD',
+      'VERSION:3.0',
+      `FN:${escapeVcard(withPrefix(row.name))}`,
+      `TEL;TYPE=CELL:+${onlyDigits(row.full_number)}`,
+      'END:VCARD',
+      ''
+    ].join('\r\n')).join('');
+
+    const stamp = new Date().toISOString().slice(0, 10);
+    res.setHeader('Content-Type', 'text/vcard; charset=utf-8');
+    res.setHeader('Content-Disposition', `attachment; filename="DOBERTO-VCF-${stamp}.vcf"`);
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Cache-Control', 'private, no-store');
+    res.setHeader('X-Doberto-Contacts', String(rows.length));
+    res.send(vcf);
+  } catch (err) {
+    console.error('[DOBERTO VCF] admin VCF export failed:', err);
+    res.status(500).json({ code: 'server_error', error: 'Nou pa ka kreye fichye VCF la kounye a.' });
+  }
+});
+
 app.post('/api/admin/push-send', pushSendLimiter, verifyAdmin, async (req, res) => {
   try {
     if (!pushNotificationsConfigured()) {
