@@ -15,3 +15,150 @@ function updatePager(){const c=tx(),info=document.getElementById('pageInfo'),pre
 function renderList(){if(!lastListData)return;const body=document.getElementById('listBody');if(!body)return;body.innerHTML='';if(!lastListData.list||!lastListData.list.length)renderMessage(hasFilters()?tx().emptySearch:tx().emptyAll);else lastListData.list.forEach(row=>{const tr=document.createElement('tr');const displayName=escapeHtml(row.display_name||row.name||'—'),country=escapeHtml(row.country_name||'—');tr.innerHTML=`<td><div class="name-cell"><span class="avatar" aria-hidden="true">${escapeHtml(initials(row.name||row.display_name))}</span><span class="member-name">${displayName}</span>${typeof dobertoIconSvg==='function'?dobertoIconSvg(row.icon):''}</div></td><td data-country-cell>${country}</td>`;body.appendChild(tr)});updatePager()}
 function applyLanguage(){const c=tx();document.title=c.title;document.documentElement.lang=lang();setText('.list-page-hero .list-kicker',c.kicker);setText('.list-page-hero [data-i18n="list_title_1"]',c.title1);setText('.list-page-hero [data-i18n="list_title_2"]',c.title2);setText('.list-page-hero [data-i18n="list_desc"]',c.desc);setText('#privacyChipTitle',c.privacyTitle);setText('#privacyChipDesc',c.privacyDesc);setText('#directoryKicker',c.network);setText('#directoryTitle',c.directoryTitle);setText('#directoryDesc',c.directoryDesc);setText('#filterTitle',c.filters);const search=document.getElementById('publicSearch');if(search){search.placeholder=c.search;search.setAttribute('aria-label',c.searchLabel)}const clear=document.getElementById('clearSearchBtn');if(clear){clear.setAttribute('aria-label',c.clearSearch);clear.title=c.clearSearch}const country=document.getElementById('publicCountry');if(country){country.setAttribute('aria-label',c.countryLabel);if(country.options[0])country.options[0].textContent=c.allCountries}setText('#thName',c.name);setText('#thCountry',c.country);setText('#footerAbout',c.footerAbout);setText('#footerPrivacy',c.footerPrivacy);setText('#footerTerms',c.footerTerms);if(loadError)renderMessage(c.error,true);else if(loading)renderLoading();else renderList();updatePager();updateClearButton()}
 document.getElementById('prevBtn')?.addEventListener('click',()=>{if(currentPage>1)loadList(currentPage-1)});document.getElementById('nextBtn')?.addEventListener('click',()=>{if(currentPage<totalPages)loadList(currentPage+1)});setupDirectoryFilters();applyLanguage();loadList(1);document.getElementById('langSelect')?.addEventListener('change',()=>setTimeout(applyLanguage,0));window.addEventListener('pageshow',()=>setTimeout(applyLanguage,0));
+
+
+// ---------- Public VCF download ----------
+(function setupVcfDownload(){
+  const form=document.getElementById('vcfDownloadForm');
+  if(!form)return;
+
+  const dial=document.getElementById('vcfDial');
+  const state=document.getElementById('vcfDownloadState');
+  const progressText=document.getElementById('vcfDownloadProgressText');
+  const remaining=document.getElementById('vcfDownloadRemaining');
+  const bar=document.getElementById('vcfDownloadProgressBar');
+  const btn=document.getElementById('vcfDownloadBtn');
+  const msg=document.getElementById('vcfDownloadMsg');
+
+  if(dial && typeof COUNTRIES!=='undefined'){
+    dial.innerHTML='';
+    COUNTRIES.forEach(country=>{
+      const option=document.createElement('option');
+      option.value=String(country.dial||'');
+      option.textContent=`${country.name} (+${country.dial})`;
+      if(String(country.dial)==='509') option.selected=true;
+      dial.appendChild(option);
+    });
+  }
+
+  const copy={
+    ht:{checking:'AP VERIFYE',open:'OUVÈ',locked:'BLOKE',members:'manm',left:'rete',ready:'Download la disponib kounye a.',wait:'Download la poko disponib.',adminLock:'Admin lan bloke download la pou kounye a.',loading:'Ap prepare fichye a...',button:'Telechaje VCF',bad:'Verifye non ak nimewo ou te itilize lè ou te enskri a.',error:'Nou pa ka telechaje fichye a kounye a.'},
+    fr:{checking:'VÉRIFICATION',open:'OUVERT',locked:'BLOQUÉ',members:'membres',left:'restants',ready:'Le téléchargement est disponible.',wait:'Le téléchargement n’est pas encore disponible.',adminLock:'L’administrateur a bloqué le téléchargement pour le moment.',loading:'Préparation du fichier...',button:'Télécharger le VCF',bad:'Vérifiez le nom et le numéro utilisés lors de votre inscription.',error:'Impossible de télécharger le fichier pour le moment.'},
+    en:{checking:'CHECKING',open:'OPEN',locked:'LOCKED',members:'members',left:'left',ready:'The download is available now.',wait:'The download is not available yet.',adminLock:'The admin has locked downloads for now.',loading:'Preparing file...',button:'Download VCF',bad:'Check the name and number you used when registering.',error:'Unable to download the file right now.'}
+  };
+
+  function c(){
+    const l=lang();
+    return copy[l]||copy.ht;
+  }
+
+  let lastStats=null;
+
+  function renderStats(stats){
+    lastStats=stats||{};
+    const t=c();
+    const total=Number(stats?.total||0);
+    const min=Math.max(1,Number(stats?.minRequired||200));
+    const pct=Math.max(0,Math.min(100,Math.round((total/min)*100)));
+
+    if(progressText) progressText.textContent=`${total.toLocaleString()} / ${min.toLocaleString()} ${t.members}`;
+    if(remaining) remaining.textContent=`${Math.max(0,min-total).toLocaleString()} ${t.left}`;
+    if(bar) bar.style.width=`${pct}%`;
+
+    const isOpen=Boolean(stats?.unlocked);
+    if(state){
+      state.textContent=isOpen?t.open:t.locked;
+      state.style.borderColor=isOpen?'rgba(37,211,102,.35)':'rgba(255,255,255,.12)';
+    }
+    if(btn){
+      btn.disabled=!isOpen;
+      btn.textContent=t.button;
+    }
+
+    if(msg){
+      msg.className='msg show '+(isOpen?'ok':'err');
+      msg.textContent=isOpen
+        ? t.ready
+        : stats?.downloadMode==='locked'
+          ? t.adminLock
+          : t.wait;
+    }
+  }
+
+  async function loadStats(){
+    if(state) state.textContent=c().checking;
+    try{
+      const res=await fetch('/api/stats',{cache:'no-store',headers:{Accept:'application/json'}});
+      const data=await res.json().catch(()=>({}));
+      if(!res.ok) throw new Error(data.error||'stats_failed');
+      renderStats(data);
+    }catch(_){
+      if(btn) btn.disabled=true;
+      if(msg){msg.textContent=c().error;msg.className='msg show err';}
+    }
+  }
+
+  form.addEventListener('submit',async event=>{
+    event.preventDefault();
+    if(!lastStats?.unlocked){
+      await loadStats();
+      if(!lastStats?.unlocked)return;
+    }
+
+    const name=String(document.getElementById('vcfName')?.value||'').trim();
+    const dialCode=String(dial?.value||'').replace(/\D/g,'');
+    const phone=String(document.getElementById('vcfPhone')?.value||'').replace(/\D/g,'');
+    if(!name||!dialCode||!phone){
+      if(msg){msg.textContent=c().bad;msg.className='msg show err';}
+      return;
+    }
+
+    btn.disabled=true;
+    btn.textContent=c().loading;
+    if(msg){msg.className='msg';msg.textContent='';}
+
+    try{
+      const verify=await fetch('/api/verify-download',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({name,dialCode,phone})
+      });
+      const data=await verify.json().catch(()=>({}));
+      if(!verify.ok) throw new Error(data.error||c().bad);
+
+      const dl=await fetch(`/api/download-vcf?token=${encodeURIComponent(data.downloadToken||'')}`,{cache:'no-store'});
+      if(!dl.ok){
+        const err=await dl.json().catch(()=>({}));
+        throw new Error(err.error||c().error);
+      }
+
+      const blob=await dl.blob();
+      const disposition=String(dl.headers.get('Content-Disposition')||'');
+      const match=disposition.match(/filename="?([^";]+)"?/i);
+      const filename=match?.[1]||'DOBERTO-VCF.vcf';
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement('a');
+      a.href=url;
+      a.download=filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url),1500);
+
+      if(msg){msg.textContent=c().ready;msg.className='msg show ok';}
+      await loadStats();
+    }catch(error){
+      if(msg){msg.textContent=error?.message||c().error;msg.className='msg show err';}
+      await loadStats();
+    }finally{
+      btn.disabled=!Boolean(lastStats?.unlocked);
+      btn.textContent=c().button;
+    }
+  });
+
+  document.getElementById('langSelect')?.addEventListener('change',()=>{
+    if(lastStats)renderStats(lastStats);
+  });
+
+  loadStats();
+})();
