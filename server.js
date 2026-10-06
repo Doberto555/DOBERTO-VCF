@@ -444,7 +444,7 @@ async function recordVcfDownload(registrationId) {
 }
 
 // ---------- Email unlock ----------
-function unlockEmailHtml(name) {
+function unlockEmailHtml(name, minRequired = DEFAULT_MIN_TO_UNLOCK) {
   const safeName = escapeHtml(name || '');
   const listUrl = `${SITE_URL}/list.html#download`;
   return `<!doctype html><html><body style="margin:0;background:#07080d;color:#f4f7fb;font-family:Arial,sans-serif">
@@ -452,7 +452,7 @@ function unlockEmailHtml(name) {
     <div style="font-size:13px;font-weight:800;letter-spacing:.12em;color:#42e8b4;margin-bottom:18px">DOBERTO VCF</div>
     <div style="background:#11141c;border:1px solid #262c38;border-radius:18px;padding:28px">
       <h1 style="font-size:28px;line-height:1.15;margin:0 0 14px">VCF la disponib kounye a</h1>
-      <p style="color:#b9c1cf;line-height:1.65;margin:0 0 12px">Bonjou${safeName ? ` ${safeName}` : ''}, objektif ${DEFAULT_MIN_TO_UNLOCK.toLocaleString('fr-FR')} moun lan rive.</p>
+      <p style="color:#b9c1cf;line-height:1.65;margin:0 0 12px">Bonjou${safeName ? ` ${safeName}` : ''}, objektif ${Number(minRequired).toLocaleString('fr-FR')} moun lan rive.</p>
       <p style="color:#b9c1cf;line-height:1.65;margin:0 0 24px">Ale sou DOBERTO VCF, verifye menm non ak nimewo ou te itilize lè ou te enskri a, epi telechaje fichye VCF la.</p>
       <a href="${listUrl}" style="display:inline-block;background:#42e8b4;color:#06120f;text-decoration:none;font-weight:800;padding:14px 20px;border-radius:12px">Verifye &amp; Download VCF</a>
       <p style="font-size:12px;color:#7f8999;line-height:1.6;margin:24px 0 0">Mesaj sa a se yon notifikasyon sèvis paske ou te bay email ou pandan enskripsyon DOBERTO VCF.</p>
@@ -460,12 +460,12 @@ function unlockEmailHtml(name) {
   </div></body></html>`;
 }
 
-function unlockEmailText(name) {
+function unlockEmailText(name, minRequired = DEFAULT_MIN_TO_UNLOCK) {
   const hello = name ? `Bonjou ${name},\n\n` : '';
-  return `${hello}Objektif ${DEFAULT_MIN_TO_UNLOCK} moun DOBERTO VCF la rive. VCF la disponib kounye a.\n\nVerifye non ak nimewo ou te itilize a epi telechaje li isit la:\n${SITE_URL}/list.html#download\n\nDOBERTO VCF`;
+  return `${hello}Objektif ${minRequired} moun DOBERTO VCF la rive. VCF la disponib kounye a.\n\nKonekte ak menm kont Google ou te itilize a, oswa verifye non ak nimewo WhatsApp ou, epi telechaje li isit la:\n${SITE_URL}/list.html#download\n\nDOBERTO VCF`;
 }
 
-async function sendUnlockEmailCampaign() {
+async function sendUnlockEmailCampaign(minRequired = DEFAULT_MIN_TO_UNLOCK) {
   if (!emailNotificationsConfigured()) return { ok: false, skipped: 'not_configured', sent: 0 };
 
   const { data, error } = await supabase
@@ -496,15 +496,15 @@ async function sendUnlockEmailCampaign() {
       headers: {
         Authorization: `Bearer ${RESEND_API_KEY}`,
         'Content-Type': 'application/json',
-        'Idempotency-Key': `doberto-vcf-unlock-${DEFAULT_MIN_TO_UNLOCK}-batch-${batchNumber}`
+        'Idempotency-Key': `doberto-vcf-unlock-${minRequired}-batch-${batchNumber}`
       },
       body: JSON.stringify(slice.map((row) => ({
         from: RESEND_FROM,
         to: [row.email],
         subject: 'DOBERTO VCF disponib — telechaje fichye a',
-        html: unlockEmailHtml(row.name),
-        text: unlockEmailText(row.name),
-        tags: [{ name: 'campaign', value: `vcf_unlock_${DEFAULT_MIN_TO_UNLOCK}` }]
+        html: unlockEmailHtml(row.name, minRequired),
+        text: unlockEmailText(row.name, minRequired),
+        tags: [{ name: 'campaign', value: `vcf_unlock_${minRequired}` }]
       })))
     });
     if (!response.ok) {
@@ -554,24 +554,25 @@ async function sendOneSignalPush({ title, message, url = '/', campaignName = 'do
   return { ok: true, id: payload.id || null, recipients: payload.recipients ?? null };
 }
 
-async function sendUnlockPush() {
+async function sendUnlockPush(minRequired = DEFAULT_MIN_TO_UNLOCK) {
   return sendOneSignalPush({
     title: 'DOBERTO VCF — Fichye a pare',
-    message: `Objektif ${DEFAULT_MIN_TO_UNLOCK} moun lan rive. Verifye non ak nimewo ou epi telechaje fichye VCF la.`,
+    message: `Objektif ${minRequired} moun lan rive. Konekte ak kont Google ou oswa verifye non/nimewo ou pou telechaje fichye VCF la.`,
     url: '/list.html#download',
-    campaignName: `vcf-unlock-${DEFAULT_MIN_TO_UNLOCK}`
+    campaignName: `vcf-unlock-${minRequired}`
   });
 }
 
 async function runUnlockCampaign(force = false) {
-  const { count, error: countError } = await supabase
-    .from('registrations')
-    .select('*', { count: 'exact', head: true });
+  const [{ count, error: countError }, minRequired] = await Promise.all([
+    supabase.from('registrations').select('*', { count: 'exact', head: true }),
+    getDownloadThreshold()
+  ]);
   if (countError) throw countError;
   const total = count || 0;
-  if (total < DEFAULT_MIN_TO_UNLOCK) return { ok: true, skipped: 'locked', total };
+  if (total < minRequired) return { ok: true, skipped: 'locked', total, minRequired };
 
-  const campaignKey = `vcf_unlock_${DEFAULT_MIN_TO_UNLOCK}`;
+  const campaignKey = `vcf_unlock_${minRequired}`;
   let existing = null;
   const existingResult = await supabase
     .from('notification_campaigns')
@@ -581,8 +582,8 @@ async function runUnlockCampaign(force = false) {
 
   if (existingResult.error) {
     console.warn('[DOBERTO VCF] notification_campaigns unavailable:', existingResult.error.message);
-    if (!force && total !== DEFAULT_MIN_TO_UNLOCK) return { ok: false, skipped: 'campaign_table_missing' };
-    const [email, push] = await Promise.allSettled([sendUnlockEmailCampaign(), sendUnlockPush()]);
+    if (!force && total !== minRequired) return { ok: false, skipped: 'campaign_table_missing' };
+    const [email, push] = await Promise.allSettled([sendUnlockEmailCampaign(minRequired), sendUnlockPush(minRequired)]);
     return { ok: true, legacy: true, email, push };
   }
   existing = existingResult.data;
@@ -611,8 +612,8 @@ async function runUnlockCampaign(force = false) {
   }
 
   const [emailResult, pushResult] = await Promise.allSettled([
-    sendUnlockEmailCampaign(),
-    sendUnlockPush()
+    sendUnlockEmailCampaign(minRequired),
+    sendUnlockPush(minRequired)
   ]);
 
   const emailValue = emailResult.status === 'fulfilled' ? emailResult.value : { ok: false, error: String(emailResult.reason && emailResult.reason.message || emailResult.reason) };
