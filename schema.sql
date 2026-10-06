@@ -59,6 +59,10 @@ insert into app_settings (key, value)
 values ('vcf_download_mode', 'auto')
 on conflict (key) do nothing;
 
+insert into app_settings (key, value)
+values ('vcf_download_threshold', '200')
+on conflict (key) do nothing;
+
 -- Eta kanpay notifikasyon/email unlock la.
 create table if not exists notification_campaigns (
   campaign_key text primary key,
