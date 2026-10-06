@@ -24,8 +24,8 @@ const PORT = parseInt(process.env.PORT || '3000', 10);
 const SITE_URL = String(process.env.SITE_URL || 'https://doberto-vcf-509.vercel.app').replace(/\/$/, '');
 const JWT_SECRET = String(process.env.JWT_SECRET || '').trim();
 const ADMIN_PASSWORD = String(process.env.ADMIN_PASSWORD || '').trim();
-const MIN_TO_UNLOCK = 200;
-const MAX_IN_FILE = Math.max(MIN_TO_UNLOCK, parseInt(process.env.MAX_IN_FILE || '50000', 10));
+const DEFAULT_MIN_TO_UNLOCK = 200;
+const MAX_IN_FILE = Math.max(DEFAULT_MIN_TO_UNLOCK, parseInt(process.env.MAX_IN_FILE || '50000', 10));
 const NAME_PREFIX = String(process.env.NAME_PREFIX || 'D.M.L').trim();
 const SUPABASE_URL = String(process.env.SUPABASE_URL || '').trim();
 const SUPABASE_SERVICE_ROLE_KEY = String(process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
@@ -323,15 +323,15 @@ async function setDownloadMode(mode) {
 function downloadAccess(total, mode = 'auto') {
   const count = Math.max(0, Number(total || 0));
   const cleanMode = ['auto', 'locked', 'unlocked'].includes(mode) ? mode : 'auto';
-  const thresholdReached = count >= MIN_TO_UNLOCK;
+  const thresholdReached = count >= DEFAULT_MIN_TO_UNLOCK;
   const unlocked = cleanMode === 'unlocked' || (cleanMode === 'auto' && thresholdReached);
 
   return {
     mode: cleanMode,
     unlocked,
     thresholdReached,
-    minRequired: MIN_TO_UNLOCK,
-    remaining: Math.max(0, MIN_TO_UNLOCK - count)
+    minRequired: DEFAULT_MIN_TO_UNLOCK,
+    remaining: Math.max(0, DEFAULT_MIN_TO_UNLOCK - count)
   };
 }
 
@@ -409,7 +409,7 @@ function unlockEmailHtml(name) {
     <div style="font-size:13px;font-weight:800;letter-spacing:.12em;color:#42e8b4;margin-bottom:18px">DOBERTO VCF</div>
     <div style="background:#11141c;border:1px solid #262c38;border-radius:18px;padding:28px">
       <h1 style="font-size:28px;line-height:1.15;margin:0 0 14px">VCF la disponib kounye a</h1>
-      <p style="color:#b9c1cf;line-height:1.65;margin:0 0 12px">Bonjou${safeName ? ` ${safeName}` : ''}, objektif ${MIN_TO_UNLOCK.toLocaleString('fr-FR')} moun lan rive.</p>
+      <p style="color:#b9c1cf;line-height:1.65;margin:0 0 12px">Bonjou${safeName ? ` ${safeName}` : ''}, objektif ${DEFAULT_MIN_TO_UNLOCK.toLocaleString('fr-FR')} moun lan rive.</p>
       <p style="color:#b9c1cf;line-height:1.65;margin:0 0 24px">Ale sou DOBERTO VCF, verifye menm non ak nimewo ou te itilize lè ou te enskri a, epi telechaje fichye VCF la.</p>
       <a href="${listUrl}" style="display:inline-block;background:#42e8b4;color:#06120f;text-decoration:none;font-weight:800;padding:14px 20px;border-radius:12px">Verifye &amp; Download VCF</a>
       <p style="font-size:12px;color:#7f8999;line-height:1.6;margin:24px 0 0">Mesaj sa a se yon notifikasyon sèvis paske ou te bay email ou pandan enskripsyon DOBERTO VCF.</p>
@@ -419,7 +419,7 @@ function unlockEmailHtml(name) {
 
 function unlockEmailText(name) {
   const hello = name ? `Bonjou ${name},\n\n` : '';
-  return `${hello}Objektif ${MIN_TO_UNLOCK} moun DOBERTO VCF la rive. VCF la disponib kounye a.\n\nVerifye non ak nimewo ou te itilize a epi telechaje li isit la:\n${SITE_URL}/list.html#download\n\nDOBERTO VCF`;
+  return `${hello}Objektif ${DEFAULT_MIN_TO_UNLOCK} moun DOBERTO VCF la rive. VCF la disponib kounye a.\n\nVerifye non ak nimewo ou te itilize a epi telechaje li isit la:\n${SITE_URL}/list.html#download\n\nDOBERTO VCF`;
 }
 
 async function sendUnlockEmailCampaign() {
@@ -453,7 +453,7 @@ async function sendUnlockEmailCampaign() {
       headers: {
         Authorization: `Bearer ${RESEND_API_KEY}`,
         'Content-Type': 'application/json',
-        'Idempotency-Key': `doberto-vcf-unlock-${MIN_TO_UNLOCK}-batch-${batchNumber}`
+        'Idempotency-Key': `doberto-vcf-unlock-${DEFAULT_MIN_TO_UNLOCK}-batch-${batchNumber}`
       },
       body: JSON.stringify(slice.map((row) => ({
         from: RESEND_FROM,
@@ -461,7 +461,7 @@ async function sendUnlockEmailCampaign() {
         subject: 'DOBERTO VCF disponib — telechaje fichye a',
         html: unlockEmailHtml(row.name),
         text: unlockEmailText(row.name),
-        tags: [{ name: 'campaign', value: `vcf_unlock_${MIN_TO_UNLOCK}` }]
+        tags: [{ name: 'campaign', value: `vcf_unlock_${DEFAULT_MIN_TO_UNLOCK}` }]
       })))
     });
     if (!response.ok) {
@@ -514,9 +514,9 @@ async function sendOneSignalPush({ title, message, url = '/', campaignName = 'do
 async function sendUnlockPush() {
   return sendOneSignalPush({
     title: 'DOBERTO VCF — Fichye a pare',
-    message: `Objektif ${MIN_TO_UNLOCK} moun lan rive. Verifye non ak nimewo ou epi telechaje fichye VCF la.`,
+    message: `Objektif ${DEFAULT_MIN_TO_UNLOCK} moun lan rive. Verifye non ak nimewo ou epi telechaje fichye VCF la.`,
     url: '/list.html#download',
-    campaignName: `vcf-unlock-${MIN_TO_UNLOCK}`
+    campaignName: `vcf-unlock-${DEFAULT_MIN_TO_UNLOCK}`
   });
 }
 
@@ -526,9 +526,9 @@ async function runUnlockCampaign(force = false) {
     .select('*', { count: 'exact', head: true });
   if (countError) throw countError;
   const total = count || 0;
-  if (total < MIN_TO_UNLOCK) return { ok: true, skipped: 'locked', total };
+  if (total < DEFAULT_MIN_TO_UNLOCK) return { ok: true, skipped: 'locked', total };
 
-  const campaignKey = `vcf_unlock_${MIN_TO_UNLOCK}`;
+  const campaignKey = `vcf_unlock_${DEFAULT_MIN_TO_UNLOCK}`;
   let existing = null;
   const existingResult = await supabase
     .from('notification_campaigns')
@@ -538,7 +538,7 @@ async function runUnlockCampaign(force = false) {
 
   if (existingResult.error) {
     console.warn('[DOBERTO VCF] notification_campaigns unavailable:', existingResult.error.message);
-    if (!force && total !== MIN_TO_UNLOCK) return { ok: false, skipped: 'campaign_table_missing' };
+    if (!force && total !== DEFAULT_MIN_TO_UNLOCK) return { ok: false, skipped: 'campaign_table_missing' };
     const [email, push] = await Promise.allSettled([sendUnlockEmailCampaign(), sendUnlockPush()]);
     return { ok: true, legacy: true, email, push };
   }
@@ -785,7 +785,7 @@ app.get('/api/stats', publicReadLimiter, requireDatabase, async (req, res) => {
   res.json({
     total,
     downloadCount,
-    minRequired: MIN_TO_UNLOCK,
+    minRequired: DEFAULT_MIN_TO_UNLOCK,
     maxInFile: MAX_IN_FILE,
     unlocked: access.unlocked,
     downloadMode: access.mode,
@@ -849,10 +849,10 @@ app.post('/api/verify-download', downloadLimiter, requireDatabase, async (req, r
       const forced = access.mode === 'locked';
       return res.status(403).json({
         code: 'download_locked',
-        vars: { min: MIN_TO_UNLOCK, count: count || 0, mode: access.mode },
+        vars: { min: DEFAULT_MIN_TO_UNLOCK, count: count || 0, mode: access.mode },
         error: forced
           ? 'Admin lan bloke download VCF la pou kounye a.'
-          : `Download lan ap debloke otomatikman lè gen ${MIN_TO_UNLOCK} moun enskri (${count || 0}/${MIN_TO_UNLOCK} kounye a).`
+          : `Download lan ap debloke otomatikman lè gen ${DEFAULT_MIN_TO_UNLOCK} moun enskri (${count || 0}/${DEFAULT_MIN_TO_UNLOCK} kounye a).`
       });
     }
 
@@ -908,7 +908,7 @@ app.get('/api/download-vcf', downloadLimiter, requireDatabase, async (req, res) 
     if (!access.unlocked) {
       return res.status(403).json({
         code: 'download_locked',
-        vars: { min: MIN_TO_UNLOCK, count: count || 0, mode: access.mode },
+        vars: { min: DEFAULT_MIN_TO_UNLOCK, count: count || 0, mode: access.mode },
         error: access.mode === 'locked'
           ? 'Admin lan bloke download VCF la pou kounye a.'
           : 'Download VCF la poko debloke.'
@@ -1022,8 +1022,8 @@ app.get('/api/admin/stats', adminActionLimiter, verifyAdmin, requireDatabase, as
       unlocked: access.unlocked,
       downloadMode: access.mode,
       thresholdReached: access.thresholdReached,
-      minRequired: MIN_TO_UNLOCK,
-      progress: Math.min(100, Math.round((total / MIN_TO_UNLOCK) * 100)),
+      minRequired: DEFAULT_MIN_TO_UNLOCK,
+      progress: Math.min(100, Math.round((total / DEFAULT_MIN_TO_UNLOCK) * 100)),
       emailNotificationsEnabled: emailNotificationsConfigured(),
       pushNotificationsEnabled: pushNotificationsConfigured()
     });
