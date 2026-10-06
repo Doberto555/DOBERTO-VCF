@@ -257,6 +257,22 @@ function verifyUser(req, res, next) {
   }
 }
 
+function optionalUserSession(req) {
+  if (!securityConfigured) return null;
+  const auth = String(req.headers.authorization || '');
+  const token = auth.startsWith('Bearer ') ? auth.slice(7).trim() : '';
+  if (!token) return null;
+  try {
+    const payload = jwt.verify(token, JWT_SECRET, {
+      algorithms: ['HS256'], issuer: 'doberto-vcf', audience: 'doberto-vcf-user'
+    });
+    if (payload.purpose !== 'user_session' || !payload.userId) return null;
+    return payload;
+  } catch (_) {
+    return null;
+  }
+}
+
 function emailNotificationsConfigured() {
   return Boolean(RESEND_API_KEY && RESEND_FROM && !RESEND_API_KEY.includes('REPLACE_WITH'));
 }
@@ -320,18 +336,45 @@ async function setDownloadMode(mode) {
   return clean;
 }
 
-function downloadAccess(total, mode = 'auto') {
-  const count = Math.max(0, Number(total || 0));
-  const cleanMode = ['auto', 'locked', 'unlocked'].includes(mode) ? mode : 'auto';
-  const thresholdReached = count >= DEFAULT_MIN_TO_UNLOCK;
-  const unlocked = cleanMode === 'unlocked' || (cleanMode === 'auto' && thresholdReached);
+async function getDownloadThreshold() {
+  try {
+    const { data, error } = await supabase.from('app_settings').select('value').eq('key', 'vcf_download_threshold').maybeSingle();
+    if (error) return DEFAULT_MIN_TO_UNLOCK;
+    const parsed = parseInt(String(data?.value || DEFAULT_MIN_TO_UNLOCK), 10);
+    return Number.isFinite(parsed) ? Math.max(1, Math.min(MAX_IN_FILE, parsed)) : DEFAULT_MIN_TO_UNLOCK;
+  } catch (_) {
+    return DEFAULT_MIN_TO_UNLOCK;
+  }
+}
 
+async function setDownloadThreshold(value) {
+  const parsed = parseInt(String(value || ''), 10);
+  if (!Number.isFinite(parsed) || parsed < 1 || parsed > MAX_IN_FILE) {
+    const error = new Error(`Limit la dwe ant 1 ak ${MAX_IN_FILE}.`);
+    error.code = 'invalid_download_threshold';
+    throw error;
+  }
+  const { error } = await supabase.from('app_settings').upsert({
+    key: 'vcf_download_threshold',
+    value: String(parsed),
+    updated_at: new Date().toISOString()
+  }, { onConflict: 'key' });
+  if (error) throw error;
+  return parsed;
+}
+
+function downloadAccess(total, mode = 'auto', minRequired = DEFAULT_MIN_TO_UNLOCK) {
+  const count = Math.max(0, Number(total || 0));
+  const threshold = Math.max(1, Math.min(MAX_IN_FILE, Number(minRequired || DEFAULT_MIN_TO_UNLOCK)));
+  const cleanMode = ['auto', 'locked', 'unlocked'].includes(mode) ? mode : 'auto';
+  const thresholdReached = count >= threshold;
+  const unlocked = cleanMode === 'unlocked' || (cleanMode === 'auto' && thresholdReached);
   return {
     mode: cleanMode,
     unlocked,
     thresholdReached,
-    minRequired: DEFAULT_MIN_TO_UNLOCK,
-    remaining: Math.max(0, DEFAULT_MIN_TO_UNLOCK - count)
+    minRequired: threshold,
+    remaining: Math.max(0, threshold - count)
   };
 }
 
