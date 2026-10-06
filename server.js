@@ -817,18 +817,19 @@ app.post('/api/register', registerLimiter, requireDatabase, verifyUser, async (r
 
 // ---------- GET /api/stats ----------
 app.get('/api/stats', publicReadLimiter, requireDatabase, async (req, res) => {
-  const [{ count, error }, downloadCount, downloadMode] = await Promise.all([
+  const [{ count, error }, downloadCount, downloadMode, minRequired] = await Promise.all([
     supabase.from('registrations').select('*', { count: 'exact', head: true }),
     getUniqueDownloadCount(),
-    getDownloadMode()
+    getDownloadMode(),
+    getDownloadThreshold()
   ]);
   if (error) return res.status(500).json({ code: 'server_error', error: 'Erè sèvè.' });
   const total = count || 0;
-  const access = downloadAccess(total, downloadMode);
+  const access = downloadAccess(total, downloadMode, minRequired);
   res.json({
     total,
     downloadCount,
-    minRequired: DEFAULT_MIN_TO_UNLOCK,
+    minRequired: access.minRequired,
     maxInFile: MAX_IN_FILE,
     unlocked: access.unlocked,
     downloadMode: access.mode,
@@ -876,28 +877,59 @@ app.get('/api/public-list', publicReadLimiter, requireDatabase, async (req, res)
 app.post('/api/verify-download', downloadLimiter, requireDatabase, async (req, res) => {
   try {
     if (!requireSecurity(res)) return;
+
+    const [{ count, error: countError }, downloadMode, minRequired] = await Promise.all([
+      supabase.from('registrations').select('*', { count: 'exact', head: true }),
+      getDownloadMode(),
+      getDownloadThreshold()
+    ]);
+    if (countError) throw countError;
+
+    const access = downloadAccess(count || 0, downloadMode, minRequired);
+    if (!access.unlocked) {
+      return res.status(403).json({
+        code: 'download_locked',
+        vars: { min: access.minRequired, count: count || 0, mode: access.mode },
+        error: access.mode === 'locked'
+          ? 'Admin lan bloke telechajman VCF la pou kounye a.'
+          : `Telechajman an ap debloke otomatikman lè gen ${access.minRequired} moun enskri (${count || 0}/${access.minRequired} kounye a).`
+      });
+    }
+
+    const sessionUser = optionalUserSession(req);
+    if (sessionUser?.userId) {
+      const { data: googleMatch, error: googleMatchError } = await supabase
+        .from('registrations')
+        .select('id, name, email, user_id')
+        .eq('user_id', sessionUser.userId)
+        .maybeSingle();
+      if (googleMatchError) throw googleMatchError;
+
+      if (googleMatch) {
+        const dlToken = jwt.sign({
+          purpose: 'download',
+          registrationId: googleMatch.id,
+          verifiedBy: 'google'
+        }, JWT_SECRET, {
+          algorithm: 'HS256',
+          expiresIn: '5m',
+          issuer: 'doberto-vcf',
+          audience: 'doberto-vcf-download'
+        });
+        return res.json({
+          ok: true,
+          verifiedBy: 'google',
+          googleEmail: googleMatch.email || sessionUser.email || '',
+          downloadToken: dlToken
+        });
+      }
+    }
+
     let { name, dialCode, phone } = req.body || {};
     name = String(name || '').trim().slice(0, 120);
     dialCode = onlyDigits(dialCode).slice(0, 5);
     phone = onlyDigits(phone).slice(0, 14);
     const fullNumber = dialCode + phone;
-
-    const [{ count, error: countError }, downloadMode] = await Promise.all([
-      supabase.from('registrations').select('*', { count: 'exact', head: true }),
-      getDownloadMode()
-    ]);
-    if (countError) throw countError;
-    const access = downloadAccess(count || 0, downloadMode);
-    if (!access.unlocked) {
-      const forced = access.mode === 'locked';
-      return res.status(403).json({
-        code: 'download_locked',
-        vars: { min: DEFAULT_MIN_TO_UNLOCK, count: count || 0, mode: access.mode },
-        error: forced
-          ? 'Admin lan bloke download VCF la pou kounye a.'
-          : `Download lan ap debloke otomatikman lè gen ${DEFAULT_MIN_TO_UNLOCK} moun enskri (${count || 0}/${DEFAULT_MIN_TO_UNLOCK} kounye a).`
-      });
-    }
 
     const { data: match, error: matchError } = await supabase
       .from('registrations').select('id, name').eq('full_number', fullNumber).maybeSingle();
@@ -908,17 +940,21 @@ app.post('/api/verify-download', downloadLimiter, requireDatabase, async (req, r
     if (!match || !requestedName || requestedName !== registeredName) {
       return res.status(403).json({
         code: 'no_match',
-        error: 'Nou pa jwenn okenn moun ki enskri ak non ak nimewo sa yo. Verifye non ak nimewo ou te itilize lè ou te enskri a.'
+        error: 'Nou pa jwenn enskripsyon sa a. Konekte ak menm kont Google ou te itilize lè ou te enskri a, oswa verifye non ak nimewo WhatsApp ou.'
       });
     }
 
-    const dlToken = jwt.sign({ purpose: 'download', registrationId: match.id }, JWT_SECRET, {
+    const dlToken = jwt.sign({
+      purpose: 'download',
+      registrationId: match.id,
+      verifiedBy: 'name_phone'
+    }, JWT_SECRET, {
       algorithm: 'HS256',
       expiresIn: '5m',
       issuer: 'doberto-vcf',
       audience: 'doberto-vcf-download'
     });
-    res.json({ ok: true, downloadToken: dlToken });
+    res.json({ ok: true, verifiedBy: 'name_phone', downloadToken: dlToken });
   } catch (err) {
     console.error(err);
     res.status(500).json({ code: 'server_error', error: 'Erè sèvè.' });
