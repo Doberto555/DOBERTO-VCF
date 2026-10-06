@@ -147,7 +147,7 @@ function renderAdminVcfCopy(){
 
 const DOWNLOAD_CONTROL_COPY = {
   ht: {
-    auto:'AUTO 200', unlock:'DEBLOKE', lock:'BLOKE',
+    auto:'AUTO', unlock:'DEBLOKE', lock:'BLOKE',
     autoSaved:'Mode AUTO aktive. Download ap louvri otomatikman depi 200 manm.',
     unlocked:'Telechajman piblik la debloke.',
     locked:'Telechajman piblik la bloke.',
@@ -155,7 +155,7 @@ const DOWNLOAD_CONTROL_COPY = {
     stateOpen:'OUVÈ', stateClosed:'BLOKE'
   },
   fr: {
-    auto:'AUTO 200', unlock:'DÉBLOQUER', lock:'BLOQUER',
+    auto:'AUTO', unlock:'DÉBLOQUER', lock:'BLOQUER',
     autoSaved:'Mode AUTO activé. Le téléchargement s’ouvrira automatiquement à partir de 200 membres.',
     unlocked:'Le téléchargement public est débloqué.',
     locked:'Le téléchargement public est bloqué.',
@@ -163,7 +163,7 @@ const DOWNLOAD_CONTROL_COPY = {
     stateOpen:'OUVERT', stateClosed:'BLOQUÉ'
   },
   en: {
-    auto:'AUTO 200', unlock:'UNLOCK', lock:'LOCK',
+    auto:'AUTO', unlock:'UNLOCK', lock:'LOCK',
     autoSaved:'AUTO mode enabled. Public download will unlock automatically at 200 members.',
     unlocked:'Public download is unlocked.',
     locked:'Public download is locked.',
@@ -195,7 +195,12 @@ function renderDownloadControl(data){
   const mode=document.getElementById('downloadControlMode');
   const state=document.getElementById('downloadControlState');
   if(members) members.textContent=Number(data.total||0).toLocaleString();
-  if(threshold) threshold.textContent=Number(data.minRequired||200).toLocaleString();
+  const currentThreshold=Number(data.minRequired||200);
+  if(threshold) threshold.textContent=currentThreshold.toLocaleString();
+  const thresholdInput=document.getElementById('downloadThresholdInput');
+  const thresholdHint=document.getElementById('downloadThresholdHint');
+  if(thresholdInput && document.activeElement!==thresholdInput) thresholdInput.value=String(currentThreshold);
+  if(thresholdHint) thresholdHint.textContent=`Limit aktyèl: ${currentThreshold.toLocaleString()}`;
   if(mode) mode.textContent=String(data.mode||'auto').toUpperCase();
   if(state) state.textContent=data.unlocked?c.stateOpen:c.stateClosed;
 
@@ -259,6 +264,41 @@ async function setDownloadControl(mode){
   }
 }
 
+async function saveDownloadThreshold(){
+  const input=document.getElementById('downloadThresholdInput');
+  const btn=document.getElementById('saveDownloadThresholdBtn');
+  const msg=document.getElementById('downloadControlMsg');
+  const threshold=parseInt(String(input?.value||''),10);
+
+  if(!Number.isFinite(threshold)||threshold<1||threshold>50000){
+    if(msg){msg.textContent='Limit la dwe ant 1 ak 50 000.';msg.className='msg show err';}
+    return;
+  }
+
+  btn.disabled=true;
+  if(msg){msg.className='msg';msg.textContent='';}
+  try{
+    const res=await fetch('/api/admin/download-control',{
+      method:'PUT',
+      headers:{
+        'Content-Type':'application/json',
+        Authorization:`Bearer ${adminToken}`
+      },
+      body:JSON.stringify({threshold})
+    });
+    if(res.status===401){document.getElementById('logoutBtn').click();return;}
+    const data=await res.json().catch(()=>({}));
+    if(!res.ok) throw new Error(data.error||'Nou pa ka sove limit la.');
+    renderDownloadControl(data);
+    if(msg){msg.textContent=`Nouvo limit la se ${Number(data.minRequired||threshold).toLocaleString()} manm.`;msg.className='msg show ok';}
+  }catch(error){
+    if(msg){msg.textContent=error?.message||'Nou pa ka sove limit la.';msg.className='msg show err';}
+  }finally{
+    btn.disabled=false;
+  }
+}
+
+document.getElementById('saveDownloadThresholdBtn')?.addEventListener('click',saveDownloadThreshold);
 document.getElementById('downloadModeAutoBtn')?.addEventListener('click',()=>setDownloadControl('auto'));
 document.getElementById('downloadModeUnlockBtn')?.addEventListener('click',()=>setDownloadControl('unlocked'));
 document.getElementById('downloadModeLockBtn')?.addEventListener('click',()=>setDownloadControl('locked'));
