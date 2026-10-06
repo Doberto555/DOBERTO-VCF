@@ -37,6 +37,8 @@ function showAdminPanel() {
   ensureAdminPushPanel();
   renderAdminPushCopy();
   renderAdminVcfCopy();
+  ensureDownloadControl();
+  loadDownloadControl();
   loadAdminList(1);
 }
 
@@ -142,6 +144,124 @@ function renderAdminVcfCopy(){
   const btn=document.getElementById('downloadVcfBtn');
   if(btn && !btn.disabled) btn.textContent=copy.button;
 }
+
+const DOWNLOAD_CONTROL_COPY = {
+  ht: {
+    auto:'AUTO 200', unlock:'DEBLOKE', lock:'BLOKE',
+    autoSaved:'Mode AUTO aktive. Download ap louvri otomatikman depi 200 manm.',
+    unlocked:'Download piblik la debloke.',
+    locked:'Download piblik la bloke.',
+    error:'Nou pa ka chanje kontwòl download la kounye a.',
+    stateOpen:'OUVÈ', stateClosed:'BLOKE'
+  },
+  fr: {
+    auto:'AUTO 200', unlock:'DÉBLOQUER', lock:'BLOQUER',
+    autoSaved:'Mode AUTO activé. Le téléchargement s’ouvrira automatiquement à partir de 200 membres.',
+    unlocked:'Le téléchargement public est débloqué.',
+    locked:'Le téléchargement public est bloqué.',
+    error:'Impossible de modifier le contrôle du téléchargement.',
+    stateOpen:'OUVERT', stateClosed:'BLOQUÉ'
+  },
+  en: {
+    auto:'AUTO 200', unlock:'UNLOCK', lock:'LOCK',
+    autoSaved:'AUTO mode enabled. Public download will unlock automatically at 200 members.',
+    unlocked:'Public download is unlocked.',
+    locked:'Public download is locked.',
+    error:'Unable to change download control right now.',
+    stateOpen:'OPEN', stateClosed:'LOCKED'
+  }
+};
+
+function downloadControlCopy(){
+  const lang=adminUiLang();
+  return DOWNLOAD_CONTROL_COPY[lang]||DOWNLOAD_CONTROL_COPY.ht;
+}
+
+function ensureDownloadControl(){
+  const c=downloadControlCopy();
+  const auto=document.getElementById('downloadModeAutoBtn');
+  const unlock=document.getElementById('downloadModeUnlockBtn');
+  const lock=document.getElementById('downloadModeLockBtn');
+  if(auto) auto.textContent=c.auto;
+  if(unlock) unlock.textContent=c.unlock;
+  if(lock) lock.textContent=c.lock;
+}
+
+function renderDownloadControl(data){
+  if(!data) return;
+  const c=downloadControlCopy();
+  const members=document.getElementById('downloadControlMembers');
+  const threshold=document.getElementById('downloadControlThreshold');
+  const mode=document.getElementById('downloadControlMode');
+  const state=document.getElementById('downloadControlState');
+  if(members) members.textContent=Number(data.total||0).toLocaleString();
+  if(threshold) threshold.textContent=Number(data.minRequired||200).toLocaleString();
+  if(mode) mode.textContent=String(data.mode||'auto').toUpperCase();
+  if(state) state.textContent=data.unlocked?c.stateOpen:c.stateClosed;
+
+  ['Auto','Unlock','Lock'].forEach(name=>{
+    document.getElementById('downloadMode'+name+'Btn')?.classList.remove('is-active');
+  });
+  const active=data.mode==='unlocked'?'Unlock':data.mode==='locked'?'Lock':'Auto';
+  document.getElementById('downloadMode'+active+'Btn')?.classList.add('is-active');
+}
+
+async function loadDownloadControl(){
+  if(!adminToken) return;
+  const msg=document.getElementById('downloadControlMsg');
+  try{
+    const res=await fetch('/api/admin/download-control',{
+      headers:{Authorization:`Bearer ${adminToken}`,Accept:'application/json'},
+      cache:'no-store'
+    });
+    if(res.status===401){document.getElementById('logoutBtn').click();return;}
+    const data=await res.json().catch(()=>({}));
+    if(!res.ok) throw new Error(data.error||downloadControlCopy().error);
+    renderDownloadControl(data);
+    if(msg){msg.className='msg';msg.textContent='';}
+  }catch(error){
+    if(msg){msg.textContent=error?.message||downloadControlCopy().error;msg.className='msg show err';}
+  }
+}
+
+async function setDownloadControl(mode){
+  const msg=document.getElementById('downloadControlMsg');
+  const buttons=[
+    document.getElementById('downloadModeAutoBtn'),
+    document.getElementById('downloadModeUnlockBtn'),
+    document.getElementById('downloadModeLockBtn')
+  ].filter(Boolean);
+  buttons.forEach(btn=>btn.disabled=true);
+  if(msg){msg.className='msg';msg.textContent='';}
+
+  try{
+    const res=await fetch('/api/admin/download-control',{
+      method:'PUT',
+      headers:{
+        'Content-Type':'application/json',
+        Authorization:`Bearer ${adminToken}`
+      },
+      body:JSON.stringify({mode})
+    });
+    if(res.status===401){document.getElementById('logoutBtn').click();return;}
+    const data=await res.json().catch(()=>({}));
+    if(!res.ok) throw new Error(data.error||downloadControlCopy().error);
+    renderDownloadControl(data);
+    const c=downloadControlCopy();
+    if(msg){
+      msg.textContent=mode==='unlocked'?c.unlocked:mode==='locked'?c.locked:c.autoSaved;
+      msg.className='msg show ok';
+    }
+  }catch(error){
+    if(msg){msg.textContent=error?.message||downloadControlCopy().error;msg.className='msg show err';}
+  }finally{
+    buttons.forEach(btn=>btn.disabled=false);
+  }
+}
+
+document.getElementById('downloadModeAutoBtn')?.addEventListener('click',()=>setDownloadControl('auto'));
+document.getElementById('downloadModeUnlockBtn')?.addEventListener('click',()=>setDownloadControl('unlocked'));
+document.getElementById('downloadModeLockBtn')?.addEventListener('click',()=>setDownloadControl('locked'));
 
 document.getElementById('downloadVcfBtn')?.addEventListener('click', async () => {
   const btn=document.getElementById('downloadVcfBtn');
@@ -294,6 +414,8 @@ function onLangChange() {
   renderAdminList();
   renderAdminPushCopy();
   renderAdminVcfCopy();
+  ensureDownloadControl();
+  loadDownloadControl();
 }
 
 if (adminToken) showAdminPanel();
