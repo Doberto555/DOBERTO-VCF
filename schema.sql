@@ -55,6 +55,10 @@ insert into app_settings (key, value)
 values ('whatsapp_group_url', 'https://chat.whatsapp.com/GySPeuvDlI14BnWWvdm7U4?s=sh&p=a&mlu=4&ilr=4')
 on conflict (key) do nothing;
 
+insert into app_settings (key, value)
+values ('vcf_download_mode', 'auto')
+on conflict (key) do nothing;
+
 -- Eta kanpay notifikasyon/email unlock la.
 create table if not exists notification_campaigns (
   campaign_key text primary key,
