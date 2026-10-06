@@ -24,7 +24,7 @@ const PORT = parseInt(process.env.PORT || '3000', 10);
 const SITE_URL = String(process.env.SITE_URL || 'https://doberto-vcf-509.vercel.app').replace(/\/$/, '');
 const JWT_SECRET = String(process.env.JWT_SECRET || '').trim();
 const ADMIN_PASSWORD = String(process.env.ADMIN_PASSWORD || '').trim();
-const MIN_TO_UNLOCK = Math.max(1, parseInt(process.env.MIN_TO_UNLOCK || '500', 10));
+const MIN_TO_UNLOCK = 200;
 const MAX_IN_FILE = Math.max(MIN_TO_UNLOCK, parseInt(process.env.MAX_IN_FILE || '50000', 10));
 const NAME_PREFIX = String(process.env.NAME_PREFIX || 'D.M.L').trim();
 const SUPABASE_URL = String(process.env.SUPABASE_URL || '').trim();
@@ -277,6 +277,62 @@ function cleanUrl(value, fallback = '/') {
   } catch (_) {
     return `${SITE_URL}${fallback.startsWith('/') ? fallback : `/${fallback}`}`;
   }
+}
+
+async function getDownloadMode() {
+  try {
+    const { data, error } = await supabase
+      .from('app_settings')
+      .select('value')
+      .eq('key', 'vcf_download_mode')
+      .maybeSingle();
+
+    if (error) {
+      console.warn('[DOBERTO VCF] download mode unavailable:', error.message);
+      return 'auto';
+    }
+
+    const mode = String(data?.value || 'auto').trim().toLowerCase();
+    return ['auto', 'locked', 'unlocked'].includes(mode) ? mode : 'auto';
+  } catch (err) {
+    console.warn('[DOBERTO VCF] download mode read failed:', err && err.message || err);
+    return 'auto';
+  }
+}
+
+async function setDownloadMode(mode) {
+  const clean = String(mode || '').trim().toLowerCase();
+  if (!['auto', 'locked', 'unlocked'].includes(clean)) {
+    const error = new Error('Mòd download lan pa valid.');
+    error.code = 'invalid_download_mode';
+    throw error;
+  }
+
+  const { error } = await supabase
+    .from('app_settings')
+    .upsert({
+      key: 'vcf_download_mode',
+      value: clean,
+      updated_at: new Date().toISOString()
+    }, { onConflict: 'key' });
+
+  if (error) throw error;
+  return clean;
+}
+
+function downloadAccess(total, mode = 'auto') {
+  const count = Math.max(0, Number(total || 0));
+  const cleanMode = ['auto', 'locked', 'unlocked'].includes(mode) ? mode : 'auto';
+  const thresholdReached = count >= MIN_TO_UNLOCK;
+  const unlocked = cleanMode === 'unlocked' || (cleanMode === 'auto' && thresholdReached);
+
+  return {
+    mode: cleanMode,
+    unlocked,
+    thresholdReached,
+    minRequired: MIN_TO_UNLOCK,
+    remaining: Math.max(0, MIN_TO_UNLOCK - count)
+  };
 }
 
 async function getUniqueDownloadCount() {
@@ -718,19 +774,23 @@ app.post('/api/register', registerLimiter, requireDatabase, verifyUser, async (r
 
 // ---------- GET /api/stats ----------
 app.get('/api/stats', publicReadLimiter, requireDatabase, async (req, res) => {
-  const [{ count, error }, downloadCount] = await Promise.all([
+  const [{ count, error }, downloadCount, downloadMode] = await Promise.all([
     supabase.from('registrations').select('*', { count: 'exact', head: true }),
-    getUniqueDownloadCount()
+    getUniqueDownloadCount(),
+    getDownloadMode()
   ]);
   if (error) return res.status(500).json({ code: 'server_error', error: 'Erè sèvè.' });
   const total = count || 0;
+  const access = downloadAccess(total, downloadMode);
   res.json({
     total,
     downloadCount,
     minRequired: MIN_TO_UNLOCK,
     maxInFile: MAX_IN_FILE,
-    unlocked: total >= MIN_TO_UNLOCK,
-    remaining: Math.max(0, MIN_TO_UNLOCK - total),
+    unlocked: access.unlocked,
+    downloadMode: access.mode,
+    thresholdReached: access.thresholdReached,
+    remaining: access.remaining,
     namePrefix: NAME_PREFIX,
     emailNotificationsEnabled: emailNotificationsConfigured(),
     pushNotificationsEnabled: pushNotificationsConfigured()
@@ -779,13 +839,20 @@ app.post('/api/verify-download', downloadLimiter, requireDatabase, async (req, r
     phone = onlyDigits(phone).slice(0, 14);
     const fullNumber = dialCode + phone;
 
-    const { count, error: countError } = await supabase.from('registrations').select('*', { count: 'exact', head: true });
+    const [{ count, error: countError }, downloadMode] = await Promise.all([
+      supabase.from('registrations').select('*', { count: 'exact', head: true }),
+      getDownloadMode()
+    ]);
     if (countError) throw countError;
-    if ((count || 0) < MIN_TO_UNLOCK) {
+    const access = downloadAccess(count || 0, downloadMode);
+    if (!access.unlocked) {
+      const forced = access.mode === 'locked';
       return res.status(403).json({
         code: 'download_locked',
-        vars: { min: MIN_TO_UNLOCK, count: count || 0 },
-        error: `Download lan bloke toujou. Fòk gen omwen ${MIN_TO_UNLOCK} moun enskri (${count || 0}/${MIN_TO_UNLOCK} kounye a).`
+        vars: { min: MIN_TO_UNLOCK, count: count || 0, mode: access.mode },
+        error: forced
+          ? 'Admin lan bloke download VCF la pou kounye a.'
+          : `Download lan ap debloke otomatikman lè gen ${MIN_TO_UNLOCK} moun enskri (${count || 0}/${MIN_TO_UNLOCK} kounye a).`
       });
     }
 
@@ -832,9 +899,21 @@ app.get('/api/download-vcf', downloadLimiter, requireDatabase, async (req, res) 
       return res.status(401).json({ code: 'invalid_token', error: 'Token download lan pa valid oswa li ekspire.' });
     }
 
-    const { count, error: countError } = await supabase.from('registrations').select('*', { count: 'exact', head: true });
+    const [{ count, error: countError }, downloadMode] = await Promise.all([
+      supabase.from('registrations').select('*', { count: 'exact', head: true }),
+      getDownloadMode()
+    ]);
     if (countError) throw countError;
-    if ((count || 0) < MIN_TO_UNLOCK) return res.status(403).json({ code: 'download_locked', vars: { min: MIN_TO_UNLOCK, count: count || 0 }, error: 'Download lan bloke toujou.' });
+    const access = downloadAccess(count || 0, downloadMode);
+    if (!access.unlocked) {
+      return res.status(403).json({
+        code: 'download_locked',
+        vars: { min: MIN_TO_UNLOCK, count: count || 0, mode: access.mode },
+        error: access.mode === 'locked'
+          ? 'Admin lan bloke download VCF la pou kounye a.'
+          : 'Download VCF la poko debloke.'
+      });
+    }
 
     const { data, error } = await supabase.from('registrations')
       .select('name, full_number').order('created_at', { ascending: true }).limit(MAX_IN_FILE);
@@ -890,22 +969,59 @@ app.put('/api/admin/ads', adminActionLimiter, verifyAdmin, (req,res) => {
   }
 });
 
+app.get('/api/admin/download-control', adminActionLimiter, verifyAdmin, requireDatabase, async (req, res) => {
+  try {
+    const [{ count, error }, mode] = await Promise.all([
+      supabase.from('registrations').select('*', { count: 'exact', head: true }),
+      getDownloadMode()
+    ]);
+    if (error) throw error;
+    const total = count || 0;
+    const access = downloadAccess(total, mode);
+    res.setHeader('Cache-Control', 'private, no-store');
+    res.json({ ok: true, total, ...access });
+  } catch (err) {
+    console.error('[DOBERTO VCF] admin download control read failed:', err);
+    res.status(500).json({ code: 'server_error', error: 'Nou pa ka chaje kontwòl download la.' });
+  }
+});
+
+app.put('/api/admin/download-control', adminActionLimiter, verifyAdmin, requireDatabase, async (req, res) => {
+  try {
+    const mode = await setDownloadMode(req.body && req.body.mode);
+    const { count, error } = await supabase.from('registrations').select('*', { count: 'exact', head: true });
+    if (error) throw error;
+    const total = count || 0;
+    const access = downloadAccess(total, mode);
+    res.setHeader('Cache-Control', 'private, no-store');
+    res.json({ ok: true, total, ...access });
+  } catch (err) {
+    console.error('[DOBERTO VCF] admin download control write failed:', err);
+    const status = err && err.code === 'invalid_download_mode' ? 400 : 500;
+    res.status(status).json({ code: err && err.code || 'server_error', error: err && err.message || 'Nou pa ka chanje kontwòl download la.' });
+  }
+});
+
 app.get('/api/admin/stats', adminActionLimiter, verifyAdmin, requireDatabase, async (req, res) => {
   try {
     const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-    const [allResult, dayResult, downloadCount] = await Promise.all([
+    const [allResult, dayResult, downloadCount, downloadMode] = await Promise.all([
       supabase.from('registrations').select('*', { count: 'exact', head: true }),
       supabase.from('registrations').select('*', { count: 'exact', head: true }).gte('created_at', since),
-      getUniqueDownloadCount()
+      getUniqueDownloadCount(),
+      getDownloadMode()
     ]);
     if (allResult.error || dayResult.error) return res.status(500).json({ code: 'server_error', error: 'Erè sèvè.' });
     const total = allResult.count || 0;
+    const access = downloadAccess(total, downloadMode);
     res.json({
       total,
       today: dayResult.count || 0,
       downloadCount,
-      remaining: Math.max(0, MIN_TO_UNLOCK - total),
-      unlocked: total >= MIN_TO_UNLOCK,
+      remaining: access.remaining,
+      unlocked: access.unlocked,
+      downloadMode: access.mode,
+      thresholdReached: access.thresholdReached,
       minRequired: MIN_TO_UNLOCK,
       progress: Math.min(100, Math.round((total / MIN_TO_UNLOCK) * 100)),
       emailNotificationsEnabled: emailNotificationsConfigured(),
