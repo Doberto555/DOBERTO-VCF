@@ -29,6 +29,52 @@ document.getElementById('prevBtn')?.addEventListener('click',()=>{if(currentPage
   const bar=document.getElementById('vcfDownloadProgressBar');
   const btn=document.getElementById('vcfDownloadBtn');
   const msg=document.getElementById('vcfDownloadMsg');
+  const googleAccount=document.getElementById('vcfGoogleAccount');
+  const googleLoginBtn=document.getElementById('vcfGoogleLoginBtn');
+  let googleSession=null;
+
+  function authToken(){
+    try{return localStorage.getItem('dv_auth_token')||''}catch(_){return ''}
+  }
+
+  async function loadGoogleDownloadSession(){
+    const token=authToken();
+    if(!token){
+      googleSession=null;
+      if(googleAccount)googleAccount.style.display='none';
+      if(googleLoginBtn)googleLoginBtn.style.display='';
+      return null;
+    }
+    try{
+      const res=await fetch('/api/auth/session',{
+        headers:{Authorization:`Bearer ${token}`,Accept:'application/json'},
+        cache:'no-store'
+      });
+      const data=await res.json().catch(()=>({}));
+      if(!res.ok||!data?.user){
+        googleSession=null;
+        if(googleAccount)googleAccount.style.display='none';
+        if(googleLoginBtn)googleLoginBtn.style.display='';
+        return null;
+      }
+      googleSession=data;
+      if(googleAccount){
+        googleAccount.textContent=data.registered
+          ? `Google: ${data.user.email} — enskripsyon jwenn otomatikman`
+          : `Google: ${data.user.email} — kont sa a poko gen enskripsyon`;
+        googleAccount.style.display='block';
+      }
+      if(googleLoginBtn)googleLoginBtn.style.display=data.registered?'none':'';
+      const nameInput=document.getElementById('vcfName');
+      if(data.registration?.name && nameInput && !nameInput.value) nameInput.value=data.registration.name;
+      if(data.registration?.dial_code && dial) dial.value=String(data.registration.dial_code);
+      const phoneInput=document.getElementById('vcfPhone');
+      if(data.registration?.phone && phoneInput && !phoneInput.value) phoneInput.value=data.registration.phone;
+      return data;
+    }catch(_){
+      return null;
+    }
+  }
 
   if(dial && typeof COUNTRIES!=='undefined'){
     dial.innerHTML='';
@@ -108,7 +154,8 @@ document.getElementById('prevBtn')?.addEventListener('click',()=>{if(currentPage
     const name=String(document.getElementById('vcfName')?.value||'').trim();
     const dialCode=String(dial?.value||'').replace(/\D/g,'');
     const phone=String(document.getElementById('vcfPhone')?.value||'').replace(/\D/g,'');
-    if(!name||!dialCode||!phone){
+    const googleReady=Boolean(googleSession?.registered&&authToken());
+    if(!googleReady&&(!name||!dialCode||!phone)){
       if(msg){msg.textContent=c().bad;msg.className='msg show err';}
       return;
     }
@@ -118,9 +165,12 @@ document.getElementById('prevBtn')?.addEventListener('click',()=>{if(currentPage
     if(msg){msg.className='msg';msg.textContent='';}
 
     try{
+      const headers={'Content-Type':'application/json'};
+      const token=authToken();
+      if(token)headers.Authorization=`Bearer ${token}`;
       const verify=await fetch('/api/verify-download',{
         method:'POST',
-        headers:{'Content-Type':'application/json'},
+        headers,
         body:JSON.stringify({name,dialCode,phone})
       });
       const data=await verify.json().catch(()=>({}));
@@ -161,4 +211,6 @@ document.getElementById('prevBtn')?.addEventListener('click',()=>{if(currentPage
   });
 
   loadStats();
+  loadGoogleDownloadSession();
+  window.addEventListener('pageshow',()=>loadGoogleDownloadSession());
 })();
