@@ -3,6 +3,7 @@
 
   const TOKEN_KEY='dv_auth_token';
   const LEGACY_STATE_KEY='dv_google_oauth_state';
+  const RETURN_TO_KEY='dv_google_return_to';
   const LOGIN_URL='/api/auth/google/url?flow=login&redirect=1';
   let session=null;
   let busy=false;
@@ -57,6 +58,11 @@
     clearOAuthQuery();
     session=d;
     if(d.registered){set(localStorage,'dv_registered','1');set(localStorage,'dv_member_name',d.registration?.name||d.user?.name||'');set(localStorage,'dv_member_dial',d.registration?.dial_code||'');set(localStorage,'dv_member_phone',d.registration?.phone||'')}
+    const returnTo=get(sessionStorage,RETURN_TO_KEY);
+    if(returnTo&&returnTo.startsWith('/')){
+      remove(sessionStorage,RETURN_TO_KEY);
+      setTimeout(()=>location.assign(returnTo),40);
+    }
     return d;
   }
 
@@ -84,6 +90,11 @@
   function logout(){remove(localStorage,TOKEN_KEY);remove(localStorage,'dv_registered');session=null;render()}
 
   async function boot(){
+    try{
+      const params=new URLSearchParams(location.search);
+      const returnTo=String(params.get('return_to')||'').trim();
+      if(returnTo.startsWith('/')) set(sessionStorage,RETURN_TO_KEY,returnTo);
+    }catch(_){}
     const login=document.getElementById('googleLoginBtn');
     const logoutBtn=document.getElementById('googleLogoutBtn');
     if(login instanceof HTMLAnchorElement){
