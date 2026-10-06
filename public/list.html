@@ -33,6 +33,16 @@
       <span id="vcfDownloadProgressBar" style="display:block;width:0%;height:100%;background:#25d366;border-radius:inherit;transition:width .25s ease"></span>
     </div>
   </div>
+  <div id="vcfGoogleVerify" style="margin:16px 0;padding:14px 16px;border:1px solid rgba(66,232,180,.18);border-radius:14px;background:rgba(66,232,180,.035)">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">
+      <div>
+        <strong id="vcfGoogleTitle">Verifye ak kont Google ou</strong>
+        <p id="vcfGoogleText" style="margin:5px 0 0;color:#8fa39a;font-size:12px">Si w konekte ak menm kont Google ou te itilize lè w te enskri a, sistèm nan ap jwenn enskripsyon ou otomatikman.</p>
+      </div>
+      <a id="vcfGoogleLoginBtn" class="secondary" href="register.html?return_to=%2Flist.html%23download" style="text-decoration:none;padding:12px 16px;border-radius:12px">Konekte ak Google</a>
+    </div>
+    <div id="vcfGoogleAccount" style="display:none;margin-top:10px;font-size:12px;color:#42e8b4"></div>
+  </div>
   <form id="vcfDownloadForm" class="pro-filter-grid" style="align-items:end">
     <label style="display:grid;gap:7px"><span>Non ou te itilize</span><input id="vcfName" type="text" autocomplete="name" required placeholder="Jean Doberto"></label>
     <label style="display:grid;gap:7px"><span>Peyi</span><select id="vcfDial" aria-label="Kòd peyi" required></select></label>
@@ -44,7 +54,7 @@
 <section class="panel member-directory-panel" id="memberDirectoryPanel" aria-busy="true"><div class="member-directory-head"><div><span class="member-directory-kicker" id="directoryKicker">Rezo</span><h2 id="directoryTitle">Anyè manm yo</h2><p id="directoryDesc">Chèche pa non oswa pa peyi.</p></div><span class="member-total-chip" id="memberTotalChip" aria-live="polite">…</span></div><div class="pro-list-toolbar"><div class="pro-filter-title" id="filterTitle">Chèche manm</div><div class="pro-filter-grid"><div class="pro-search-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4 4"></path></svg><input id="publicSearch" type="search" autocomplete="off" placeholder="Chèche pa non..." /><button type="button" class="clear-search-btn" id="clearSearchBtn" aria-label="Efase rechèch la" title="Efase rechèch la" hidden>×</button></div><select id="publicCountry" aria-label="Filtre pa peyi"><option value="">Tout peyi</option></select></div></div><div class="table-scroll"><table><thead><tr><th id="thName">Non</th><th id="thCountry">Peyi</th></tr></thead><tbody id="listBody" aria-live="polite"><tr><td colspan="2"><div class="pro-empty">Ap chaje manm yo...</div></td></tr></tbody></table></div><div class="pager"><button class="secondary" id="prevBtn">Anvan</button><span class="badge" id="pageInfo"></span><button class="secondary" id="nextBtn">Apre</button></div></section>
 <footer class="dv-footer"><span>© 2026 DOBERTO VCF · DOBERTO MRLIT DEV</span><div class="footer-links"><a href="about.html" id="footerAbout">Konsènan</a><a href="privacy.html" id="footerPrivacy">Konfidansyalite</a><a href="terms.html" id="footerTerms">Kondisyon</a></div></footer>
 </main>
-<script src="js/stability.js?v=20260911-1"></script><script src="js/i18n.js?v=20260917-1"></script><script src="js/i18n-v12.js?v=20260917-2"></script><script src="js/icons.js"></script><script src="js/countries.js"></script><script src="js/list.js?v=20261005-2"></script>
+<script src="js/stability.js?v=20260911-1"></script><script src="js/i18n.js?v=20260917-1"></script><script src="js/i18n-v12.js?v=20260917-2"></script><script src="js/icons.js"></script><script src="js/countries.js"></script><script src="js/list.js?v=20261005-3"></script>
 <script src="/js/public-ad-v1.js?v=20260918-1" defer></script>
 <script src="js/ad-runtime-v34.js?v=20260927-1" defer></script>
 <script src="js/push.js?v=20260929-3"></script>
