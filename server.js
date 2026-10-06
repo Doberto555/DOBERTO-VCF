@@ -966,7 +966,7 @@ app.get('/api/download-vcf', downloadLimiter, requireDatabase, async (req, res) 
   try {
     if (!requireSecurity(res)) return;
     const token = String(req.query.token || '');
-    if (!token) return res.status(401).json({ code: 'missing_token', error: 'Manke token download.' });
+    if (!token) return res.status(401).json({ code: 'missing_token', error: 'Manke token telechajman.' });
 
     let downloadPayload;
     try {
@@ -975,22 +975,24 @@ app.get('/api/download-vcf', downloadLimiter, requireDatabase, async (req, res) 
       });
       if (downloadPayload.purpose !== 'download') throw new Error('bad token');
     } catch (_) {
-      return res.status(401).json({ code: 'invalid_token', error: 'Token download lan pa valid oswa li ekspire.' });
+      return res.status(401).json({ code: 'invalid_token', error: 'Token telechajman an pa valid oswa li ekspire.' });
     }
 
-    const [{ count, error: countError }, downloadMode] = await Promise.all([
+    const [{ count, error: countError }, downloadMode, minRequired] = await Promise.all([
       supabase.from('registrations').select('*', { count: 'exact', head: true }),
-      getDownloadMode()
+      getDownloadMode(),
+      getDownloadThreshold()
     ]);
     if (countError) throw countError;
-    const access = downloadAccess(count || 0, downloadMode);
+
+    const access = downloadAccess(count || 0, downloadMode, minRequired);
     if (!access.unlocked) {
       return res.status(403).json({
         code: 'download_locked',
-        vars: { min: DEFAULT_MIN_TO_UNLOCK, count: count || 0, mode: access.mode },
+        vars: { min: access.minRequired, count: count || 0, mode: access.mode },
         error: access.mode === 'locked'
-          ? 'Admin lan bloke download VCF la pou kounye a.'
-          : 'Download VCF la poko debloke.'
+          ? 'Admin lan bloke telechajman VCF la pou kounye a.'
+          : 'Telechajman VCF la poko debloke.'
       });
     }
 
@@ -1050,49 +1052,60 @@ app.put('/api/admin/ads', adminActionLimiter, verifyAdmin, (req,res) => {
 
 app.get('/api/admin/download-control', adminActionLimiter, verifyAdmin, requireDatabase, async (req, res) => {
   try {
-    const [{ count, error }, mode] = await Promise.all([
+    const [{ count, error }, mode, minRequired] = await Promise.all([
       supabase.from('registrations').select('*', { count: 'exact', head: true }),
-      getDownloadMode()
+      getDownloadMode(),
+      getDownloadThreshold()
     ]);
     if (error) throw error;
     const total = count || 0;
-    const access = downloadAccess(total, mode);
+    const access = downloadAccess(total, mode, minRequired);
     res.setHeader('Cache-Control', 'private, no-store');
     res.json({ ok: true, total, ...access });
   } catch (err) {
     console.error('[DOBERTO VCF] admin download control read failed:', err);
-    res.status(500).json({ code: 'server_error', error: 'Nou pa ka chaje kontwòl download la.' });
+    res.status(500).json({ code: 'server_error', error: 'Nou pa ka chaje kontwòl telechajman an.' });
   }
 });
 
 app.put('/api/admin/download-control', adminActionLimiter, verifyAdmin, requireDatabase, async (req, res) => {
   try {
-    const mode = await setDownloadMode(req.body && req.body.mode);
+    const body = req.body || {};
+    let mode = await getDownloadMode();
+    let minRequired = await getDownloadThreshold();
+
+    if (body.mode != null) mode = await setDownloadMode(body.mode);
+    if (body.threshold != null) minRequired = await setDownloadThreshold(body.threshold);
+
     const { count, error } = await supabase.from('registrations').select('*', { count: 'exact', head: true });
     if (error) throw error;
     const total = count || 0;
-    const access = downloadAccess(total, mode);
+    const access = downloadAccess(total, mode, minRequired);
     res.setHeader('Cache-Control', 'private, no-store');
     res.json({ ok: true, total, ...access });
   } catch (err) {
     console.error('[DOBERTO VCF] admin download control write failed:', err);
-    const status = err && err.code === 'invalid_download_mode' ? 400 : 500;
-    res.status(status).json({ code: err && err.code || 'server_error', error: err && err.message || 'Nou pa ka chanje kontwòl download la.' });
+    const badRequest = ['invalid_download_mode', 'invalid_download_threshold'].includes(err && err.code);
+    res.status(badRequest ? 400 : 500).json({
+      code: err && err.code || 'server_error',
+      error: err && err.message || 'Nou pa ka chanje kontwòl telechajman an.'
+    });
   }
 });
 
 app.get('/api/admin/stats', adminActionLimiter, verifyAdmin, requireDatabase, async (req, res) => {
   try {
     const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-    const [allResult, dayResult, downloadCount, downloadMode] = await Promise.all([
+    const [allResult, dayResult, downloadCount, downloadMode, minRequired] = await Promise.all([
       supabase.from('registrations').select('*', { count: 'exact', head: true }),
       supabase.from('registrations').select('*', { count: 'exact', head: true }).gte('created_at', since),
       getUniqueDownloadCount(),
-      getDownloadMode()
+      getDownloadMode(),
+      getDownloadThreshold()
     ]);
     if (allResult.error || dayResult.error) return res.status(500).json({ code: 'server_error', error: 'Erè sèvè.' });
     const total = allResult.count || 0;
-    const access = downloadAccess(total, downloadMode);
+    const access = downloadAccess(total, downloadMode, minRequired);
     res.json({
       total,
       today: dayResult.count || 0,
@@ -1101,8 +1114,8 @@ app.get('/api/admin/stats', adminActionLimiter, verifyAdmin, requireDatabase, as
       unlocked: access.unlocked,
       downloadMode: access.mode,
       thresholdReached: access.thresholdReached,
-      minRequired: DEFAULT_MIN_TO_UNLOCK,
-      progress: Math.min(100, Math.round((total / DEFAULT_MIN_TO_UNLOCK) * 100)),
+      minRequired: access.minRequired,
+      progress: Math.min(100, Math.round((total / access.minRequired) * 100)),
       emailNotificationsEnabled: emailNotificationsConfigured(),
       pushNotificationsEnabled: pushNotificationsConfigured()
     });
