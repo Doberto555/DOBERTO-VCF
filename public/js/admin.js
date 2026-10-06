@@ -135,7 +135,7 @@ document.getElementById('searchBox').addEventListener('input', (e) => {
 const ADMIN_VCF_COPY = {
   ht: { button:'Telechaje fichye VCF', loading:'Ap prepare VCF...', ok:'Fichye VCF la telechaje. Ou ka voye li bay moun yo.', error:'Nou pa ka telechaje fichye VCF la kounye a.' },
   fr: { button:'Télécharger le fichier VCF', loading:'Préparation du VCF...', ok:'Le fichier VCF est téléchargé. Vous pouvez maintenant le partager.', error:'Impossible de télécharger le fichier VCF pour le moment.' },
-  en: { button:'Download VCF file', loading:'Preparing VCF...', ok:'The VCF file was downloaded. You can now share it.', error:'Unable to download the VCF file right now.' }
+  en: { button:'Telechaje VCF file', loading:'Preparing VCF...', ok:'The VCF file was downloaded. You can now share it.', error:'Unable to download the VCF file right now.' }
 };
 
 function renderAdminVcfCopy(){
@@ -149,9 +149,9 @@ const DOWNLOAD_CONTROL_COPY = {
   ht: {
     auto:'AUTO 200', unlock:'DEBLOKE', lock:'BLOKE',
     autoSaved:'Mode AUTO aktive. Download ap louvri otomatikman depi 200 manm.',
-    unlocked:'Download piblik la debloke.',
-    locked:'Download piblik la bloke.',
-    error:'Nou pa ka chanje kontwòl download la kounye a.',
+    unlocked:'Telechajman piblik la debloke.',
+    locked:'Telechajman piblik la bloke.',
+    error:'Nou pa ka chanje kontwòl telechajman la kounye a.',
     stateOpen:'OUVÈ', stateClosed:'BLOKE'
   },
   fr: {
