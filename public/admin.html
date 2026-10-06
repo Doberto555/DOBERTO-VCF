@@ -45,8 +45,13 @@
     <div class="migration-stat"><strong id="downloadControlMode">—</strong><span>Mode</span></div>
     <div class="migration-stat"><strong id="downloadControlState">—</strong><span>Telechajman</span></div>
   </div>
+  <div class="group-setting-row" style="margin-top:14px">
+    <input id="downloadThresholdInput" type="number" inputmode="numeric" min="1" max="50000" step="1" placeholder="200" />
+    <button type="button" id="saveDownloadThresholdBtn">Sove limit la</button>
+    <span class="badge" id="downloadThresholdHint">Limit aktyèl: 200</span>
+  </div>
   <div class="migration-actions">
-    <button type="button" id="downloadModeAutoBtn">AUTO 200</button>
+    <button type="button" id="downloadModeAutoBtn">AUTO</button>
     <button type="button" id="downloadModeUnlockBtn" class="secondary">DEBLOKE</button>
     <button type="button" id="downloadModeLockBtn" class="danger">BLOKE</button>
   </div>
