@@ -36,14 +36,14 @@
 <div id="loginPanel" class="panel"><div class="admin-kicker">DOBERTO VCF · SECURE ADMIN</div><h3 style="margin-top:8px" data-i18n="admin_login_title">Koneksyon Admin</h3><p class="hint" style="margin-top:-8px;margin-bottom:20px" data-i18n="admin_secure_desc">Aksè sa a rezève pou administrasyon DOBERTO VCF.</p><label for="pw" data-i18n="label_password">Modpas admin</label><input id="pw" type="password" autocomplete="current-password" required /><button id="loginBtn" data-i18n="btn_login">Konekte</button><div class="msg" id="loginMsg"></div></div>
 <div id="adminPanel" class="panel admin-shell" style="display:none"><div class="admin-kicker">DOBERTO VCF CONTROL CENTER</div><div class="panel-header"><h3 data-i18n="admin_list_title">Tout moun ki enskri</h3><button class="secondary btn-auto" id="logoutBtn" data-i18n="btn_logout">Dekonekte</button></div><div class="admin-tools"><div class="admin-search-label" data-i18n="admin_manage">Jere enskripsyon yo</div><span class="badge" id="adminTotalCount">— manm</span></div><input id="searchBox" data-i18n-placeholder="search_placeholder" placeholder="Chèche pa non..." style="margin-top:16px" /><div class="table-scroll"><table><thead><tr><th data-i18n="th_name">Non</th><th data-i18n="th_email">Email</th><th data-i18n="th_country">Peyi</th><th data-i18n="th_phone">Nimewo</th><th data-i18n="th_actions">Aksyon</th></tr></thead><tbody id="adminBody"></tbody></table></div><div class="pager"><button class="secondary" id="aPrev" data-i18n="pager_prev">← Anvan</button><span class="badge" id="aPageInfo"></span><button class="secondary" id="aNext" data-i18n="pager_next">Apre →</button></div><div class="admin-export-actions" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:24px"><button id="downloadVcfBtn" type="button">Telechaje fichye VCF</button><button id="exportBtn" type="button" class="secondary" data-i18n="btn_export">Ekspòte tout an CSV</button></div><div class="msg" id="downloadVcfMsg"></div>
 <section class="group-setting" id="downloadControlPanel">
-  <div class="admin-kicker">VCF DOWNLOAD CONTROL</div>
-  <h3 id="downloadControlTitle">Kontwole aksè download piblik la</h3>
-  <p id="downloadControlDesc">Mode AUTO ap debloke download la otomatikman depi 200 moun enskri. Ou ka fòse l bloke oswa debloke nenpòt lè.</p>
+  <div class="admin-kicker">KONTWÒL TELECHAJMAN VCF</div>
+  <h3 id="downloadControlTitle">Kontwole aksè telechajman piblik la</h3>
+  <p id="downloadControlDesc">Mòd AUTO ap debloke telechajman an otomatikman depi 200 moun enskri. Ou ka fòse l bloke oswa debloke nenpòt lè.</p>
   <div class="migration-admin-grid" style="grid-template-columns:repeat(4,minmax(0,1fr))">
     <div class="migration-stat"><strong id="downloadControlMembers">—</strong><span>Manm</span></div>
     <div class="migration-stat"><strong id="downloadControlThreshold">200</strong><span>Limit</span></div>
     <div class="migration-stat"><strong id="downloadControlMode">—</strong><span>Mode</span></div>
-    <div class="migration-stat"><strong id="downloadControlState">—</strong><span>Download</span></div>
+    <div class="migration-stat"><strong id="downloadControlState">—</strong><span>Telechajman</span></div>
   </div>
   <div class="migration-actions">
     <button type="button" id="downloadModeAutoBtn">AUTO 200</button>
