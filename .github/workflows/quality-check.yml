@@ -129,3 +129,21 @@ jobs:
           fi
           grep -q "purpose !== 'admin_session'" server.js
           grep -q "purpose==='admin_session'" api/admin-system-health.js
+
+
+      - name: Prevent committed secret values
+        shell: bash
+        run: |
+          set -e
+          if grep -R --line-number -E 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+' .             --exclude-dir=.git --exclude='package-lock.json'; then
+            echo "JWT-like secret value detected in repository content."
+            exit 1
+          fi
+          if grep -R --line-number -E 'sb_secret_[A-Za-z0-9._-]{20,}' .             --exclude-dir=.git --exclude='package-lock.json'; then
+            echo "Supabase secret key detected in repository content."
+            exit 1
+          fi
+          if grep -R --line-number -E 'SUPABASE_SERVICE_ROLE_KEY=[^[:space:]]+' .             --exclude-dir=.git             | grep -v -E 'REPLACE_WITH|YOUR_|example|placeholder'; then
+            echo "Real Supabase service-role value detected in repository content."
+            exit 1
+          fi
