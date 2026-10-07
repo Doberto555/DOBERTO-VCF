@@ -223,6 +223,9 @@ function verifyAdmin(req, res, next) {
       issuer: 'doberto-vcf',
       audience: 'doberto-vcf-admin'
     });
+    if (req.admin?.role !== 'admin' || req.admin?.purpose !== 'admin_session') {
+      throw new Error('invalid admin session');
+    }
     next();
   } catch (_) {
     return res.status(401).json({ error: 'Sesyon admin ekspire, konekte ankò.' });
@@ -1029,10 +1032,14 @@ app.post('/api/admin/login', adminLoginLimiter, (req, res) => {
   if (!password || !secureEqual(password, ADMIN_PASSWORD)) {
     return res.status(401).json({ code: 'admin_password_incorrect', error: 'Modpas admin lan pa kòrèk.' });
   }
-  const token = jwt.sign({ role: 'admin' }, JWT_SECRET, {
-    algorithm: 'HS256', expiresIn: '12h', issuer: 'doberto-vcf', audience: 'doberto-vcf-admin'
+  const token = jwt.sign({ role: 'admin', purpose: 'admin_session' }, JWT_SECRET, {
+    algorithm: 'HS256',
+    expiresIn: '2h',
+    issuer: 'doberto-vcf',
+    audience: 'doberto-vcf-admin',
+    jwtid: crypto.randomBytes(16).toString('hex')
   });
-  res.json({ ok: true, token });
+  res.json({ ok: true, token, expiresIn: 7200 });
 });
 
 app.get('/api/admin/ads', adminActionLimiter, verifyAdmin, (req,res) => {
