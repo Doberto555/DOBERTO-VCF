@@ -1,26 +1,7 @@
 // Vercel serverless entrypoint — main API logic stays in server.js.
 // Google is used only for sign-in/registration. Legacy Google Contacts and VIP
 // endpoints are blocked here so removed features cannot be called in production.
-const crypto = require('crypto');
-
-const serviceRole = String(process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
-const hasUsableServiceRole = serviceRole && !serviceRole.includes('REPLACE_WITH');
-const currentJwt = String(process.env.JWT_SECRET || '').trim();
-const currentAdminPassword = String(process.env.ADMIN_PASSWORD || '').trim();
-
-if (currentJwt.length < 32 && hasUsableServiceRole) {
-  process.env.JWT_SECRET = crypto
-    .createHash('sha256')
-    .update(`doberto-vcf-jwt-v1:${serviceRole}`)
-    .digest('hex');
-}
-
-if (currentAdminPassword.length < 8 && hasUsableServiceRole) {
-  process.env.ADMIN_PASSWORD = crypto
-    .createHash('sha256')
-    .update(`doberto-vcf-admin-internal-v1:${serviceRole}`)
-    .digest('hex');
-}
+require('../lib/runtime-secrets');
 
 const app = require('../server.js');
 
