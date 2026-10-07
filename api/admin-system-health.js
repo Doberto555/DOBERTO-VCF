@@ -7,7 +7,12 @@ const SERVICE_KEY = String(process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
 const JWT_SECRET = String(process.env.JWT_SECRET || '').trim();
 
 function bearer(req){const value=String(req.headers.authorization||'');return value.startsWith('Bearer ')?value.slice(7).trim():'';}
-function verifyAdmin(req){try{return jwt.verify(bearer(req),JWT_SECRET,{algorithms:['HS256'],issuer:'doberto-vcf',audience:'doberto-vcf-admin'});}catch(_){return null;}}
+function verifyAdmin(req){
+  try{
+    const payload=jwt.verify(bearer(req),JWT_SECRET,{algorithms:['HS256'],issuer:'doberto-vcf',audience:'doberto-vcf-admin'});
+    return payload?.role==='admin'&&payload?.purpose==='admin_session'?payload:null;
+  }catch(_){return null;}
+}
 function validGroupUrl(value){try{const u=new URL(String(value||'').trim());return u.protocol==='https:'&&u.hostname==='chat.whatsapp.com'&&u.pathname.length>5;}catch(_){return false;}}
 function validBotUrl(value){try{const u=new URL(String(value||'').trim());return u.protocol==='https:'&&u.hostname==='doberto-minibot-v1.vercel.app';}catch(_){return false;}}
 
