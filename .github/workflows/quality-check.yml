@@ -105,3 +105,27 @@ jobs:
           test -f public/css/admin-dashboard-v33.css
           test -f public/js/admin-dashboard-v33.js
           test -f vercel.json
+
+
+      - name: Verify VPS and serverless auth stay aligned
+        shell: bash
+        run: |
+          set -e
+          grep -q "googleLoginUrlHandler" server.js
+          grep -q "googleCallbackHandler" server.js
+          grep -q "registerSecureHandler" server.js
+          grep -q "adminLoginSecureHandler" server.js
+          if grep -q "google_connections" server.js; then
+            echo "Legacy Google Contacts runtime detected in server.js."
+            exit 1
+          fi
+          if grep -q "syncUser(" server.js; then
+            echo "Legacy Google Contacts sync runtime detected in server.js."
+            exit 1
+          fi
+          if grep -q "runAutoSync(" server.js; then
+            echo "Legacy Google Contacts auto-sync runtime detected in server.js."
+            exit 1
+          fi
+          grep -q "purpose !== 'admin_session'" server.js
+          grep -q "purpose==='admin_session'" api/admin-system-health.js
