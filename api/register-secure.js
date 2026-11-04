@@ -92,6 +92,7 @@ module.exports = async (req, res) => {
       throw insertError;
     }
 
+    try { require('../lib/welcome-email').sendWelcome(email, name).catch((e) => console.error('welcome-email:', e.message)); } catch (e) { console.error('welcome-email:', e.message); }
     return res.status(200).json({ ok: true, registration: inserted });
   } catch (error) {
     console.error('[DOBERTO VCF] secure registration:', error?.message || error);
