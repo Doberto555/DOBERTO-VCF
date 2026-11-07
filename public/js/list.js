@@ -60,8 +60,8 @@ document.getElementById('prevBtn')?.addEventListener('click',()=>{if(currentPage
       googleSession=data;
       if(googleAccount){
         googleAccount.textContent=data.registered
-          ? `Google: ${data.user.email} — enskripsyon jwenn otomatikman`
-          : `Google: ${data.user.email} — kont sa a poko gen enskripsyon`;
+          ? `Google: ${data.user.email} — ${c().gFound}`
+          : `Google: ${data.user.email} — ${c().gNone}`;
         googleAccount.style.display='block';
       }
       if(googleLoginBtn)googleLoginBtn.style.display=data.registered?'none':'';
@@ -88,9 +88,9 @@ document.getElementById('prevBtn')?.addEventListener('click',()=>{if(currentPage
   }
 
   const copy={
-    ht:{checking:'AP VERIFYE',open:'OUVÈ',locked:'BLOKE',members:'manm',left:'rete',ready:'Telechajman an disponib kounye a.',wait:'Telechajman an poko disponib.',adminLock:'Admin lan bloke telechajman an pou kounye a.',loading:'Ap prepare fichye a...',button:'Telechaje VCF',bad:'Verifye non ak nimewo ou te itilize lè ou te enskri a.',error:'Nou pa ka telechaje fichye a kounye a.'},
-    fr:{checking:'VÉRIFICATION',open:'OUVERT',locked:'BLOQUÉ',members:'membres',left:'restants',ready:'Le téléchargement est disponible.',wait:'Le téléchargement n’est pas encore disponible.',adminLock:'L’administrateur a bloqué le téléchargement pour le moment.',loading:'Préparation du fichier...',button:'Télécharger le VCF',bad:'Vérifiez le nom et le numéro utilisés lors de votre inscription.',error:'Impossible de télécharger le fichier pour le moment.'},
-    en:{checking:'CHECKING',open:'OPEN',locked:'LOCKED',members:'members',left:'left',ready:'The download is available now.',wait:'The download is not available yet.',adminLock:'The admin has locked downloads for now.',loading:'Preparing file...',button:'Telechaje VCF',bad:'Check the name and number you used when registering.',error:'Unable to download the file right now.'}
+    ht:{checking:'AP VERIFYE',open:'OUVÈ',locked:'BLOKE',members:'manm',left:'rete',ready:'Telechajman an disponib kounye a.',wait:'Telechajman an poko disponib.',adminLock:'Admin lan bloke telechajman an pou kounye a.',loading:'Ap prepare fichye a...',button:'Telechaje VCF',gFound:'enskripsyon jwenn otomatikman',gNone:'kont sa a poko gen enskripsyon',bad:'Verifye non ak nimewo ou te itilize lè ou te enskri a.',error:'Nou pa ka telechaje fichye a kounye a.'},
+    fr:{checking:'VÉRIFICATION',open:'OUVERT',locked:'BLOQUÉ',members:'membres',left:'restants',ready:'Le téléchargement est disponible.',wait:'Le téléchargement n’est pas encore disponible.',adminLock:'L’administrateur a bloqué le téléchargement pour le moment.',loading:'Préparation du fichier...',button:'Télécharger le VCF',gFound:'inscription trouvée automatiquement',gNone:'ce compte n’a pas encore d’inscription',bad:'Vérifiez le nom et le numéro utilisés lors de votre inscription.',error:'Impossible de télécharger le fichier pour le moment.'},
+    en:{checking:'CHECKING',open:'OPEN',locked:'LOCKED',members:'members',left:'left',ready:'The download is available now.',wait:'The download is not available yet.',adminLock:'The admin has locked downloads for now.',loading:'Preparing file...',button:'Download VCF',gFound:'registration found automatically',gNone:'this account has no registration yet',bad:'Check the name and number you used when registering.',error:'Unable to download the file right now.'}
   };
 
   function c(){
