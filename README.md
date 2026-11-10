@@ -174,3 +174,24 @@ Migration lan:
 - pa bezwen nouvo tablo SQL; li itilize `notification_campaigns` ak `app_settings` ki deja egziste.
 
 WhatsApp toujou mande itilizatè a aksepte invitation lan; sit la pa fòse ajoute moun nan yon gwoup.
+
+
+## Sync Google Contacts via Shizzy Connect
+
+Sa a pa mande okenn scope Google Contacts nan DOBERTO VCF: Shizzy Connect jere OAuth la (prefiks ak group chak patnè konfigire sou kont Shizzy a).
+
+Variables `.env` (sèvè-sèlman, PA JANM nan navigatè a oswa sou GitHub):
+
+- `SHIZZY_PARTNER_KEY` — kle Partner API a (header `X-API-Key`)
+- `SHIZZY_BASE_URL` — default `https://shizzy-connect.online/api/v1/partner`
+- `SHIZZY_BATCH_SIZE` — kantite kontak maksimòm pa sync (default 5000)
+
+Routes backend (tout mande login itilizatè):
+
+- `GET /api/shizzy/status` → `GET /connections/{userId}`
+- `POST /api/shizzy/connect` → `POST /connections` (retounen URL konsantman Google)
+- `POST /api/shizzy/sync` → `PUT /connections/{userId}/contacts` (mode `replace`, menm règ debloke ak VCF)
+- `GET /api/shizzy/jobs/:jobId` → `GET /jobs/{jobId}` (sèlman job pa itilizatè a)
+- `DELETE /api/shizzy/connection` → `DELETE /connections/{userId}`
+
+UI a se `public/js/shizzy-sync.js` (paj `list.html`). Apre `.env` mete, rekòmanse PM2: `pm2 restart ecosystem.config.cjs`.

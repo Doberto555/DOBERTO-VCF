@@ -17,6 +17,7 @@ const registerSecureHandler = require('./api/register-secure');
 const adminLoginSecureHandler = require('./api/admin-login-secure');
 const groupMigrationHandler = require('./api/group-migration');
 const adminGroupMigrationHandler = require('./api/admin-group-migration');
+const { createShizzyConnect, toPartnerContact, ShizzyError } = require('./lib/shizzy-connect');
 
 const app = express();
 app.disable('x-powered-by');
@@ -122,6 +123,7 @@ const adminLoginLimiter = rateLimit({ ...limiterDefaults, windowMs: 15 * 60 * 10
 const adminActionLimiter = rateLimit({ ...limiterDefaults, windowMs: 60 * 60 * 1000, limit: 120 });
 const pushSendLimiter = rateLimit({ ...limiterDefaults, windowMs: 60 * 60 * 1000, limit: 12 });
 const publicReadLimiter = rateLimit({ ...limiterDefaults, windowMs: 60 * 1000, limit: 300 });
+const shizzyActionLimiter = rateLimit({ ...limiterDefaults, windowMs: 60 * 60 * 1000, limit: 12 });
 
 // ---------- Itilitè ----------
 function normalizeAdSettings(input = {}) {
@@ -655,6 +657,161 @@ app.all('/api/google/status', removedGoogleContacts);
 app.all('/api/google/sync', removedGoogleContacts);
 app.all('/api/google/auto-sync', removedGoogleContacts);
 app.all('/api/cron/google-sync', removedGoogleContacts);
+
+// ---------- Shizzy Connect: sync kontak nan Google Contacts via Partner API ----------
+// Shizzy jere OAuth Google a (DOBERTO VCF pa mande okenn scope Contacts). Kle API a rete sèvè-sèlman.
+const shizzy = createShizzyConnect();
+const SHIZZY_BATCH_SIZE = Math.max(1, Math.min(MAX_IN_FILE, parseInt(process.env.SHIZZY_BATCH_SIZE || '5000', 10) || 5000));
+const SHIZZY_JOB_ID_RE = /^[0-9A-Za-z-]{8,64}$/;
+
+function sendShizzyError(res, err) {
+  if (err instanceof ShizzyError) return res.status(err.status).json({ code: err.code, error: err.message });
+  console.error('[DOBERTO VCF] shizzy route error:', err);
+  return res.status(500).json({ code: 'server_error', error: 'Erè sèvè.' });
+}
+
+function requireShizzy(req, res, next) {
+  if (!shizzy.configured) {
+    return res.status(503).json({ code: 'shizzy_not_configured', error: 'Sync Google Contacts poko disponib.' });
+  }
+  next();
+}
+
+function pickShizzyConsentUrl(data) {
+  const keys = ['url', 'consentUrl', 'authUrl', 'authorizationUrl', 'authorization_url', 'consent_url'];
+  for (const key of keys) {
+    const value = data && data[key];
+    if (typeof value === 'string' && /^https:\/\//i.test(value)) return value;
+  }
+  return '';
+}
+
+async function fetchRegistrationsForSync(limit) {
+  const rows = [];
+  const pageSize = 1000;
+  for (let from = 0; rows.length < limit; from += pageSize) {
+    const take = Math.min(pageSize, limit - rows.length);
+    const { data, error } = await supabase.from('registrations')
+      .select('id, name, dial_code, phone, user_id')
+      .order('created_at', { ascending: true }).order('id', { ascending: true })
+      .range(from, from + take - 1);
+    if (error) throw error;
+    rows.push(...(data || []));
+    if (!data || data.length < take) break;
+  }
+  return rows;
+}
+
+app.get('/api/shizzy/status', publicReadLimiter,
+  (req, res, next) => (shizzy.configured ? next() : res.json({ ok: true, configured: false })),
+  verifyUser,
+  async (req, res) => {
+    try {
+      const connection = await shizzy.getConnection(req.user.userId);
+      res.json({ ok: true, configured: true, connection });
+    } catch (err) {
+      if (err instanceof ShizzyError && err.status === 404) {
+        return res.json({ ok: true, configured: true, connection: null });
+      }
+      sendShizzyError(res, err);
+    }
+  });
+
+app.post('/api/shizzy/connect', shizzyActionLimiter, verifyUser, requireShizzy, async (req, res) => {
+  try {
+    const data = await shizzy.createConnection(req.user.userId);
+    const url = pickShizzyConsentUrl(data);
+    if (!url) {
+      console.error('[DOBERTO VCF] Shizzy POST /connections: pa gen URL konsantman nan repons lan.');
+      return res.status(502).json({ code: 'shizzy_bad_response', error: 'Shizzy Connect pa voye lyen konsantman an.' });
+    }
+    res.json({ ok: true, url });
+  } catch (err) {
+    sendShizzyError(res, err);
+  }
+});
+
+app.post('/api/shizzy/sync', shizzyActionLimiter, verifyUser, requireDatabase, requireShizzy, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const [mine, total, downloadMode, minRequired] = await Promise.all([
+      supabase.from('registrations').select('id').eq('user_id', userId).maybeSingle(),
+      supabase.from('registrations').select('*', { count: 'exact', head: true }),
+      getDownloadMode(),
+      getDownloadThreshold()
+    ]);
+    if (mine.error) throw mine.error;
+    if (total.error) throw total.error;
+
+    // Menm règ ak telechajman VCF: ou dwe enskri, epi lis la dwe debloke.
+    if (!mine.data) {
+      return res.status(403).json({ code: 'not_registered', error: 'Ou dwe enskri anvan ou sinkronize kontak yo.' });
+    }
+    const access = downloadAccess(total.count || 0, downloadMode, minRequired);
+    if (!access.unlocked) {
+      return res.status(403).json({
+        code: 'download_locked',
+        vars: { min: access.minRequired, count: total.count || 0, mode: access.mode },
+        error: access.mode === 'locked'
+          ? 'Admin lan bloke sync kontak yo pou kounye a.'
+          : `Sync lan ap debloke lè gen ${access.minRequired} moun enskri (${total.count || 0}/${access.minRequired} kounye a).`
+      });
+    }
+
+    const rows = await fetchRegistrationsForSync(SHIZZY_BATCH_SIZE);
+    const contacts = rows
+      .filter((row) => row.user_id !== userId)
+      .map((row) => toPartnerContact(row, NAME_PREFIX))
+      .filter(Boolean);
+    if (!contacts.length) {
+      return res.status(422).json({ code: 'no_contacts', error: 'Pa gen kontak valid pou sinkronize.' });
+    }
+
+    const job = await shizzy.putContacts(userId, contacts, 'replace');
+    res.status(202).json({
+      ok: true,
+      jobId: job && job.jobId || null,
+      status: job && job.status || 'queued',
+      sent: contacts.length
+    });
+  } catch (err) {
+    sendShizzyError(res, err);
+  }
+});
+
+app.get('/api/shizzy/jobs/:jobId', publicReadLimiter, verifyUser, requireShizzy, async (req, res) => {
+  const jobId = String(req.params.jobId || '');
+  if (!SHIZZY_JOB_ID_RE.test(jobId)) return res.status(400).json({ code: 'invalid_job', error: 'Job ID pa valid.' });
+  try {
+    const job = await shizzy.getJob(jobId);
+    // Yon itilizatè pa ka swiv job yon lòt moun.
+    if (!job || String(job.externalUserId || '') !== String(req.user.userId)) {
+      return res.status(404).json({ code: 'job_not_found', error: 'Job la pa egziste.' });
+    }
+    res.json({
+      ok: true,
+      job: {
+        jobId: job.jobId,
+        status: job.status,
+        mode: job.mode || null,
+        stats: job.stats || null,
+        error: job.error ? String(job.error).slice(0, 200) : null
+      }
+    });
+  } catch (err) {
+    sendShizzyError(res, err);
+  }
+});
+
+app.delete('/api/shizzy/connection', shizzyActionLimiter, verifyUser, requireShizzy, async (req, res) => {
+  try {
+    const data = await shizzy.deleteConnection(req.user.userId);
+    res.json({ ok: true, jobId: data && data.jobId || null });
+  } catch (err) {
+    if (err instanceof ShizzyError && err.status === 404) return res.json({ ok: true, jobId: null });
+    sendShizzyError(res, err);
+  }
+});
 
 // ---------- POST /api/register ----------
 app.post('/api/register', registerLimiter, requireDatabase, (req, res) => registerSecureHandler(req, res));
