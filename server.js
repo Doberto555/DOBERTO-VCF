@@ -12,7 +12,7 @@ const googleLoginUrlHandler = require('./api/google-login-url');
 const googleCallbackHandler = require('./api/google-callback');
 const registerSecureHandler = require('./api/register-secure');
 const adminLoginSecureHandler = require('./api/admin-login-secure');
-const { createShizzyConnect, toPartnerContact, ShizzyError } = require('./lib/shizzy-connect');
+const { createShizzyConnect, toPartnerContact, ShizzyError, pickConsentUrl, describeShape } = require('./lib/shizzy-connect');
 
 const app = express();
 app.disable('x-powered-by');
@@ -368,15 +368,6 @@ function requireShizzy(req, res, next) {
   next();
 }
 
-function pickShizzyConsentUrl(data) {
-  const keys = ['url', 'consentUrl', 'authUrl', 'authorizationUrl', 'authorization_url', 'consent_url'];
-  for (const key of keys) {
-    const value = data && data[key];
-    if (typeof value === 'string' && /^https:\/\//i.test(value)) return value;
-  }
-  return '';
-}
-
 async function fetchRegistrationsForSync(limit) {
   const rows = [];
   const pageSize = 1000;
@@ -411,9 +402,10 @@ app.get('/api/shizzy/status', publicReadLimiter,
 app.post('/api/shizzy/connect', shizzyActionLimiter, verifyUser, requireShizzy, async (req, res) => {
   try {
     const data = await shizzy.createConnection(req.user.userId);
-    const url = pickShizzyConsentUrl(data);
+    const url = pickConsentUrl(data, shizzy.baseUrl);
     if (!url) {
-      console.error('[DOBERTO VCF] Shizzy POST /connections: pa gen URL konsantman nan repons lan.');
+      // Sèlman non chan yo ak tip yo (pa valè), pou n konnen kijan Shizzy fòmate repons lan.
+      console.error('[DOBERTO VCF] Shizzy POST /connections: pa gen URL konsantman nan repons lan. Fòm repons:', JSON.stringify(describeShape(data)));
       return res.status(502).json({ code: 'shizzy_bad_response', error: 'Shizzy Connect pa voye lyen konsantman an.' });
     }
     res.json({ ok: true, url });
