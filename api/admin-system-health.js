@@ -13,8 +13,6 @@ function verifyAdmin(req){
     return payload?.role==='admin'&&payload?.purpose==='admin_session'?payload:null;
   }catch(_){return null;}
 }
-function validGroupUrl(value){try{const u=new URL(String(value||'').trim());return u.protocol==='https:'&&u.hostname==='chat.whatsapp.com'&&u.pathname.length>5;}catch(_){return false;}}
-function validBotUrl(value){try{const u=new URL(String(value||'').trim());return u.protocol==='https:'&&u.hostname==='doberto-minibot-v1.vercel.app';}catch(_){return false;}}
 
 module.exports=async(req,res)=>{
   res.setHeader('Cache-Control','no-store');
@@ -27,32 +25,19 @@ module.exports=async(req,res)=>{
     google:{status:process.env.GOOGLE_CLIENT_ID&&process.env.GOOGLE_CLIENT_SECRET&&process.env.GOOGLE_REDIRECT_URI?'configured':'missing'},
     push:{status:process.env.ONESIGNAL_APP_ID&&process.env.ONESIGNAL_REST_API_KEY?'configured':'missing'},
     email:{status:process.env.RESEND_API_KEY&&process.env.RESEND_FROM?'configured':'missing'},
-    community:{status:'checking',groupConfigured:false,botConfigured:false}
+    shizzy:{status:String(process.env.SHIZZY_PARTNER_KEY||'').trim()&&!String(process.env.SHIZZY_PARTNER_KEY).includes('REPLACE_WITH')?'configured':'missing'}
   };
 
   if(!SUPABASE_URL||!SERVICE_KEY){
     services.database={status:'missing'};
-    services.community={status:'missing',groupConfigured:false,botConfigured:false};
   }else{
     try{
       const supabase=createClient(SUPABASE_URL,SERVICE_KEY,{auth:{persistSession:false,autoRefreshToken:false}});
-      const [dbResult,settingsResult]=await Promise.all([
-        supabase.from('registrations').select('id',{count:'exact',head:true}),
-        supabase.from('app_settings').select('key,value').in('key',['whatsapp_group_url','vcf_bot_api_url','vcf_bot_api_token'])
-      ]);
+      const dbResult=await supabase.from('registrations').select('id',{count:'exact',head:true});
       services.database={status:dbResult.error?'error':'operational'};
       if(dbResult.error)services.database.code=String(dbResult.error.code||'database_error');
-      if(settingsResult.error){
-        services.community={status:'error',groupConfigured:false,botConfigured:false};
-      }else{
-        const map=Object.fromEntries((settingsResult.data||[]).map(row=>[row.key,String(row.value||'').trim()]));
-        const groupConfigured=validGroupUrl(map.whatsapp_group_url);
-        const botConfigured=validBotUrl(map.vcf_bot_api_url)&&String(map.vcf_bot_api_token||'').length>=16;
-        services.community={status:groupConfigured?(botConfigured?'operational':'configured'):'missing',groupConfigured,botConfigured};
-      }
     }catch(_){
       services.database={status:'error'};
-      services.community={status:'error',groupConfigured:false,botConfigured:false};
     }
   }
 

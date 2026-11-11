@@ -8,7 +8,7 @@
     const ht=api?.copy?.ht;
     if(ht){
       Object.assign(ht,{
-        navGroup:'Gwoup',s3:'Gwoup',doneText:'Ou deja enskri sou DOBERTO VCF. Antre nan gwoup ofisyèl la pou kontinye.',doneLink:'Antre nan gwoup WhatsApp',redirect:'N ap ouvri WhatsApp otomatikman…',side2:'Antre nan gwoup la',side2d:'Lè enskripsyon an fini, sit la voye w dirèkteman sou envitasyon gwoup WhatsApp DOBERTO VCF la.',sideLink:'Ouvri gwoup WhatsApp',announce:'Mwen dakò pou DOBERTO VCF anonse non ak nimewo WhatsApp mwen nan gwoup ofisyèl la apre enskripsyon an.'
+        navGroup:'Gwoup',s3:'Sync',doneText:'Ou deja enskri sou DOBERTO VCF. Konekte Google Contacts ou sou paj manm yo pou kontinye.',doneLink:'Sinkronize kontak yo',redirect:'N ap ouvri WhatsApp otomatikman…',side2:'Sinkronize kontak yo',side2d:'Lè enskripsyon an fini, konekte Google Contacts ou sou paj manm yo pou manm yo ajoute nan telefòn ou.',sideLink:'Ale sou paj manm yo',announce:'Mwen dakò pou DOBERTO VCF anonse non ak nimewo WhatsApp mwen nan gwoup ofisyèl la apre enskripsyon an.'
       });
       api.apply?.();
     }

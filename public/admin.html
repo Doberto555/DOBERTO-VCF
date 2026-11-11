@@ -34,29 +34,7 @@
 <div class="topbar"><a href="/" class="brand"><img class="brand-logo" src="icons/doberto-vcf-mark.svg?v=20260904-1" alt="" width="38" height="38" /> DOBERTO VCF</a><div class="topbar-right"><div class="nav-links"><a href="/" data-i18n="nav_home">Akèy</a><a href="register.html" data-i18n="nav_register">Enskri</a><a href="list.html" data-i18n="nav_list">Manm</a></div><select id="langSelect" class="lang-select" aria-label="Chwazi lang"><option value="ht">KR</option><option value="fr">FR</option><option value="en">EN</option></select></div></div>
 <div class="container">
 <div id="loginPanel" class="panel"><div class="admin-kicker">DOBERTO VCF · SECURE ADMIN</div><h3 style="margin-top:8px" data-i18n="admin_login_title">Koneksyon Admin</h3><p class="hint" style="margin-top:-8px;margin-bottom:20px" data-i18n="admin_secure_desc">Aksè sa a rezève pou administrasyon DOBERTO VCF.</p><label for="pw" data-i18n="label_password">Modpas admin</label><input id="pw" type="password" autocomplete="current-password" required /><button id="loginBtn" data-i18n="btn_login">Konekte</button><div class="msg" id="loginMsg"></div></div>
-<div id="adminPanel" class="panel admin-shell" style="display:none"><div class="admin-kicker">DOBERTO VCF CONTROL CENTER</div><div class="panel-header"><h3 data-i18n="admin_list_title">Tout moun ki enskri</h3><button class="secondary btn-auto" id="logoutBtn" data-i18n="btn_logout">Dekonekte</button></div><div class="admin-tools"><div class="admin-search-label" data-i18n="admin_manage">Jere enskripsyon yo</div><span class="badge" id="adminTotalCount">— manm</span></div><input id="searchBox" data-i18n-placeholder="search_placeholder" placeholder="Chèche pa non..." style="margin-top:16px" /><div class="table-scroll"><table><thead><tr><th data-i18n="th_name">Non</th><th data-i18n="th_email">Email</th><th data-i18n="th_country">Peyi</th><th data-i18n="th_phone">Nimewo</th><th data-i18n="th_actions">Aksyon</th></tr></thead><tbody id="adminBody"></tbody></table></div><div class="pager"><button class="secondary" id="aPrev" data-i18n="pager_prev">← Anvan</button><span class="badge" id="aPageInfo"></span><button class="secondary" id="aNext" data-i18n="pager_next">Apre →</button></div><div class="admin-export-actions" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:24px"><button id="downloadVcfBtn" type="button">Telechaje fichye VCF</button><button id="exportBtn" type="button" class="secondary" data-i18n="btn_export">Ekspòte tout an CSV</button></div><div class="msg" id="downloadVcfMsg"></div>
-<section class="group-setting" id="downloadControlPanel">
-  <div class="admin-kicker">KONTWÒL TELECHAJMAN VCF</div>
-  <h3 id="downloadControlTitle">Kontwole aksè telechajman piblik la</h3>
-  <p id="downloadControlDesc">Mòd AUTO ap debloke telechajman an otomatikman lè kantite manm yo rive nan limit ou chwazi a. Ou ka chanje limit la, bloke oswa debloke telechajman an nenpòt lè.</p>
-  <div class="migration-admin-grid" style="grid-template-columns:repeat(4,minmax(0,1fr))">
-    <div class="migration-stat"><strong id="downloadControlMembers">—</strong><span>Manm</span></div>
-    <div class="migration-stat"><strong id="downloadControlThreshold">200</strong><span>Limit</span></div>
-    <div class="migration-stat"><strong id="downloadControlMode">—</strong><span>Mode</span></div>
-    <div class="migration-stat"><strong id="downloadControlState">—</strong><span>Telechajman</span></div>
-  </div>
-  <div class="group-setting-row" style="margin-top:14px">
-    <input id="downloadThresholdInput" type="number" inputmode="numeric" min="1" max="50000" step="1" placeholder="200" />
-    <button type="button" id="saveDownloadThresholdBtn">Sove limit la</button>
-    <span class="badge" id="downloadThresholdHint">Limit aktyèl: —</span>
-  </div>
-  <div class="migration-actions">
-    <button type="button" id="downloadModeAutoBtn">AUTO</button>
-    <button type="button" id="downloadModeUnlockBtn" class="secondary">DEBLOKE</button>
-    <button type="button" id="downloadModeLockBtn" class="danger">BLOKE</button>
-  </div>
-  <div class="msg" id="downloadControlMsg"></div>
-</section>
+<div id="adminPanel" class="panel admin-shell" style="display:none"><div class="admin-kicker">DOBERTO VCF CONTROL CENTER</div><div class="panel-header"><h3 data-i18n="admin_list_title">Tout moun ki enskri</h3><button class="secondary btn-auto" id="logoutBtn" data-i18n="btn_logout">Dekonekte</button></div><div class="admin-tools"><div class="admin-search-label" data-i18n="admin_manage">Jere enskripsyon yo</div><span class="badge" id="adminTotalCount">— manm</span></div><input id="searchBox" data-i18n-placeholder="search_placeholder" placeholder="Chèche pa non..." style="margin-top:16px" /><div class="table-scroll"><table><thead><tr><th data-i18n="th_name">Non</th><th data-i18n="th_email">Email</th><th data-i18n="th_country">Peyi</th><th data-i18n="th_phone">Nimewo</th><th data-i18n="th_actions">Aksyon</th></tr></thead><tbody id="adminBody"></tbody></table></div><div class="pager"><button class="secondary" id="aPrev" data-i18n="pager_prev">← Anvan</button><span class="badge" id="aPageInfo"></span><button class="secondary" id="aNext" data-i18n="pager_next">Apre →</button></div><div class="admin-export-actions" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:24px"><button id="exportBtn" type="button" class="secondary" data-i18n="btn_export">Ekspòte tout an CSV</button></div>
 <section class="group-setting ads-admin-setting" id="adsSettingPanel">
 <div class="admin-kicker">ADVERTISING</div>
 <h3>Kontwòl piblisite</h3>
@@ -112,30 +90,9 @@
 </div>
 <div class="ads-footer"><div class="msg" id="adsSettingMsg"></div><button id="saveAdsBtn" type="button">Sove piblisite yo</button></div>
 </section>
-<section class="group-setting" id="groupSettingPanel"><div class="admin-kicker" id="groupSettingKicker">WHATSAPP GROUP</div><h3 id="groupSettingTitle">Link gwoup prensipal la</h3><p id="groupSettingDesc">Chanje link la isit la si gwoup WhatsApp la reset oswa ou kreye yon nouvo gwoup. Tout nouvo enskripsyon yo ap itilize nouvo link la touswit.</p><div class="group-setting-row"><input id="groupUrlInput" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://chat.whatsapp.com/..." /><button id="saveGroupUrlBtn" type="button">Sove link gwoup la</button><button id="testGroupUrlBtn" type="button" class="secondary">Teste link la</button></div><div class="msg" id="groupSettingMsg"></div></section>
-<section class="group-setting" id="migrationSettingPanel">
-<div class="admin-kicker">GROUP MIGRATION</div>
-<h3>Migration ansyen manm yo</h3>
-<p id="migrationTip">Sove nouvo link gwoup la anlè, apre sa kòmanse migration lan. Sistèm nan ap pran sèlman moun ki deja enskri nan moman ou kòmanse a.</p>
-<div class="migration-state-row"><span id="migrationStateBadge" class="migration-state-badge">OFF</span><strong id="migrationStatusLabel">Estati migration</strong><span id="migrationStateText" class="hint">Pa gen migration aktif.</span></div>
-<div class="migration-admin-grid">
-  <div class="migration-stat"><strong id="migrationTotal">0</strong><span id="migrationTotalLabel">Ansyen manm</span></div>
-  <div class="migration-stat"><strong id="migrationPending">0</strong><span id="migrationPendingLabel">Ap tann</span></div>
-  <div class="migration-stat"><strong id="migrationOpened">0</strong><span id="migrationOpenedLabel">Ouvri link</span></div>
-  <div class="migration-stat"><strong id="migrationJoined">0</strong><span id="migrationJoinedLabel">Konfime antre</span></div>
-  <div class="migration-stat push-target"><strong id="migrationPushRecipients">0</strong><span id="migrationPushRecipientsLabel">Destinatè push</span></div>
-</div>
-<div class="migration-meta"><span id="migrationGroupMetaLabel">Gwoup migration</span>: <span id="migrationGroupUrl">—</span><br><span id="migrationStartedMetaLabel">Kòmanse</span>: <span id="migrationStartedAt">—</span><br><span id="migrationLastPushMetaLabel">Dènye push</span>: <span id="migrationLastPushAt">—</span></div>
-<div class="migration-actions">
-  <button id="startMigrationBtn" type="button">Kòmanse migration ansyen manm yo</button>
-  <button id="pushMigrationBtn" type="button" class="secondary">Voye push envitasyon</button>
-  <button id="refreshMigrationBtn" type="button" class="secondary">Rafrechi</button>
-  <button id="stopMigrationBtn" type="button" class="danger" disabled>Fèmen migration</button>
-</div>
-<div class="msg" id="migrationAdminMsg"></div>
-</section>
+
 </div>
 <div class="social-row"><a href="https://www.instagram.com/doberto.best.dev?igsh=MW5iOWY3d2VlMTViaw==" target="_blank" rel="noopener" class="social-link" aria-label="Instagram"><span>IG</span></a><a href="https://github.com/Doberto555" target="_blank" rel="noopener" class="social-link" aria-label="GitHub"><span>GH</span></a></div><p class="footer-note" data-i18n="footer_admin">DOBERTO VCF — Zòn admin sèlman. Aksè restrenn.</p></div>
 <div class="modal-overlay" id="editOverlay" hidden><div class="modal-box"><h3 data-i18n="edit_modal_title">Modifye moun sa a</h3><form id="editForm"><input type="hidden" id="editId" /><label for="editName" data-i18n="label_name">Non konplè</label><input id="editName" type="text" required /><label data-i18n="label_phone">Nimewo WhatsApp</label><div class="phone-row"><select id="editDial"></select><input id="editPhone" type="tel" inputmode="numeric" required /></div><label for="editIcon" data-i18n="label_icon">Ikòn</label><select id="editIcon"></select><div class="modal-actions"><button type="button" class="secondary" id="editCancelBtn" data-i18n="btn_cancel">Anile</button><button type="submit" id="editSaveBtn" data-i18n="btn_save">Sove chanjman</button></div><div class="msg" id="editMsg"></div></form></div></div>
-<script src="js/admin-ads-v34.js?v=20260927-1"></script><script src="js/i18n.js?v=20260917-1"></script><script src="js/i18n-v12.js?v=20260917-4"></script><script src="js/icons.js"></script><script src="js/countries.js"></script><script src="js/country-picker.js"></script><script src="js/admin.js?v=20261003-4"></script><script src="js/admin-community-settings-v32.js?v=20260926-1"></script><script src="js/admin-group-migration-v35.js?v=20260929-3"></script><script src="js/pro-v3.js?v=20260904-1"></script><script src="js/admin-dashboard-v33.js?v=20260926-1"></script><script src="js/admin-system-health-v29.js?v=20260917-4"></script><script src="js/admin-control-center-v28.js?v=20260929-2"></script>
+<script src="js/admin-ads-v34.js?v=20260927-1"></script><script src="js/i18n.js?v=20260917-1"></script><script src="js/i18n-v12.js?v=20260917-4"></script><script src="js/icons.js"></script><script src="js/countries.js"></script><script src="js/country-picker.js"></script><script src="js/admin.js?v=20261003-4"></script><script src="js/pro-v3.js?v=20260904-1"></script><script src="js/admin-dashboard-v33.js?v=20260926-1"></script><script src="js/admin-system-health-v29.js?v=20260917-4"></script><script src="js/admin-control-center-v28.js?v=20260929-2"></script>
 </body></html>

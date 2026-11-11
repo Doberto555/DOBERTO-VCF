@@ -60,15 +60,13 @@
       return;
     }
     if(!payload){recent.innerHTML=`<div class="dv-dashboard-empty">${esc(t('error'))}</div>`;return;}
-    const s=payload.stats||{}, c=payload.community||{}, rows=payload.list?.list||[];
+    const s=payload.stats||{}, rows=payload.list?.list||[];
     kpis.innerHTML=[
       kpi(t('total'),Number(s.total||0).toLocaleString()),
-      kpi(t('today'),Number(s.today||0).toLocaleString()),
-      kpi(t('downloads'),Number(s.downloadCount||0).toLocaleString()),
-      kpi(t('remaining'),Number(s.remaining||0).toLocaleString())
+      kpi(t('today'),Number(s.today||0).toLocaleString())
     ].join('');
     recent.innerHTML=rows.length?rows.slice(0,5).map(row=>`<div class="dv-dashboard-member"><span class="dv-dashboard-avatar">${esc((row.name||'?').trim().split(/\s+/).slice(0,2).map(x=>x[0]).join('').toUpperCase())}</span><div><strong>${esc(row.display_name||row.name||'—')}</strong><small>${esc(row.country_name||'—')} · +${esc(row.full_number||'')}</small></div><time>${row.created_at?new Date(row.created_at).toLocaleDateString(lang()==='en'?'en-US':'fr-FR'):'—'}</time></div>`).join(''):`<div class="dv-dashboard-empty">${esc(t('empty'))}</div>`;
-    status.innerHTML=stateRow(t('community'),Boolean(c.whatsappGroupUrl))+stateRow(t('bot'),Boolean(c.botConfigured));
+    status.innerHTML='';
   }
 
   async function load(force=false){
@@ -80,8 +78,7 @@
     try{
       const results=await Promise.allSettled([
         fetch('/api/admin/stats',{headers,cache:'no-store'}),
-        fetch('/api/admin/list?page=1',{headers,cache:'no-store'}),
-        fetch('/api/admin/community/settings',{headers,cache:'no-store'})
+        fetch('/api/admin/list?page=1',{headers,cache:'no-store'})
       ]);
       const responses=results.map(x=>x.status==='fulfilled'?x.value:null);
       if(responses.some(r=>r&&r.status===401)){document.getElementById('logoutBtn')?.click();return;}
@@ -92,13 +89,11 @@
       };
       const stats=await readJson(responses[0],null);
       const list=await readJson(responses[1],{page:1,pageSize:100,total:0,list:[]});
-      const community=await readJson(responses[2],{ok:false,whatsappGroupUrl:'',botConfigured:false});
 
       if(!stats&&!responses[1]?.ok)throw new Error('dashboard');
       payload={
-        stats:stats||{total:Number(list?.total||0),today:0,downloadCount:0,remaining:0},
-        list,
-        community
+        stats:stats||{total:Number(list?.total||0),today:0},
+        list
       };
     }catch(_){payload=null}finally{loading=false;render()}
   }

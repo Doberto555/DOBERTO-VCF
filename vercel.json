@@ -5,11 +5,6 @@
     { "source": "/api/auth/google/callback", "destination": "/api/google-callback" },
     { "source": "/api/register", "destination": "/api/register-secure" },
     { "source": "/api/admin/login", "destination": "/api/admin-login-secure" },
-    { "source": "/api/settings/public", "destination": "/api/public-settings" },
-    { "source": "/api/community/announce", "destination": "/api/community-announce" },
-    { "source": "/api/group-migration", "destination": "/api/group-migration" },
-    { "source": "/api/admin/community/settings", "destination": "/api/admin-community-settings" },
-    { "source": "/api/admin/group-migration", "destination": "/api/admin-group-migration" },
 
     { "source": "/api/google/status", "destination": "/api/feature-removed" },
     { "source": "/api/google/sync", "destination": "/api/feature-removed" },

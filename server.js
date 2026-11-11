@@ -7,16 +7,11 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const rateLimit = require('express-rate-limit');
 const { createClient } = require('@supabase/supabase-js');
-const publicSettingsHandler = require('./api/public-settings');
-const communityAnnounceHandler = require('./api/community-announce');
-const adminCommunitySettingsHandler = require('./api/admin-community-settings');
 const adminSystemHealthHandler = require('./api/admin-system-health');
 const googleLoginUrlHandler = require('./api/google-login-url');
 const googleCallbackHandler = require('./api/google-callback');
 const registerSecureHandler = require('./api/register-secure');
 const adminLoginSecureHandler = require('./api/admin-login-secure');
-const groupMigrationHandler = require('./api/group-migration');
-const adminGroupMigrationHandler = require('./api/admin-group-migration');
 const { createShizzyConnect, toPartnerContact, ShizzyError } = require('./lib/shizzy-connect');
 
 const app = express();
@@ -38,7 +33,6 @@ const RESEND_FROM = String(process.env.RESEND_FROM || '').trim();
 const ONESIGNAL_APP_ID = String(process.env.ONESIGNAL_APP_ID || '').trim();
 const ONESIGNAL_REST_API_KEY = String(process.env.ONESIGNAL_REST_API_KEY || '').trim();
 const CRON_SECRET = String(process.env.CRON_SECRET || '').trim();
-const DOWNLOAD_METRIC_PREFIX = 'vcf_download_user_';
 const ADS_SETTINGS_FILE = path.join(__dirname, '.runtime', 'site-ads.json');
 const DEFAULT_AD_SETTINGS = Object.freeze({
   enabled:false,
@@ -118,7 +112,6 @@ app.use(express.static(path.join(__dirname, 'public'), {
 // ---------- Rate limiting ----------
 const limiterDefaults = { standardHeaders: 'draft-7', legacyHeaders: false };
 const registerLimiter = rateLimit({ ...limiterDefaults, windowMs: 15 * 60 * 1000, limit: 30 });
-const downloadLimiter = rateLimit({ ...limiterDefaults, windowMs: 15 * 60 * 1000, limit: 10 });
 const adminLoginLimiter = rateLimit({ ...limiterDefaults, windowMs: 15 * 60 * 1000, limit: 8 });
 const adminActionLimiter = rateLimit({ ...limiterDefaults, windowMs: 60 * 60 * 1000, limit: 120 });
 const pushSendLimiter = rateLimit({ ...limiterDefaults, windowMs: 60 * 60 * 1000, limit: 12 });
@@ -286,227 +279,6 @@ function cleanUrl(value, fallback = '/') {
   }
 }
 
-async function getDownloadMode() {
-  try {
-    const { data, error } = await supabase
-      .from('app_settings')
-      .select('value')
-      .eq('key', 'vcf_download_mode')
-      .maybeSingle();
-
-    if (error) {
-      console.warn('[DOBERTO VCF] download mode unavailable:', error.message);
-      return 'auto';
-    }
-
-    const mode = String(data?.value || 'auto').trim().toLowerCase();
-    return ['auto', 'locked', 'unlocked'].includes(mode) ? mode : 'auto';
-  } catch (err) {
-    console.warn('[DOBERTO VCF] download mode read failed:', err && err.message || err);
-    return 'auto';
-  }
-}
-
-async function setDownloadMode(mode) {
-  const clean = String(mode || '').trim().toLowerCase();
-  if (!['auto', 'locked', 'unlocked'].includes(clean)) {
-    const error = new Error('Mòd download lan pa valid.');
-    error.code = 'invalid_download_mode';
-    throw error;
-  }
-
-  const { error } = await supabase
-    .from('app_settings')
-    .upsert({
-      key: 'vcf_download_mode',
-      value: clean,
-      updated_at: new Date().toISOString()
-    }, { onConflict: 'key' });
-
-  if (error) throw error;
-  return clean;
-}
-
-async function getDownloadThreshold() {
-  try {
-    const { data, error } = await supabase.from('app_settings').select('value').eq('key', 'vcf_download_threshold').maybeSingle();
-    if (error) return DEFAULT_MIN_TO_UNLOCK;
-    const parsed = parseInt(String(data?.value || DEFAULT_MIN_TO_UNLOCK), 10);
-    return Number.isFinite(parsed) ? Math.max(1, Math.min(MAX_IN_FILE, parsed)) : DEFAULT_MIN_TO_UNLOCK;
-  } catch (_) {
-    return DEFAULT_MIN_TO_UNLOCK;
-  }
-}
-
-async function setDownloadThreshold(value) {
-  const parsed = parseInt(String(value || ''), 10);
-  if (!Number.isFinite(parsed) || parsed < 1 || parsed > MAX_IN_FILE) {
-    const error = new Error(`Limit la dwe ant 1 ak ${MAX_IN_FILE}.`);
-    error.code = 'invalid_download_threshold';
-    throw error;
-  }
-  const { error } = await supabase.from('app_settings').upsert({
-    key: 'vcf_download_threshold',
-    value: String(parsed),
-    updated_at: new Date().toISOString()
-  }, { onConflict: 'key' });
-  if (error) throw error;
-  return parsed;
-}
-
-function downloadAccess(total, mode = 'auto', minRequired = DEFAULT_MIN_TO_UNLOCK) {
-  const count = Math.max(0, Number(total || 0));
-  const threshold = Math.max(1, Math.min(MAX_IN_FILE, Number(minRequired || DEFAULT_MIN_TO_UNLOCK)));
-  const cleanMode = ['auto', 'locked', 'unlocked'].includes(mode) ? mode : 'auto';
-  const thresholdReached = count >= threshold;
-  const unlocked = cleanMode === 'unlocked' || (cleanMode === 'auto' && thresholdReached);
-  return {
-    mode: cleanMode,
-    unlocked,
-    thresholdReached,
-    minRequired: threshold,
-    remaining: Math.max(0, threshold - count)
-  };
-}
-
-async function getUniqueDownloadCount() {
-  try {
-    const { count, error } = await supabase
-      .from('notification_campaigns')
-      .select('campaign_key', { count: 'exact', head: true })
-      .like('campaign_key', `${DOWNLOAD_METRIC_PREFIX}%`);
-    if (error) {
-      console.warn('[DOBERTO VCF] download metric count unavailable:', error.message);
-      return 0;
-    }
-    return count || 0;
-  } catch (err) {
-    console.warn('[DOBERTO VCF] download metric count failed:', err && err.message || err);
-    return 0;
-  }
-}
-
-async function recordVcfDownload(registrationId) {
-  const id = String(registrationId || '').trim();
-  if (!/^[0-9a-f-]{36}$/i.test(id)) return false;
-  const campaignKey = `${DOWNLOAD_METRIC_PREFIX}${id}`;
-  const nowIso = new Date().toISOString();
-
-  try {
-    const existingResult = await supabase
-      .from('notification_campaigns')
-      .select('campaign_key,attempts')
-      .eq('campaign_key', campaignKey)
-      .maybeSingle();
-
-    if (existingResult.error) {
-      console.warn('[DOBERTO VCF] download metric table unavailable:', existingResult.error.message);
-      return false;
-    }
-
-    const attempts = Number(existingResult.data && existingResult.data.attempts || 0) + 1;
-    const payload = {
-      campaign_key: campaignKey,
-      status: 'downloaded',
-      attempts,
-      updated_at: nowIso,
-      details: { registrationId: id, lastDownloadAt: nowIso }
-    };
-
-    let result;
-    if (existingResult.data) {
-      result = await supabase.from('notification_campaigns').update(payload).eq('campaign_key', campaignKey);
-    } else {
-      result = await supabase.from('notification_campaigns').insert(payload);
-      if (result.error && String(result.error.code || '') === '23505') {
-        result = await supabase.from('notification_campaigns').update(payload).eq('campaign_key', campaignKey);
-      }
-    }
-
-    if (result.error) {
-      console.warn('[DOBERTO VCF] download metric write failed:', result.error.message);
-      return false;
-    }
-    return true;
-  } catch (err) {
-    console.warn('[DOBERTO VCF] download metric write failed:', err && err.message || err);
-    return false;
-  }
-}
-
-// ---------- Email unlock ----------
-function unlockEmailHtml(name, minRequired = DEFAULT_MIN_TO_UNLOCK) {
-  const safeName = escapeHtml(name || '');
-  const listUrl = `${SITE_URL}/list.html#download`;
-  return `<!doctype html><html><body style="margin:0;background:#07080d;color:#f4f7fb;font-family:Arial,sans-serif">
-  <div style="max-width:620px;margin:0 auto;padding:34px 20px">
-    <div style="font-size:13px;font-weight:800;letter-spacing:.12em;color:#42e8b4;margin-bottom:18px">DOBERTO VCF</div>
-    <div style="background:#11141c;border:1px solid #262c38;border-radius:18px;padding:28px">
-      <h1 style="font-size:28px;line-height:1.15;margin:0 0 14px">VCF la disponib kounye a</h1>
-      <p style="color:#b9c1cf;line-height:1.65;margin:0 0 12px">Bonjou${safeName ? ` ${safeName}` : ''}, objektif ${Number(minRequired).toLocaleString('fr-FR')} moun lan rive.</p>
-      <p style="color:#b9c1cf;line-height:1.65;margin:0 0 24px">Ale sou DOBERTO VCF, verifye menm non ak nimewo ou te itilize lè ou te enskri a, epi telechaje fichye VCF la.</p>
-      <a href="${listUrl}" style="display:inline-block;background:#42e8b4;color:#06120f;text-decoration:none;font-weight:800;padding:14px 20px;border-radius:12px">Verifye &amp; Download VCF</a>
-      <p style="font-size:12px;color:#7f8999;line-height:1.6;margin:24px 0 0">Mesaj sa a se yon notifikasyon sèvis paske ou te bay email ou pandan enskripsyon DOBERTO VCF.</p>
-    </div>
-  </div></body></html>`;
-}
-
-function unlockEmailText(name, minRequired = DEFAULT_MIN_TO_UNLOCK) {
-  const hello = name ? `Bonjou ${name},\n\n` : '';
-  return `${hello}Objektif ${minRequired} moun DOBERTO VCF la rive. VCF la disponib kounye a.\n\nKonekte ak menm kont Google ou te itilize a, oswa verifye non ak nimewo WhatsApp ou, epi telechaje li isit la:\n${SITE_URL}/list.html#download\n\nDOBERTO VCF`;
-}
-
-async function sendUnlockEmailCampaign(minRequired = DEFAULT_MIN_TO_UNLOCK) {
-  if (!emailNotificationsConfigured()) return { ok: false, skipped: 'not_configured', sent: 0 };
-
-  const { data, error } = await supabase
-    .from('registrations')
-    .select('name,email,created_at')
-    .not('email', 'is', null)
-    .order('created_at', { ascending: true })
-    .limit(Math.min(MAX_IN_FILE, 50000));
-  if (error) throw error;
-
-  const seen = new Set();
-  const recipients = (data || []).filter((row) => {
-    const email = String(row.email || '').trim().toLowerCase();
-    if (!validEmail(email) || seen.has(email)) return false;
-    seen.add(email);
-    row.email = email;
-    return true;
-  });
-
-  if (!recipients.length) return { ok: true, sent: 0, skipped: 'no_emails' };
-
-  let sent = 0;
-  for (let i = 0; i < recipients.length; i += 100) {
-    const slice = recipients.slice(i, i + 100);
-    const batchNumber = Math.floor(i / 100) + 1;
-    const response = await fetch('https://api.resend.com/emails/batch', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${RESEND_API_KEY}`,
-        'Content-Type': 'application/json',
-        'Idempotency-Key': `doberto-vcf-unlock-${minRequired}-batch-${batchNumber}`
-      },
-      body: JSON.stringify(slice.map((row) => ({
-        from: RESEND_FROM,
-        to: [row.email],
-        subject: 'DOBERTO VCF disponib — telechaje fichye a',
-        html: unlockEmailHtml(row.name, minRequired),
-        text: unlockEmailText(row.name, minRequired),
-        tags: [{ name: 'campaign', value: `vcf_unlock_${minRequired}` }]
-      })))
-    });
-    if (!response.ok) {
-      const detail = await response.text().catch(() => '');
-      throw new Error(`Resend batch ${batchNumber} failed (${response.status}): ${detail.slice(0, 240)}`);
-    }
-    sent += slice.length;
-  }
-  return { ok: true, sent };
-}
-
 // ---------- OneSignal push ----------
 async function sendOneSignalPush({ title, message, url = '/', campaignName = 'doberto-vcf-push' }) {
   if (!pushNotificationsConfigured()) return { ok: false, skipped: 'not_configured' };
@@ -543,87 +315,6 @@ async function sendOneSignalPush({ title, message, url = '/', campaignName = 'do
     throw error;
   }
   return { ok: true, id: payload.id || null, recipients: payload.recipients ?? null };
-}
-
-async function sendUnlockPush(minRequired = DEFAULT_MIN_TO_UNLOCK) {
-  return sendOneSignalPush({
-    title: 'DOBERTO VCF — Fichye a pare',
-    message: `Objektif ${minRequired} moun lan rive. Konekte ak kont Google ou oswa verifye non/nimewo ou pou telechaje fichye VCF la.`,
-    url: '/list.html#download',
-    campaignName: `vcf-unlock-${minRequired}`
-  });
-}
-
-async function runUnlockCampaign(force = false) {
-  const [{ count, error: countError }, minRequired] = await Promise.all([
-    supabase.from('registrations').select('*', { count: 'exact', head: true }),
-    getDownloadThreshold()
-  ]);
-  if (countError) throw countError;
-  const total = count || 0;
-  if (total < minRequired) return { ok: true, skipped: 'locked', total, minRequired };
-
-  const campaignKey = `vcf_unlock_${minRequired}`;
-  let existing = null;
-  const existingResult = await supabase
-    .from('notification_campaigns')
-    .select('campaign_key,status,attempts,updated_at,details')
-    .eq('campaign_key', campaignKey)
-    .maybeSingle();
-
-  if (existingResult.error) {
-    console.warn('[DOBERTO VCF] notification_campaigns unavailable:', existingResult.error.message);
-    if (!force && total !== minRequired) return { ok: false, skipped: 'campaign_table_missing' };
-    const [email, push] = await Promise.allSettled([sendUnlockEmailCampaign(minRequired), sendUnlockPush(minRequired)]);
-    return { ok: true, legacy: true, email, push };
-  }
-  existing = existingResult.data;
-
-  if (!force && existing && existing.status === 'sent') {
-    return { ok: true, skipped: 'already_sent', total };
-  }
-
-  const attempts = Number(existing && existing.attempts || 0) + 1;
-  const nowIso = new Date().toISOString();
-  if (!existing) {
-    const claim = await supabase.from('notification_campaigns').insert({
-      campaign_key: campaignKey, status: 'sending', attempts, updated_at: nowIso, details: { total }
-    });
-    if (claim.error) {
-      if (!force && String(claim.error.code || '') === '23505') return { ok: true, skipped: 'claimed_by_other_request', total };
-      throw claim.error;
-    }
-  } else {
-    const recentSending = existing.status === 'sending' && existing.updated_at && (Date.now() - new Date(existing.updated_at).getTime() < 10 * 60 * 1000);
-    if (!force && recentSending) return { ok: true, skipped: 'already_sending', total };
-    const mark = await supabase.from('notification_campaigns').update({
-      status: 'sending', attempts, updated_at: nowIso, details: { total }
-    }).eq('campaign_key', campaignKey);
-    if (mark.error) throw mark.error;
-  }
-
-  const [emailResult, pushResult] = await Promise.allSettled([
-    sendUnlockEmailCampaign(minRequired),
-    sendUnlockPush(minRequired)
-  ]);
-
-  const emailValue = emailResult.status === 'fulfilled' ? emailResult.value : { ok: false, error: String(emailResult.reason && emailResult.reason.message || emailResult.reason) };
-  const pushValue = pushResult.status === 'fulfilled' ? pushResult.value : { ok: false, error: String(pushResult.reason && pushResult.reason.message || pushResult.reason) };
-
-  const configuredCount = Number(emailNotificationsConfigured()) + Number(pushNotificationsConfigured());
-  const successCount = Number(emailNotificationsConfigured() && emailValue.ok) + Number(pushNotificationsConfigured() && pushValue.ok);
-  const status = configuredCount === 0 ? 'waiting_config' : (successCount === configuredCount ? 'sent' : 'partial');
-
-  await supabase.from('notification_campaigns').upsert({
-    campaign_key: campaignKey,
-    status,
-    attempts,
-    sent_at: status === 'sent' ? new Date().toISOString() : null,
-    updated_at: new Date().toISOString(),
-    details: { total, email: emailValue, push: pushValue }
-  }, { onConflict: 'campaign_key' });
-
-  return { ok: status === 'sent', status, total, email: emailValue, push: pushValue };
 }
 
 // ---------- Google Sign-In only ----------
@@ -734,28 +425,12 @@ app.post('/api/shizzy/connect', shizzyActionLimiter, verifyUser, requireShizzy, 
 app.post('/api/shizzy/sync', shizzyActionLimiter, verifyUser, requireDatabase, requireShizzy, async (req, res) => {
   try {
     const userId = req.user.userId;
-    const [mine, total, downloadMode, minRequired] = await Promise.all([
-      supabase.from('registrations').select('id').eq('user_id', userId).maybeSingle(),
-      supabase.from('registrations').select('*', { count: 'exact', head: true }),
-      getDownloadMode(),
-      getDownloadThreshold()
-    ]);
+    const mine = await supabase.from('registrations').select('id').eq('user_id', userId).maybeSingle();
     if (mine.error) throw mine.error;
-    if (total.error) throw total.error;
 
-    // Menm règ ak telechajman VCF: ou dwe enskri, epi lis la dwe debloke.
+    // Sèl kondisyon: itilizatè a dwe enskri.
     if (!mine.data) {
       return res.status(403).json({ code: 'not_registered', error: 'Ou dwe enskri anvan ou sinkronize kontak yo.' });
-    }
-    const access = downloadAccess(total.count || 0, downloadMode, minRequired);
-    if (!access.unlocked) {
-      return res.status(403).json({
-        code: 'download_locked',
-        vars: { min: access.minRequired, count: total.count || 0, mode: access.mode },
-        error: access.mode === 'locked'
-          ? 'Admin lan bloke sync kontak yo pou kounye a.'
-          : `Sync lan ap debloke lè gen ${access.minRequired} moun enskri (${total.count || 0}/${access.minRequired} kounye a).`
-      });
     }
 
     const rows = await fetchRegistrationsForSync(SHIZZY_BATCH_SIZE);
@@ -818,29 +493,16 @@ app.post('/api/register', registerLimiter, requireDatabase, (req, res) => regist
 
 // ---------- GET /api/stats ----------
 app.get('/api/stats', publicReadLimiter, requireDatabase, async (req, res) => {
-  const [{ count, error }, downloadCount, downloadMode, minRequired] = await Promise.all([
-    supabase.from('registrations').select('*', { count: 'exact', head: true }),
-    getUniqueDownloadCount(),
-    getDownloadMode(),
-    getDownloadThreshold()
-  ]);
+  const { count, error } = await supabase.from('registrations').select('*', { count: 'exact', head: true });
   if (error) return res.status(500).json({ code: 'server_error', error: 'Erè sèvè.' });
-  const total = count || 0;
-  const access = downloadAccess(total, downloadMode, minRequired);
   res.json({
-    total,
-    downloadCount,
-    minRequired: access.minRequired,
-    maxInFile: MAX_IN_FILE,
-    unlocked: access.unlocked,
-    downloadMode: access.mode,
-    thresholdReached: access.thresholdReached,
-    remaining: access.remaining,
+    total: count || 0,
     namePrefix: NAME_PREFIX,
     emailNotificationsEnabled: emailNotificationsConfigured(),
     pushNotificationsEnabled: pushNotificationsConfigured()
   });
 });
+
 
 // ---------- GET /api/push/config ----------
 app.get('/api/push/config', publicReadLimiter, (req, res) => {
@@ -874,149 +536,6 @@ app.get('/api/public-list', publicReadLimiter, requireDatabase, async (req, res)
   res.json({ page, pageSize, total: count || 0, list, namePrefix: NAME_PREFIX, filters: { search, country } });
 });
 
-// ---------- POST /api/verify-download ----------
-app.post('/api/verify-download', downloadLimiter, requireDatabase, async (req, res) => {
-  try {
-    if (!requireSecurity(res)) return;
-
-    const [{ count, error: countError }, downloadMode, minRequired] = await Promise.all([
-      supabase.from('registrations').select('*', { count: 'exact', head: true }),
-      getDownloadMode(),
-      getDownloadThreshold()
-    ]);
-    if (countError) throw countError;
-
-    const access = downloadAccess(count || 0, downloadMode, minRequired);
-    if (!access.unlocked) {
-      return res.status(403).json({
-        code: 'download_locked',
-        vars: { min: access.minRequired, count: count || 0, mode: access.mode },
-        error: access.mode === 'locked'
-          ? 'Admin lan bloke telechajman VCF la pou kounye a.'
-          : `Telechajman an ap debloke otomatikman lè gen ${access.minRequired} moun enskri (${count || 0}/${access.minRequired} kounye a).`
-      });
-    }
-
-    const sessionUser = optionalUserSession(req);
-    if (sessionUser?.userId) {
-      const { data: googleMatch, error: googleMatchError } = await supabase
-        .from('registrations')
-        .select('id, name, email, user_id')
-        .eq('user_id', sessionUser.userId)
-        .maybeSingle();
-      if (googleMatchError) throw googleMatchError;
-
-      if (googleMatch) {
-        const dlToken = jwt.sign({
-          purpose: 'download',
-          registrationId: googleMatch.id,
-          verifiedBy: 'google'
-        }, JWT_SECRET, {
-          algorithm: 'HS256',
-          expiresIn: '5m',
-          issuer: 'doberto-vcf',
-          audience: 'doberto-vcf-download'
-        });
-        return res.json({
-          ok: true,
-          verifiedBy: 'google',
-          googleEmail: googleMatch.email || sessionUser.email || '',
-          downloadToken: dlToken
-        });
-      }
-    }
-
-    let { name, dialCode, phone } = req.body || {};
-    name = String(name || '').trim().slice(0, 120);
-    dialCode = onlyDigits(dialCode).slice(0, 5);
-    phone = onlyDigits(phone).slice(0, 14);
-    const fullNumber = dialCode + phone;
-
-    const { data: match, error: matchError } = await supabase
-      .from('registrations').select('id, name').eq('full_number', fullNumber).maybeSingle();
-    if (matchError) throw matchError;
-
-    const requestedName = normalizeName(name);
-    const registeredName = match ? normalizeName(match.name) : '';
-    if (!match || !requestedName || requestedName !== registeredName) {
-      return res.status(403).json({
-        code: 'no_match',
-        error: 'Nou pa jwenn enskripsyon sa a. Konekte ak menm kont Google ou te itilize lè ou te enskri a, oswa verifye non ak nimewo WhatsApp ou.'
-      });
-    }
-
-    const dlToken = jwt.sign({
-      purpose: 'download',
-      registrationId: match.id,
-      verifiedBy: 'name_phone'
-    }, JWT_SECRET, {
-      algorithm: 'HS256',
-      expiresIn: '5m',
-      issuer: 'doberto-vcf',
-      audience: 'doberto-vcf-download'
-    });
-    res.json({ ok: true, verifiedBy: 'name_phone', downloadToken: dlToken });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ code: 'server_error', error: 'Erè sèvè.' });
-  }
-});
-
-// ---------- GET /api/download-vcf ----------
-app.get('/api/download-vcf', downloadLimiter, requireDatabase, async (req, res) => {
-  try {
-    if (!requireSecurity(res)) return;
-    const token = String(req.query.token || '');
-    if (!token) return res.status(401).json({ code: 'missing_token', error: 'Manke token telechajman.' });
-
-    let downloadPayload;
-    try {
-      downloadPayload = jwt.verify(token, JWT_SECRET, {
-        algorithms: ['HS256'], issuer: 'doberto-vcf', audience: 'doberto-vcf-download'
-      });
-      if (downloadPayload.purpose !== 'download') throw new Error('bad token');
-    } catch (_) {
-      return res.status(401).json({ code: 'invalid_token', error: 'Token telechajman an pa valid oswa li ekspire.' });
-    }
-
-    const [{ count, error: countError }, downloadMode, minRequired] = await Promise.all([
-      supabase.from('registrations').select('*', { count: 'exact', head: true }),
-      getDownloadMode(),
-      getDownloadThreshold()
-    ]);
-    if (countError) throw countError;
-
-    const access = downloadAccess(count || 0, downloadMode, minRequired);
-    if (!access.unlocked) {
-      return res.status(403).json({
-        code: 'download_locked',
-        vars: { min: access.minRequired, count: count || 0, mode: access.mode },
-        error: access.mode === 'locked'
-          ? 'Admin lan bloke telechajman VCF la pou kounye a.'
-          : 'Telechajman VCF la poko debloke.'
-      });
-    }
-
-    const { data, error } = await supabase.from('registrations')
-      .select('name, full_number').order('created_at', { ascending: true }).limit(MAX_IN_FILE);
-    if (error) throw error;
-
-    const vcf = (data || []).map((row) => [
-      'BEGIN:VCARD', 'VERSION:3.0', `FN:${withPrefix(row.name)}`, `TEL;TYPE=CELL:+${row.full_number}`, 'END:VCARD', ''
-    ].join('\r\n')).join('');
-
-    await recordVcfDownload(downloadPayload.registrationId);
-
-    res.setHeader('Content-Type', 'text/vcard; charset=utf-8');
-    res.setHeader('Content-Disposition', 'attachment; filename="DOBERTO-VCF.vcf"');
-    res.setHeader('X-Content-Type-Options', 'nosniff');
-    res.send(vcf);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ code: 'server_error', error: 'Erè sèvè.' });
-  }
-});
-
 app.get('/api/ads/public', publicReadLimiter, (req,res) => {
   res.setHeader('Cache-Control','public, max-age=20, stale-while-revalidate=40');
   res.json({ok:true,ads:readAdSettings()});
@@ -1041,72 +560,17 @@ app.put('/api/admin/ads', adminActionLimiter, verifyAdmin, (req,res) => {
   }
 });
 
-app.get('/api/admin/download-control', adminActionLimiter, verifyAdmin, requireDatabase, async (req, res) => {
-  try {
-    const [{ count, error }, mode, minRequired] = await Promise.all([
-      supabase.from('registrations').select('*', { count: 'exact', head: true }),
-      getDownloadMode(),
-      getDownloadThreshold()
-    ]);
-    if (error) throw error;
-    const total = count || 0;
-    const access = downloadAccess(total, mode, minRequired);
-    res.setHeader('Cache-Control', 'private, no-store');
-    res.json({ ok: true, total, ...access });
-  } catch (err) {
-    console.error('[DOBERTO VCF] admin download control read failed:', err);
-    res.status(500).json({ code: 'server_error', error: 'Nou pa ka chaje kontwòl telechajman an.' });
-  }
-});
-
-app.put('/api/admin/download-control', adminActionLimiter, verifyAdmin, requireDatabase, async (req, res) => {
-  try {
-    const body = req.body || {};
-    let mode = await getDownloadMode();
-    let minRequired = await getDownloadThreshold();
-
-    if (body.mode != null) mode = await setDownloadMode(body.mode);
-    if (body.threshold != null) minRequired = await setDownloadThreshold(body.threshold);
-
-    const { count, error } = await supabase.from('registrations').select('*', { count: 'exact', head: true });
-    if (error) throw error;
-    const total = count || 0;
-    const access = downloadAccess(total, mode, minRequired);
-    res.setHeader('Cache-Control', 'private, no-store');
-    res.json({ ok: true, total, ...access });
-  } catch (err) {
-    console.error('[DOBERTO VCF] admin download control write failed:', err);
-    const badRequest = ['invalid_download_mode', 'invalid_download_threshold'].includes(err && err.code);
-    res.status(badRequest ? 400 : 500).json({
-      code: err && err.code || 'server_error',
-      error: err && err.message || 'Nou pa ka chanje kontwòl telechajman an.'
-    });
-  }
-});
-
 app.get('/api/admin/stats', adminActionLimiter, verifyAdmin, requireDatabase, async (req, res) => {
   try {
     const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-    const [allResult, dayResult, downloadCount, downloadMode, minRequired] = await Promise.all([
+    const [allResult, dayResult] = await Promise.all([
       supabase.from('registrations').select('*', { count: 'exact', head: true }),
-      supabase.from('registrations').select('*', { count: 'exact', head: true }).gte('created_at', since),
-      getUniqueDownloadCount(),
-      getDownloadMode(),
-      getDownloadThreshold()
+      supabase.from('registrations').select('*', { count: 'exact', head: true }).gte('created_at', since)
     ]);
     if (allResult.error || dayResult.error) return res.status(500).json({ code: 'server_error', error: 'Erè sèvè.' });
-    const total = allResult.count || 0;
-    const access = downloadAccess(total, downloadMode, minRequired);
     res.json({
-      total,
+      total: allResult.count || 0,
       today: dayResult.count || 0,
-      downloadCount,
-      remaining: access.remaining,
-      unlocked: access.unlocked,
-      downloadMode: access.mode,
-      thresholdReached: access.thresholdReached,
-      minRequired: access.minRequired,
-      progress: Math.min(100, Math.round((total / access.minRequired) * 100)),
       emailNotificationsEnabled: emailNotificationsConfigured(),
       pushNotificationsEnabled: pushNotificationsConfigured()
     });
@@ -1195,47 +659,6 @@ app.get('/api/admin/export-csv', adminActionLimiter, verifyAdmin, requireDatabas
   res.send('\ufeff' + csv);
 });
 
-app.get('/api/admin/download-vcf', adminActionLimiter, verifyAdmin, requireDatabase, async (req, res) => {
-  try {
-    const { data, error } = await supabase.from('registrations')
-      .select('name, full_number')
-      .order('created_at', { ascending: true })
-      .limit(MAX_IN_FILE);
-    if (error) throw error;
-
-    const rows = data || [];
-    if (!rows.length) {
-      return res.status(404).json({ code: 'no_contacts', error: 'Pa gen okenn kontak pou mete nan fichye VCF la.' });
-    }
-
-    const escapeVcard = (value) => String(value || '')
-      .replace(/\\/g, '\\\\')
-      .replace(/\r?\n/g, '\\n')
-      .replace(/;/g, '\\;')
-      .replace(/,/g, '\\,');
-
-    const vcf = rows.map((row) => [
-      'BEGIN:VCARD',
-      'VERSION:3.0',
-      `FN:${escapeVcard(withPrefix(row.name))}`,
-      `TEL;TYPE=CELL:+${onlyDigits(row.full_number)}`,
-      'END:VCARD',
-      ''
-    ].join('\r\n')).join('');
-
-    const stamp = new Date().toISOString().slice(0, 10);
-    res.setHeader('Content-Type', 'text/vcard; charset=utf-8');
-    res.setHeader('Content-Disposition', `attachment; filename="DOBERTO-VCF-${stamp}.vcf"`);
-    res.setHeader('X-Content-Type-Options', 'nosniff');
-    res.setHeader('Cache-Control', 'private, no-store');
-    res.setHeader('X-Doberto-Contacts', String(rows.length));
-    res.send(vcf);
-  } catch (err) {
-    console.error('[DOBERTO VCF] admin VCF export failed:', err);
-    res.status(500).json({ code: 'server_error', error: 'Nou pa ka kreye fichye VCF la kounye a.' });
-  }
-});
-
 app.post('/api/admin/push-send', pushSendLimiter, verifyAdmin, async (req, res) => {
   try {
     if (!pushNotificationsConfigured()) {
@@ -1261,22 +684,7 @@ app.post('/api/admin/push-send', pushSendLimiter, verifyAdmin, async (req, res) 
   }
 });
 
-app.post('/api/admin/unlock-campaign/retry', pushSendLimiter, verifyAdmin, requireDatabase, async (req, res) => {
-  try {
-    const result = await runUnlockCampaign(true);
-    res.json({ ok: true, result });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Kanpay unlock la pa t fini. Verifye Resend/OneSignal ak schema Supabase la.' });
-  }
-});
-
-// ---------- VPS compatibility routes for former Vercel rewrites ----------
-app.get('/api/settings/public', (req, res) => publicSettingsHandler(req, res));
-app.all('/api/group-migration', (req, res) => groupMigrationHandler(req, res));
-app.post('/api/community/announce', (req, res) => communityAnnounceHandler(req, res));
-app.all('/api/admin/community/settings', (req, res) => adminCommunitySettingsHandler(req, res));
-app.all('/api/admin/group-migration', (req, res) => adminGroupMigrationHandler(req, res));
+// ---------- Admin system health ----------
 app.get('/api/admin/system/health', (req, res) => adminSystemHealthHandler(req, res));
 
 // ---------- Health check ----------

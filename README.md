@@ -1,14 +1,14 @@
 # DOBERTO VCF — Production Build
 
-DOBERTO VCF se yon rezo WhatsApp ak sistèm enskripsyon, kominote, lis manm, download VCF, VIP ak notifikasyon.
+DOBERTO VCF se yon rezo WhatsApp ak sistèm enskripsyon, lis manm, sinkronizasyon Google Contacts (Shizzy Connect) ak notifikasyon.
 
 Fonksyon prensipal yo:
 
 - Enskripsyon ak Google Sign-In + nimewo WhatsApp
 - Google sèvi sèlman pou login/idantifikasyon pandan enskripsyon
-- Apre enskripsyon, itilizatè a jwenn aksè rapid ak group WhatsApp + chanèl ofisyèl la
+- Apre enskripsyon, itilizatè a konekte Google Contacts sou paj manm yo (Shizzy Connect)
 - Lis piblik manm san ekspoze nimewo telefòn yo
-- Download VCF ak verifikasyon non/nimewo
+- Sinkronizasyon kontak yo nan Google Contacts via API Shizzy Connect (pa gen download VCF ankò)
 - VIP ak plizyè plan ak metòd peman
 - MonCash, NatCash ak Binance selon konfigurasyon admin
 - PWA install ak logo PNG 192/512 + maskable
@@ -73,18 +73,6 @@ Nan Google Auth Platform → Branding, itilize:
 - Authorized domain: `dobertovcf.online`
 
 Pa ajoute scope `https://www.googleapis.com/auth/contacts` ankò.
-
-## 4. WhatsApp Community
-
-Apre yon nouvo enskripsyon, flow la mennen itilizatè a sou kominote DOBERTO VCF la.
-
-Group WhatsApp:
-
-`https://chat.whatsapp.com/GySPeuvDlI14BnWWvdm7U4?s=sh&p=a&mlu=4&ilr=4`
-
-Chanèl WhatsApp:
-
-`https://whatsapp.com/channel/0029VbCtwNpJkK7Cng8qex1A`
 
 ## 5. OneSignal Web Push
 
@@ -159,23 +147,6 @@ bash deploy/update-vps.sh
 ```
 
 
-## WhatsApp group migration
-
-Lè yon ansyen gwoup WhatsApp ranplase, Admin la ka sove nouvo `whatsapp_group_url` la epi kòmanse yon migration pou tout manm ki te deja enskri nan moman sa a.
-
-Migration lan:
-
-- pran yon snapshot tout ansyen registrations yo;
-- montre yon rapèl sou Akèy, paj Kominote ak paj Enskripsyon pou manm ki konekte yo;
-- louvri nouvo invitation link la nan WhatsApp;
-- pèmèt manm nan konfime li antre;
-- montre estatistik `Ap tann`, `Ouvri link` ak `Konfime antre` nan Admin;
-- ka voye yon OneSignal push bay abonnés ki aktive notifications yo;
-- pa bezwen nouvo tablo SQL; li itilize `notification_campaigns` ak `app_settings` ki deja egziste.
-
-WhatsApp toujou mande itilizatè a aksepte invitation lan; sit la pa fòse ajoute moun nan yon gwoup.
-
-
 ## Sync Google Contacts via Shizzy Connect
 
 Sa a pa mande okenn scope Google Contacts nan DOBERTO VCF: Shizzy Connect jere OAuth la (prefiks ak group chak patnè konfigire sou kont Shizzy a).
@@ -195,3 +166,7 @@ Routes backend (tout mande login itilizatè):
 - `DELETE /api/shizzy/connection` → `DELETE /connections/{userId}`
 
 UI a se `public/js/shizzy-sync.js` (paj `list.html`). Apre `.env` mete, rekòmanse PM2: `pm2 restart ecosystem.config.cjs`.
+
+## Retire (nov. 2026)
+
+Pa gen ankò: download VCF (itilizatè ak admin), kontwòl limit download, kanpay unlock, group/chanèl WhatsApp, migrasyon group, anons kominote, paj `community.html`. Sinkronizasyon Shizzy a ranplase yo. Ekspò CSV admin nan rete (`/api/admin/export-csv`).
