@@ -2,7 +2,7 @@
   'use strict';
 
   const AD_SRC='https://glamournakedemployee.com/4b/f7/87/4bf787015f8ad537ca8f372174da4959.js';
-  const ALLOWED=new Set(['/','/index.html','/list.html','/community.html','/about.html','/mesi.html']);
+  const ALLOWED=new Set(['/','/index.html','/list.html','/about.html','/mesi.html']);
 
   if(!ALLOWED.has(location.pathname)) return;
 

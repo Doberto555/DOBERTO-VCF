@@ -1430,6 +1430,16 @@ tbody tr:hover { background: rgba(53,230,173,.025); }
   }
 }
 
+/* Mouvman redui (Android "Retire animasyon yo"): animasyon dvFadeUp pa kouri,
+   kidonk eleman ki kòmanse ak opacity:0 dwe parèt dirèkteman (sinon paj la rete vid). */
+@media (prefers-reduced-motion: reduce) {
+  .topbar, .hero, .panel, .social-row, .footer-note,
+  .mesi-hero, .mesi-share-panel, .mesi-manual-panel, .mesi-links-row {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
 /* ============================================================
    DOBERTO VCF — ADMIN VISIBILITY + TYPOGRAPHY FIX
    ============================================================ */

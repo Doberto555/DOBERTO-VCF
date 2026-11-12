@@ -8,7 +8,7 @@
     fr:{dashboard:'Aperçu',registrations:'Inscriptions',community:'Groupe',ads:'Publicités',push:'Notifications',system:'Système',dashboardTitle:'Vue d’ensemble',registrationsTitle:'Toutes les inscriptions',communityTitle:'Gestion du groupe WhatsApp',adsTitle:'Gestion des publicités',pushTitle:'Centre de notifications',systemTitle:'Santé du système'},
     en:{dashboard:'Overview',registrations:'Registrations',community:'Group',ads:'Ads',push:'Notifications',system:'System',dashboardTitle:'Admin overview',registrationsTitle:'All registrations',communityTitle:'WhatsApp group management',adsTitle:'Advertising controls',pushTitle:'Notification center',systemTitle:'System health'}
   };
-  const VIEWS=[{id:'dashboard',icon:'01'},{id:'registrations',icon:'02'},{id:'community',icon:'03'},{id:'ads',icon:'04'},{id:'push',icon:'05'},{id:'system',icon:'06'}];
+  const VIEWS=[{id:'dashboard',icon:'01'},{id:'registrations',icon:'02'},{id:'ads',icon:'03'},{id:'push',icon:'04'},{id:'system',icon:'05'}];
   const lang=()=>{const el=document.getElementById('langSelect');return el&&COPY[el.value]?el.value:'ht'};
   const t=key=>COPY[lang()]?.[key]||COPY.ht[key]||key;
   const panel=()=>document.getElementById('adminPanel');
@@ -25,13 +25,12 @@
   function registrationNodes(root){return [root.querySelector(':scope > .admin-tools'),root.querySelector(':scope > #searchBox'),root.querySelector(':scope > .table-scroll'),root.querySelector(':scope > .pager'),root.querySelector(':scope > #exportBtn')].filter(Boolean)}
   function allContentNodes(root){
     const nodes=[...registrationNodes(root)];
-    ['adminDashboard','groupSettingPanel','migrationSettingPanel','adsSettingPanel','adminPushPanel','adminSystemHealth'].forEach(id=>{const el=document.getElementById(id);if(el&&el.parentElement===root)nodes.push(el)});
+    ['adminDashboard','adsSettingPanel','adminPushPanel','adminSystemHealth'].forEach(id=>{const el=document.getElementById(id);if(el&&el.parentElement===root)nodes.push(el)});
     return [...new Set(nodes)];
   }
   function viewNodes(root,view){
     if(view==='dashboard'){const el=document.getElementById('adminDashboard');return el?[el]:[]}
     if(view==='registrations')return registrationNodes(root);
-    if(view==='community'){return ['groupSettingPanel','migrationSettingPanel'].map(id=>document.getElementById(id)).filter(el=>el&&el.parentElement===root)}
     if(view==='ads'){const el=document.getElementById('adsSettingPanel');return el?[el]:[]}
     if(view==='push'){const el=document.getElementById('adminPushPanel');return el?[el]:[]}
     if(view==='system'){const el=document.getElementById('adminSystemHealth');return el?[el]:[]}

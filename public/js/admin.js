@@ -36,9 +36,6 @@ function showAdminPanel() {
   adminPanel.style.display = 'block';
   ensureAdminPushPanel();
   renderAdminPushCopy();
-  renderAdminVcfCopy();
-  ensureDownloadControl();
-  loadDownloadControl();
   loadAdminList(1);
 }
 
@@ -132,217 +129,6 @@ document.getElementById('searchBox').addEventListener('input', (e) => {
   }, 300);
 });
 
-const ADMIN_VCF_COPY = {
-  ht: { button:'Telechaje fichye VCF', loading:'Ap prepare VCF...', ok:'Fichye VCF la telechaje. Ou ka voye li bay moun yo.', error:'Nou pa ka telechaje fichye VCF la kounye a.' },
-  fr: { button:'Télécharger le fichier VCF', loading:'Préparation du VCF...', ok:'Le fichier VCF est téléchargé. Vous pouvez maintenant le partager.', error:'Impossible de télécharger le fichier VCF pour le moment.' },
-  en: { button:'Telechaje VCF file', loading:'Preparing VCF...', ok:'The VCF file was downloaded. You can now share it.', error:'Unable to download the VCF file right now.' }
-};
-
-function renderAdminVcfCopy(){
-  const lang=adminUiLang();
-  const copy=ADMIN_VCF_COPY[lang]||ADMIN_VCF_COPY.ht;
-  const btn=document.getElementById('downloadVcfBtn');
-  if(btn && !btn.disabled) btn.textContent=copy.button;
-}
-
-const DOWNLOAD_CONTROL_COPY = {
-  ht: {
-    auto:'AUTO', unlock:'DEBLOKE', lock:'BLOKE',
-    autoSaved:'Mode AUTO aktive. Download ap louvri otomatikman depi 200 manm.',
-    unlocked:'Telechajman piblik la debloke.',
-    locked:'Telechajman piblik la bloke.',
-    error:'Nou pa ka chanje kontwòl telechajman la kounye a.',
-    stateOpen:'OUVÈ', stateClosed:'BLOKE'
-  },
-  fr: {
-    auto:'AUTO', unlock:'DÉBLOQUER', lock:'BLOQUER',
-    autoSaved:'Mode AUTO activé. Le téléchargement s’ouvrira automatiquement à partir de 200 membres.',
-    unlocked:'Le téléchargement public est débloqué.',
-    locked:'Le téléchargement public est bloqué.',
-    error:'Impossible de modifier le contrôle du téléchargement.',
-    stateOpen:'OUVERT', stateClosed:'BLOQUÉ'
-  },
-  en: {
-    auto:'AUTO', unlock:'UNLOCK', lock:'LOCK',
-    autoSaved:'AUTO mode enabled. Public download will unlock automatically at 200 members.',
-    unlocked:'Public download is unlocked.',
-    locked:'Public download is locked.',
-    error:'Unable to change download control right now.',
-    stateOpen:'OPEN', stateClosed:'LOCKED'
-  }
-};
-
-function downloadControlCopy(){
-  const lang=adminUiLang();
-  return DOWNLOAD_CONTROL_COPY[lang]||DOWNLOAD_CONTROL_COPY.ht;
-}
-
-function ensureDownloadControl(){
-  const c=downloadControlCopy();
-  const auto=document.getElementById('downloadModeAutoBtn');
-  const unlock=document.getElementById('downloadModeUnlockBtn');
-  const lock=document.getElementById('downloadModeLockBtn');
-  if(auto) auto.textContent=c.auto;
-  if(unlock) unlock.textContent=c.unlock;
-  if(lock) lock.textContent=c.lock;
-}
-
-function renderDownloadControl(data){
-  if(!data) return;
-  const c=downloadControlCopy();
-  const members=document.getElementById('downloadControlMembers');
-  const threshold=document.getElementById('downloadControlThreshold');
-  const mode=document.getElementById('downloadControlMode');
-  const state=document.getElementById('downloadControlState');
-  if(members) members.textContent=Number(data.total||0).toLocaleString();
-  const currentThreshold=Number(data.minRequired||200);
-  if(threshold) threshold.textContent=currentThreshold.toLocaleString();
-  const thresholdInput=document.getElementById('downloadThresholdInput');
-  const thresholdHint=document.getElementById('downloadThresholdHint');
-  if(thresholdInput && document.activeElement!==thresholdInput) thresholdInput.value=String(currentThreshold);
-  if(thresholdHint) thresholdHint.textContent=`Limit aktyèl: ${currentThreshold.toLocaleString()}`;
-  if(mode) mode.textContent=String(data.mode||'auto').toUpperCase();
-  if(state) state.textContent=data.unlocked?c.stateOpen:c.stateClosed;
-
-  ['Auto','Unlock','Lock'].forEach(name=>{
-    document.getElementById('downloadMode'+name+'Btn')?.classList.remove('is-active');
-  });
-  const active=data.mode==='unlocked'?'Unlock':data.mode==='locked'?'Lock':'Auto';
-  document.getElementById('downloadMode'+active+'Btn')?.classList.add('is-active');
-}
-
-async function loadDownloadControl(){
-  if(!adminToken) return;
-  const msg=document.getElementById('downloadControlMsg');
-  try{
-    const res=await fetch('/api/admin/download-control',{
-      headers:{Authorization:`Bearer ${adminToken}`,Accept:'application/json'},
-      cache:'no-store'
-    });
-    if(res.status===401){document.getElementById('logoutBtn').click();return;}
-    const data=await res.json().catch(()=>({}));
-    if(!res.ok) throw new Error(data.error||downloadControlCopy().error);
-    renderDownloadControl(data);
-    if(msg){msg.className='msg';msg.textContent='';}
-  }catch(error){
-    if(msg){msg.textContent=error?.message||downloadControlCopy().error;msg.className='msg show err';}
-  }
-}
-
-async function setDownloadControl(mode){
-  const msg=document.getElementById('downloadControlMsg');
-  const buttons=[
-    document.getElementById('downloadModeAutoBtn'),
-    document.getElementById('downloadModeUnlockBtn'),
-    document.getElementById('downloadModeLockBtn')
-  ].filter(Boolean);
-  buttons.forEach(btn=>btn.disabled=true);
-  if(msg){msg.className='msg';msg.textContent='';}
-
-  try{
-    const res=await fetch('/api/admin/download-control',{
-      method:'PUT',
-      headers:{
-        'Content-Type':'application/json',
-        Authorization:`Bearer ${adminToken}`
-      },
-      body:JSON.stringify({mode})
-    });
-    if(res.status===401){document.getElementById('logoutBtn').click();return;}
-    const data=await res.json().catch(()=>({}));
-    if(!res.ok) throw new Error(data.error||downloadControlCopy().error);
-    renderDownloadControl(data);
-    const c=downloadControlCopy();
-    if(msg){
-      msg.textContent=mode==='unlocked'?c.unlocked:mode==='locked'?c.locked:c.autoSaved;
-      msg.className='msg show ok';
-    }
-  }catch(error){
-    if(msg){msg.textContent=error?.message||downloadControlCopy().error;msg.className='msg show err';}
-  }finally{
-    buttons.forEach(btn=>btn.disabled=false);
-  }
-}
-
-async function saveDownloadThreshold(){
-  const input=document.getElementById('downloadThresholdInput');
-  const btn=document.getElementById('saveDownloadThresholdBtn');
-  const msg=document.getElementById('downloadControlMsg');
-  const threshold=parseInt(String(input?.value||''),10);
-
-  if(!Number.isFinite(threshold)||threshold<1||threshold>50000){
-    if(msg){msg.textContent='Limit la dwe ant 1 ak 50 000.';msg.className='msg show err';}
-    return;
-  }
-
-  btn.disabled=true;
-  if(msg){msg.className='msg';msg.textContent='';}
-  try{
-    const res=await fetch('/api/admin/download-control',{
-      method:'PUT',
-      headers:{
-        'Content-Type':'application/json',
-        Authorization:`Bearer ${adminToken}`
-      },
-      body:JSON.stringify({threshold})
-    });
-    if(res.status===401){document.getElementById('logoutBtn').click();return;}
-    const data=await res.json().catch(()=>({}));
-    if(!res.ok) throw new Error(data.error||'Nou pa ka sove limit la.');
-    renderDownloadControl(data);
-    if(msg){msg.textContent=`Nouvo limit la se ${Number(data.minRequired||threshold).toLocaleString()} manm.`;msg.className='msg show ok';}
-  }catch(error){
-    if(msg){msg.textContent=error?.message||'Nou pa ka sove limit la.';msg.className='msg show err';}
-  }finally{
-    btn.disabled=false;
-  }
-}
-
-document.getElementById('saveDownloadThresholdBtn')?.addEventListener('click',saveDownloadThreshold);
-document.getElementById('downloadModeAutoBtn')?.addEventListener('click',()=>setDownloadControl('auto'));
-document.getElementById('downloadModeUnlockBtn')?.addEventListener('click',()=>setDownloadControl('unlocked'));
-document.getElementById('downloadModeLockBtn')?.addEventListener('click',()=>setDownloadControl('locked'));
-
-document.getElementById('downloadVcfBtn')?.addEventListener('click', async () => {
-  const btn=document.getElementById('downloadVcfBtn');
-  const msg=document.getElementById('downloadVcfMsg');
-  const copy=ADMIN_VCF_COPY[adminUiLang()]||ADMIN_VCF_COPY.ht;
-  btn.disabled=true;
-  btn.textContent=copy.loading;
-  if(msg){msg.className='msg';msg.textContent='';}
-
-  try{
-    const res=await fetch('/api/admin/download-vcf',{
-      headers:{Authorization:`Bearer ${adminToken}`},
-      cache:'no-store'
-    });
-    if(res.status===401){document.getElementById('logoutBtn').click();return;}
-    if(!res.ok){
-      const data=await res.json().catch(()=>({}));
-      throw new Error(data.error||copy.error);
-    }
-
-    const blob=await res.blob();
-    const disposition=String(res.headers.get('Content-Disposition')||'');
-    const match=disposition.match(/filename="?([^";]+)"?/i);
-    const filename=match?.[1]||'DOBERTO-VCF.vcf';
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');
-    a.href=url;
-    a.download=filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(()=>URL.revokeObjectURL(url),1500);
-
-    if(msg){msg.textContent=copy.ok;msg.className='msg show ok';}
-  }catch(error){
-    if(msg){msg.textContent=error?.message||copy.error;msg.className='msg show err';}
-  }finally{
-    btn.disabled=false;
-    renderAdminVcfCopy();
-  }
-});
 
 document.getElementById('exportBtn').addEventListener('click', async () => {
   const btn = document.getElementById('exportBtn');
@@ -383,11 +169,10 @@ function ensureAdminPushPanel(){
     <div class="dv-admin-push-head"><div><span id="pushKicker"></span><h3 id="pushTitle"></h3><p id="pushDesc"></p></div><span class="dv-live-dot" id="pushServiceStatus">CHECK</span></div>
     <div class="dv-push-grid"><label><span id="pushLabelTitle"></span><input id="pushTitleInput" maxlength="80" value="DOBERTO VCF"></label><label><span id="pushLabelUrl"></span><input id="pushUrlInput" maxlength="300" value="/"></label></div>
     <label><span id="pushLabelMessage"></span><textarea id="pushMessageInput" maxlength="220" rows="3" placeholder="DOBERTO VCF..."></textarea></label>
-    <div class="dv-push-actions"><button type="button" id="pushSendBtn"></button><button type="button" class="secondary" id="pushRetryBtn"></button></div>
+    <div class="dv-push-actions"><button type="button" id="pushSendBtn"></button></div>
     <div class="msg" id="pushAdminMsg"></div>`;
   exportBtn.insertAdjacentElement('afterend',panel);
   document.getElementById('pushSendBtn').addEventListener('click',sendAdminPush);
-  document.getElementById('pushRetryBtn').addEventListener('click',retryUnlockCampaign);
   checkPushService();
 }
 
@@ -441,21 +226,9 @@ async function sendAdminPush(){
   finally{await checkPushService();}
 }
 
-async function retryUnlockCampaign(){
-  const c=adminPushText(); const msg=document.getElementById('pushAdminMsg'); const btn=document.getElementById('pushRetryBtn'); btn.disabled=true; msg.className='msg';
-  try{
-    const res=await fetch('/api/admin/unlock-campaign/retry',{method:'POST',headers:{Authorization:`Bearer ${adminToken}`}}); const data=await res.json();
-    if(res.status===401){document.getElementById('logoutBtn').click();return;} if(!res.ok) throw new Error(data.error||c.error);
-    msg.textContent=c.retryOk;msg.className='msg show ok';
-  }catch(e){msg.textContent=e.message||c.error;msg.className='msg show err';}finally{btn.disabled=false;}
-}
-
 function onLangChange() {
   renderAdminList();
   renderAdminPushCopy();
-  renderAdminVcfCopy();
-  ensureDownloadControl();
-  loadDownloadControl();
 }
 
 if (adminToken) showAdminPanel();
