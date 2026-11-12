@@ -1,312 +1,214 @@
 <!doctype html>
-<html lang="ht">
+<html lang="fr">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>DOBERTO VCF — Dashboard</title>
-<meta name="theme-color" content="#06080b" />
-<link rel="icon" type="image/png" sizes="192x192" href="icons/doberto-vcf-192.png" />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Tableau de bord — DOBERTO VCF</title>
 <style>
-:root{--bg:#06080b;--card:#0c1117;--line:rgba(255,255,255,.08);--txt:#eef2f0;--mut:#8b97a0;--acc:#5eead4;--acc2:#2dd4a8;--err:#ff8a8a}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%}
-body{background:radial-gradient(1200px 500px at 70% -10%,rgba(45,212,168,.08),transparent),var(--bg);color:var(--txt);font-family:Inter,system-ui,sans-serif;padding-top:env(safe-area-inset-top,0px)}
-.app{display:grid;grid-template-columns:290px minmax(0,1fr);min-height:100vh}
-.side{border-right:1px solid var(--line);padding:22px 16px;display:flex;flex-direction:column;gap:18px;position:sticky;top:0;height:100vh}
-.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;padding:0 6px;color:inherit;text-decoration:none}
-.brand img{width:38px;height:38px;border-radius:11px}
-.ucard{border:1px solid var(--line);border-radius:18px;padding:14px;background:rgba(255,255,255,.02)}
-.urow{display:flex;gap:12px;align-items:center}.urow img{width:46px;height:46px;border-radius:50%;object-fit:cover;background:#111}
-.urow b{display:block;font-size:15px}.urow span{display:block;font-size:12px;color:var(--mut);word-break:break-all}
-.chip{display:inline-block;margin-top:10px;padding:5px 10px;border-radius:999px;font-size:10.5px;font-weight:800;letter-spacing:.06em;border:1px solid rgba(94,234,180,.35);color:var(--acc)}
-.chip.off{border-color:var(--line);color:var(--mut)}
-.nav-h{font-size:10.5px;letter-spacing:.14em;color:var(--mut);font-weight:700;padding:6px 8px 2px}
-.nav a{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;color:#c4ccd1;text-decoration:none;font-weight:600;font-size:15px;border:1px solid transparent;cursor:pointer}
-.nav a.on{background:rgba(255,255,255,.05);border-color:var(--line);color:#fff;box-shadow:inset 3px 0 0 var(--acc)}
-.nav a svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.sp{flex:1}
-.lang{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:14px;padding:4px}
-.lang button{background:none;border:0;color:var(--mut);padding:9px;border-radius:10px;font-weight:700;cursor:pointer;font:inherit}.lang button.on{background:rgba(255,255,255,.08);color:#fff}
-main{padding:34px clamp(16px,4vw,48px);max-width:980px;width:100%}
-.panel{border:1px solid var(--line);border-radius:26px;background:var(--card);padding:clamp(18px,3vw,32px)}
-h1{margin:0 0 6px;font-size:clamp(22px,3vw,30px)}.sub{color:var(--mut);margin:0 0 22px;font-size:14px}
-.fiche{border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:22px}
-.fiche small{display:block;font-size:10.5px;letter-spacing:.14em;font-weight:700;color:var(--mut)}.fiche strong{display:block;font-size:18px;margin:6px 0 2px}.fiche code{font-size:13px;color:var(--mut);display:block}
-label.l{display:block;margin:18px 0 8px;font-size:11px;letter-spacing:.14em;font-weight:800;color:var(--acc)}
-.hint{font-size:12.5px;color:var(--mut);margin:-4px 0 8px}
-input,select{width:100%;padding:15px 16px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--txt);font:inherit;font-size:15px}
-.ph{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.6fr);gap:10px}
-.btn{width:100%;margin-top:18px;padding:16px;border-radius:14px;border:1px solid var(--line);background:transparent;color:var(--txt);font:inherit;font-weight:700;font-size:15px;cursor:pointer}
-.btn.pri{background:linear-gradient(135deg,#6ff2cf,var(--acc2));color:#04110d;border-color:transparent}.btn:disabled{opacity:.55;cursor:wait}
-.msg{margin-top:14px;font-size:14px;min-height:20px}.msg.ok{color:var(--acc)}.msg.err{color:var(--err)}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-bottom:18px}
-.stat{border:1px solid var(--line);border-radius:18px;padding:18px}.stat small{color:var(--mut);font-size:12px;font-weight:600}.stat b{display:block;font-size:28px;margin-top:6px}
-.note{border:1px solid rgba(94,234,180,.25);background:rgba(94,234,180,.05);border-radius:16px;padding:14px 16px;font-size:14px;color:#cfeee6;margin-bottom:16px}
-.row{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--line);font-size:14px}.row span:first-child{color:var(--mut)}
-.danger{margin-top:28px;padding-top:20px;border-top:1px solid var(--line)}.danger h2{margin:0 0 6px;font-size:18px}.btn.dng{border-color:rgba(255,138,138,.45);color:var(--err)}.btn.dng:not(:disabled):hover{background:rgba(255,138,138,.08)}a.btn{display:block;text-align:center;text-decoration:none}
-/* dvmobile */
-@media(max-width:820px){
-html,body{overflow-x:hidden}
-.app{display:block}.app>*{min-width:0}
-.side{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:12px 14px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px 12px;align-items:center}
-.side>.brand:first-child{grid-column:1;grid-row:1;font-size:16px;padding:0}
-.side>.brand:first-child img{width:32px;height:32px}
-.lang{grid-column:2;grid-row:1}.lang button{padding:7px 10px;font-size:13px}
-.ucard{grid-column:1/-1;grid-row:2;padding:10px 12px}
-.urow img{width:38px;height:38px}
-#homeLink,.sp,.nav-h{display:none}
-.nav{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;gap:2px;padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));background:rgba(8,12,16,.97);border-top:1px solid var(--line);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
-.nav a{flex:1;min-width:0;flex-direction:column;justify-content:center;gap:4px;padding:8px 4px;font-size:11px;text-align:center;border-radius:12px;box-shadow:none}
-.nav a.on{box-shadow:none;background:rgba(94,234,180,.12);color:var(--acc);border-color:transparent}
-.nav a svg{width:22px;height:22px}
-main{padding:16px 12px calc(92px + env(safe-area-inset-bottom,0px));max-width:100%}
-.panel{border-radius:20px;padding:16px}
-input,select{font-size:16px;padding:13px 14px}
-.ph{grid-template-columns:1fr}
-.stat b{font-size:24px}
+:root{
+  --ink:#04100b; --panel:#09181260; --panel-solid:#0a1a13; --line:rgba(143,255,203,.10);
+  --text:#eafff5; --muted:#7f968d; --signal:#36e7a7; --sun:#f5c451; --warn:#f5c451; --off:#8aa0a0;
+  --r:20px;
 }
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font:15px/1.5 Inter,system-ui,"Segoe UI",sans-serif;background:radial-gradient(1200px 500px at 70% -10%,rgba(54,231,167,.07),transparent),var(--ink);color:var(--text);display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+a{color:inherit;text-decoration:none}
+.side{border-right:1px solid var(--line);padding:22px 16px;display:flex;flex-direction:column;gap:22px;position:sticky;top:0;height:100vh}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;letter-spacing:.02em}
+.brand i{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#57f0b5,#12d78e);display:grid;place-items:center;color:#04110c;font-style:normal;font-weight:900}
+.me{border:1px solid var(--line);border-radius:16px;padding:14px;background:var(--panel-solid)}
+.me b{display:block}.me span{color:var(--muted);font-size:13px}
+.badge{display:inline-block;margin-top:10px;padding:3px 10px;border-radius:99px;border:1px solid rgba(245,196,81,.4);color:var(--sun);font-size:12px;font-weight:700}
+nav{display:flex;flex-direction:column;gap:4px}
+nav small{color:var(--muted);font-size:12px;margin:10px 10px 4px}
+nav a{padding:11px 12px;border-radius:12px;color:#a8bbb4;font-weight:600;border:1px solid transparent}
+nav a:hover{background:rgba(255,255,255,.04);color:var(--text)}
+nav a.on{background:var(--panel-solid);border-color:var(--line);color:var(--text);box-shadow:inset 3px 0 0 var(--signal)}
+.home{margin-top:auto;color:var(--muted)}
+main{padding:26px clamp(16px,3vw,40px) 50px;max-width:1280px;width:100%}
+h1{font-size:26px;letter-spacing:-.01em}
+.sub{color:var(--muted);margin:2px 0 22px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px}
+.card{background:var(--panel-solid);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.stat strong{display:block;font-size:38px;line-height:1.1;font-weight:800;letter-spacing:-.02em}
+.stat span{color:var(--text);font-weight:600}
+.stat em{display:block;color:var(--muted);font-style:normal;font-size:13px;margin-top:2px}
+.delta{float:right;font-size:12px;font-weight:700;padding:2px 9px;border-radius:99px;background:rgba(54,231,167,.12);color:var(--signal)}
+.delta.down{background:rgba(255,120,120,.12);color:#ff8f8f}
+.grid{display:grid;grid-template-columns:1fr 340px;gap:14px;align-items:stretch}
+.chart{display:flex;flex-direction:column;min-height:380px}
+.chart header,.status header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.chart h2,.status h2{font-size:17px}
+.chart p{color:var(--muted);font-size:13px}
+.live{font-size:12px;font-weight:700;color:var(--signal);border:1px solid rgba(54,231,167,.3);padding:3px 10px;border-radius:99px}
+.plot{flex:1 1 auto;min-height:260px;margin-top:14px;position:relative}
+.plot svg{position:absolute;inset:0;width:100%;height:100%}
+.status dl{margin:14px 0}
+.status div.row{display:flex;justify-content:space-between;padding:8px 0}
+.status dt{color:var(--muted)}.status dd{margin:0;font-weight:700}
+.pill{padding:3px 10px;border-radius:99px;background:rgba(245,196,81,.12);color:var(--warn);font-size:12px;font-weight:800}
+.pill.ok{background:rgba(54,231,167,.12);color:var(--signal)}.empty{position:absolute;inset:0;display:grid;place-items:center;text-align:center;color:var(--muted);padding:20px}.auto{border:1px solid var(--line);border-radius:14px;padding:14px;margin:6px 0 14px;background:rgba(255,255,255,.015)}
+.auto b{font-size:30px;display:block}.auto span{color:var(--muted);font-size:13px}
+.cta{display:block;text-align:center;background:var(--text);color:var(--ink);font-weight:800;padding:14px;border-radius:14px}
+.cta:hover{background:#fff}
+.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+.actions a{display:block}.actions a:hover{border-color:rgba(54,231,167,.35)}
+.actions b{display:block}.actions span{color:var(--muted);font-size:13px}
+a:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
+.stat{position:relative}
+.delta{position:absolute;top:20px;right:20px;float:none}
+.ic{display:grid;place-items:center;width:44px;height:44px;border-radius:13px;margin-bottom:14px}
+.ic svg{width:22px;height:22px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ic.a{background:linear-gradient(135deg,#ffb020,#f97316)}.ic.b{background:linear-gradient(135deg,#10d9a0,#0aa57a)}
+.ic.c{background:linear-gradient(135deg,#a78bfa,#7c3aed)}.ic.d{background:linear-gradient(135deg,#38bdf8,#2563eb)}
+.mtop,.tabbar,.more{display:none}
+@media(max-width:1000px){.grid{grid-template-columns:minmax(0,1fr)}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:820px){
+  body{grid-template-columns:minmax(0,1fr);padding-bottom:84px}
+  .side{display:none}
+  main{min-width:0;padding:18px 14px 24px}
+  h1{font-size:22px}.sub{margin-bottom:16px;font-size:14px}
+  .mtop{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:30;background:rgba(4,16,11,.92);backdrop-filter:blur(14px)}
+  .mhome{color:var(--muted);font-weight:600;font-size:14px}
+  .stats{gap:10px}.stat{padding:16px}.stat strong{font-size:30px}.stat span{font-size:14px}.stat em{font-size:12px}
+  .ic{width:40px;height:40px;margin-bottom:12px}.delta{top:16px;right:14px}
+  .chart{min-height:340px}.plot{min-height:220px}
+  .actions{display:none}
+  .tabbar{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(6,20,14,.95);backdrop-filter:blur(16px);border-top:1px solid var(--line);padding:8px 4px calc(8px + env(safe-area-inset-bottom,0px))}
+  .tab{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--muted);font-family:inherit;font-weight:600;font-size:11px;line-height:1.2;text-align:center;background:none;border:0;padding:4px 0;cursor:pointer}
+  .tab svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+  .tab.on{color:var(--signal)}
+  .more{position:fixed;right:12px;bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:45;flex-direction:column;min-width:200px;background:var(--panel-solid);border:1px solid var(--line);border-radius:16px;padding:6px;box-shadow:0 18px 50px rgba(0,0,0,.5)}
+  .more:not([hidden]){display:flex}
+  .more a{padding:12px 14px;border-radius:10px;font-weight:600}.more a:hover{background:rgba(255,255,255,.05)}
+}
+@media(max-width:360px){.stats{grid-template-columns:minmax(0,1fr)}}
 </style>
 </head>
 <body>
-<div class="app">
-  <aside class="side">
-    <a class="brand" href="/"><img src="icons/doberto-vcf-192.png" alt="" />DOBERTO VCF</a>
-    <div class="ucard"><div class="urow"><img id="uAv" alt="" src="icons/doberto-vcf-192.png" /><div><b id="uName"></b><span id="uMail"></span></div></div><span class="chip off" id="uChip"></span></div>
-    <nav class="nav" id="nav"></nav>
-    <div class="sp"></div>
-    <a class="brand" style="font-weight:600;font-size:15px;color:var(--mut)" href="/" id="homeLink"></a>
-    <div class="lang" id="lang"><button data-l="ht">KR</button><button data-l="fr">FR</button><button data-l="en">EN</button></div>
-  </aside>
-  <main><div class="panel" id="view"></div></main>
-</div>
-<script src="js/countries.js"></script>
+<header class="mtop"><a class="brand" href="index.html"><i>D</i>DOBERTO VCF</a><a class="mhome" href="index.html">Accueil</a></header>
+<aside class="side">
+  <a class="brand" href="index.html"><i>D</i>DOBERTO VCF</a>
+  <div class="me"><b id="uName">Membre</b><span id="uMail">—</span></div>
+  <nav aria-label="Navigation">
+    <small>Accueil</small>
+    <a class="on" href="dashboard.html">Aperçu</a>
+    <a href="register.html">Mon profil</a>
+    <a href="list.html">Membres</a>
+    <small>Gérer mon compte</small>
+    <a href="report.html">Signalement</a>
+    <a href="privacy.html">Confidentialité</a>
+  </nav>
+  <a class="home" href="index.html">Accueil</a>
+</aside>
+
+<main>
+  <h1>Aperçu</h1>
+  <p class="sub">Les inscriptions de votre réseau, mises à jour en direct.</p>
+
+  <section class="stats" aria-label="Statistiques">
+    <div class="card stat"><i class="ic a"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 20v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1M9.5 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M21 20v-1a4 4 0 0 0-3-3.9M16 4.1a3.5 3.5 0 0 1 0 6.8"/></svg></i><strong id="sTotal">—</strong><span>Tous les contacts</span><em>Membres dans le monde</em></div>
+    <div class="card stat"><i class="ic b"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></svg></i><span class="delta" id="dToday">—</span><strong id="sToday">—</strong><span>Nouveaux aujourd’hui</span><em id="sTodayNote">Inscrits depuis minuit</em></div>
+    <div class="card stat"><i class="ic c"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg></i><span class="delta down" id="dWeek">—</span><strong id="sWeek">—</strong><span>Cette semaine</span><em>Depuis 7 jours</em></div>
+    <div class="card stat"><i class="ic d"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></i><strong id="sCountries">—</strong><span>Pays</span><em>Pays avec des membres</em></div>
+  </section>
+
+  <section class="grid">
+    <div class="card chart">
+      <header>
+        <div><h2>Cette semaine</h2><p>Nouveaux membres chaque jour</p></div>
+        <span class="live">Direct</span>
+      </header>
+      <div class="plot" id="plot" role="img" aria-label="Courbe des nouveaux membres sur 7 jours"></div>
+    </div>
+
+    <aside class="card status">
+      <header><h2>Votre statut</h2></header>
+      <dl>
+        <div class="row"><dt>Compte</dt><dd><span class="pill" id="vAcc">—</span></dd></div>
+        <div class="row"><dt>Pays</dt><dd id="vCountry">—</dd></div>
+        <div class="row"><dt>Numéro WhatsApp</dt><dd id="vPhone">—</dd></div>
+        <div class="row"><dt>Notifications e-mail</dt><dd id="vMail">—</dd></div>
+      </dl>
+      <a class="cta" id="vCta" href="register.html">Mon profil</a>
+    </aside>
+  </section>
+
+  <section class="actions">
+    <a class="card" href="list.html"><b>Membres</b><span>Voir et télécharger les contacts</span></a>
+    <a class="card" href="register.html"><b>Mon profil</b><span>Modifier mon nom et mon numéro</span></a>
+    <a class="card" href="report.html"><b>Signalement</b><span>Signaler un problème</span></a>
+  </section>
+</main>
+
+
+<div class="more" id="more" hidden><a href="privacy.html">Confidentialité</a><a href="terms.html">Conditions</a><a href="about.html">À propos</a><a href="index.html">Accueil</a></div>
+<div class="tabbar" role="navigation" aria-label="Navigation principale"><a class="tab on" href="dashboard.html"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg><span>Aperçu</span></a><a class="tab" href="register.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>Mon profil</span></a><a class="tab" href="list.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 20v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1M9.5 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M21 20v-1a4 4 0 0 0-3-3.9M16 4.1a3.5 3.5 0 0 1 0 6.8"/></svg><span>Membres</span></a><a class="tab" href="report.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg><span>Signalement</span></a><button class="tab" id="moreBtn" type="button" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>Plus</span></button></div>
 <script>
-(function () {
-  'use strict';
-  var TOKEN_KEY = 'dv_auth_token', LAST_KEY = 'dv_last_sync';
-  var T = {
-    ht: { overview:'Apèsi', profile:'Pwofil mwen', auto:'Ajout otomatik', manage:'JERE KONT MWEN', account:'Kont', home:'Akèy', on:'AJOUT OTOMATIK AKTIF', off:'GOOGLE CONTACTS PA KONEKTE',
-      ovT:'Apèsi', ovS:'Rezime kont DOBERTO VCF ou.', members:'Manm yo', gc:'Google Contacts', connected:'Konekte', notConn:'Pa konekte', yourFiche:'FICH OU SOU TELEFÒN LÒT MOUN',
-      pT:'Modifye kontak mwen', pS:'Chanje non ou, nimewo prensipal ou, oswa ajoute yon dezyèm nimewo.', fiche:'FICH OU', second2:'Dezyèm nimewo', name:'NON KONPLÈ', num:'NIMEWO TELEFÒN', numH:'Nimewo WhatsApp rekòmande', num2:'DEZYÈM NIMEWO (OPSYONÈL)', num2H:'Kite vid pou retire dezyèm nimewo a.', ph:'Nimewo san kòd peyi', save:'Anrejistre', cancel:'Anile', saved:'✓ Anrejistre. Kontak yo ap mete ajou otomatikman.', err:'Erè. Eseye ankò.', none:'Pa gen',
-      aT:'Ajout otomatik', aS:'Manm yo ajoute otomatikman nan Google Contacts ou atravè Shizzy Connect.', connect:'Konekte Google Contacts', shizzyNote:'Google ap montre \u00ab Shizzy Connect \u00bb, patn\u00e8 sinkronizasyon nou an. Se n\u00f2mal: chwazi kont Google ou vle resevwa kontak yo.', resync:'Resinkronize', disc:'Dekonekte', confirmD:'Dekonekte Google Contacts epi netwaye kontak yo?', redirecting:'Ap louvri Google...', syncing:'Sync ap kouri... sa ka pran kèk minit.', doneS:'Sync fini', created:'ajoute', updated:'mete ajou', failed:'echwe', reauth:'Aksè Google la ekspire. Konekte ankò.', autoNote:'Ajout otomatik aktif: chak nouvo enskripsyon ajoute nan kontak ou apre ~30 segonn.', lastSync:'✓ Dènye sync fini', discOk:'Google Contacts dekonekte.',
-      delT:'Siprime kont mwen',delP:'Sa efase pwofil ou ak kont Google ou nan DOBERTO VCF. Ou pap nan lis manm yo ankò. Kopi ki deja sove sou telefòn lòt moun pa anba kontwòl nou. Aksyon sa a pa ka defèt.',delBtn:'Siprime kont mwen',delType:'TAPE "SIPRIME" POU KONFIME',delGo:'Siprime pou tout bon',delWord:'SIPRIME',delDone:'Kont ou siprime. Orevwa.',reportLink:'Siyale yon pwoblèm',acT:'Kont', acS:'Jere sesyon ou.', email:'Imèl', logout:'Dekonekte', addSecond:'Ajoute yon dezyèm nimewo' },
-    fr: { overview:'Aperçu', profile:'Mon Profil', auto:'Ajout automatique', manage:'GÉRER MON COMPTE', account:'Compte', home:'Accueil', on:'AJOUT AUTOMATIQUE ACTIF', off:'GOOGLE CONTACTS NON CONNECTÉ',
-      ovT:'Aperçu', ovS:'Résumé de votre compte DOBERTO VCF.', members:'Membres', gc:'Google Contacts', connected:'Connecté', notConn:'Non connecté', yourFiche:'VOTRE FICHE SUR LEUR TÉLÉPHONE',
-      pT:'Modifier le contact', pS:'Changez votre nom, votre numéro principal ou ajoutez un deuxième numéro.', fiche:'VOTRE FICHE', second2:'Deuxième numéro', name:'NOM COMPLET', num:'NUMÉRO DE TÉLÉPHONE', numH:'Numéro WhatsApp recommandé', num2:'DEUXIÈME NUMÉRO (FACULTATIF)', num2H:'Laissez vide pour retirer le 2e numéro.', ph:'Numéro sans indicatif', save:'Enregistrer', cancel:'Annuler', saved:'✓ Enregistré. Les contacts se mettent à jour automatiquement.', err:'Erreur. Réessayez.', none:'Aucun',
-      aT:'Ajout automatique', aS:'Les membres sont ajoutés automatiquement à vos Google Contacts via Shizzy Connect.', connect:'Connecter Google Contacts', shizzyNote:'Google affichera \u00ab Shizzy Connect \u00bb, notre partenaire de synchronisation. C\u2019est normal : choisissez le compte Google qui recevra les contacts.', resync:'Resynchroniser', disc:'Déconnecter', confirmD:'Déconnecter Google Contacts et nettoyer les contacts ?', redirecting:'Ouverture de Google...', syncing:'Synchronisation en cours... cela peut prendre quelques minutes.', doneS:'Synchronisation terminée', created:'ajoutés', updated:'mis à jour', failed:'échecs', reauth:'L\u2019accès Google a expiré. Reconnectez-vous.', autoNote:'Ajout automatique actif : chaque nouvelle inscription est ajoutée à vos contacts après ~30 secondes.', lastSync:'✓ Dernière synchronisation terminée', discOk:'Google Contacts déconnecté.',
-      delT:'Supprimer mon compte',delP:'Cela efface votre profil et votre compte Google dans DOBERTO VCF. Vous ne serez plus dans la liste des membres. Les copies déjà enregistrées sur le téléphone d\u2019autres personnes ne sont pas sous notre contrôle. Cette action est irréversible.',delBtn:'Supprimer mon compte',delType:'TAPEZ \u00ab SUPPRIMER \u00bb POUR CONFIRMER',delGo:'Supprimer définitivement',delWord:'SUPPRIMER',delDone:'Votre compte a été supprimé. À bientôt.',reportLink:'Signaler un problème',acT:'Compte', acS:'Gérez votre session.', email:'E-mail', logout:'Se déconnecter', addSecond:'Ajouter un deuxième numéro' },
-    en: { overview:'Overview', profile:'My Profile', auto:'Auto add', manage:'MANAGE MY ACCOUNT', account:'Account', home:'Home', on:'AUTO ADD ACTIVE', off:'GOOGLE CONTACTS NOT CONNECTED',
-      ovT:'Overview', ovS:'Summary of your DOBERTO VCF account.', members:'Members', gc:'Google Contacts', connected:'Connected', notConn:'Not connected', yourFiche:'YOUR CARD ON THEIR PHONE',
-      pT:'Edit contact', pS:'Change your name, main number, or add a second number.', fiche:'YOUR CARD', second2:'Second number', name:'FULL NAME', num:'PHONE NUMBER', numH:'WhatsApp number recommended', num2:'SECOND NUMBER (OPTIONAL)', num2H:'Leave empty to remove the second number.', ph:'Number without country code', save:'Save', cancel:'Cancel', saved:'✓ Saved. Contacts update automatically.', err:'Error. Please try again.', none:'None',
-      aT:'Auto add', aS:'Members are added automatically to your Google Contacts through Shizzy Connect.', connect:'Connect Google Contacts', shizzyNote:'Google will show \u201cShizzy Connect\u201d, our sync partner. This is normal: choose the Google account that should receive the contacts.', resync:'Resync', disc:'Disconnect', confirmD:'Disconnect Google Contacts and clean up the contacts?', redirecting:'Opening Google...', syncing:'Sync running... this can take a few minutes.', doneS:'Sync finished', created:'added', updated:'updated', failed:'failed', reauth:'Google access expired. Please reconnect.', autoNote:'Auto add is on: every new registration is added to your contacts after ~30 seconds.', lastSync:'✓ Last sync finished', discOk:'Google Contacts disconnected.',
-      delT:'Delete my account',delP:'This erases your profile and your Google account link in DOBERTO VCF. You will no longer be in the member list. Copies already saved on other people\u2019s phones are outside our control. This cannot be undone.',delBtn:'Delete my account',delType:'TYPE "DELETE" TO CONFIRM',delGo:'Delete permanently',delWord:'DELETE',delDone:'Your account was deleted. Goodbye.',reportLink:'Report a problem',acT:'Account', acS:'Manage your session.', email:'Email', logout:'Sign out', addSecond:'Add a second number' }
-  };
-  var ICON = {
-    overview:'<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>',
-    profile:'<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>',
-    auto:'<svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>',
-    account:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.3 1a7 7 0 0 0-2-1.2L14 3h-4l-.6 2.7a7 7 0 0 0-2 1.2l-2.3-1-2 3.4 2 1.5A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.5 2 3.4 2.3-1a7 7 0 0 0 2 1.2L10 21h4l.6-2.7a7 7 0 0 0 2-1.2l2.3 1 2-3.4-2-1.5c.1-.4.1-.8.1-1.2z"/></svg>'
-  };
-  var S = { lang: 'ht', tab: 'overview', session: null, reg: null, prefix: '', total: 0, conn: null, busy: false, auto: false };
-  var $ = function (id) { return document.getElementById(id); };
+function $(id){return document.getElementById(id)}
+function get(p){return fetch(p,{credentials:'include',cache:'no-store'}).then(function(r){if(!r.ok)throw r.status;return r.json()})}
+function num(v){return typeof v==='number'?v:'—'}
+function delta(el,v){if(typeof v!=='number'){el.style.display='none';return}el.style.display='';el.textContent=(v>=0?'+':'')+v+'%';el.className='delta'+(v<0?' down':'')}
+var days=null;
+function chart(){
+  var box=$('plot');
+  if(days&&days.length>1){draw(days)}
+  else{box.innerHTML='<p class="empty">Les inscriptions par jour ne sont pas encore disponibles.</p>'}
+}
+function fill(st,se){
+  st=st||{};
+  $('sTotal').textContent=num(st.total); $('sCountries').textContent=num(st.countries);
+  $('sToday').textContent=num(st.today); $('sWeek').textContent=num(st.week);
+  delta($('dToday'),st.todayPct); delta($('dWeek'),st.weekPct);
+  $('vMail').textContent=st.emailNotificationsEnabled?'Activées':'Désactivées';
+  days=Array.isArray(st.days)?st.days:null;
+  var ok=se&&se.ok, reg=ok?(se.registration||se.profile||null):null;
+  $('uName').textContent=ok&&se.user?(se.user.name||'Membre'):'Non connecté';
+  $('uMail').textContent=ok&&se.user?se.user.email:'—';
+  var acc=$('vAcc');
+  if(!ok){acc.textContent='Non connecté';acc.className='pill';$('vCta').textContent='Se connecter'}
+  else if(reg){acc.textContent='Inscrit';acc.className='pill ok';$('vCta').textContent='Modifier mon profil';
+    $('vCountry').textContent=reg.country_name||reg.countryName||'—';
+    $('vPhone').textContent=reg.full_number||reg.fullNumber||'—'}
+  else{acc.textContent='À compléter';acc.className='pill';$('vCta').textContent='Terminer mon profil'}
+  chart();
+}
+function draw(days){
+  var box=$('plot'), W=box.clientWidth, H=box.clientHeight;
+  if(!W||!H) return;
+  var padL=18,padR=18,padT=20,padB=34, iw=W-padL-padR, ih=H-padT-padB;
+  var max=Math.max.apply(null,days.map(function(x){return x.n}))||1;
+  var pts=days.map(function(x,i){return [padL+iw*i/(days.length-1), padT+ih-(x.n/max)*ih*0.92]});
+  var line=pts.map(function(p,i){return (i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)}).join(' ');
+  var area=line+' L'+pts[pts.length-1][0]+' '+(padT+ih)+' L'+pts[0][0]+' '+(padT+ih)+' Z';
+  var s='<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" aria-hidden="true">';
+  s+='<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#36e7a7" stop-opacity=".28"/><stop offset="1" stop-color="#36e7a7" stop-opacity="0"/></linearGradient></defs>';
+  for(var k=0;k<4;k++){var y=padT+ih*k/3; s+='<line x1="'+padL+'" x2="'+(W-padR)+'" y1="'+y+'" y2="'+y+'" stroke="rgba(143,255,203,.08)" stroke-dasharray="4 6"/>';}
+  s+='<path d="'+area+'" fill="url(#g)"/><path d="'+line+'" fill="none" stroke="#36e7a7" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';
+  pts.forEach(function(p,i){
+    var last=i===pts.length-1;
+    s+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="'+(last?6:4)+'" fill="'+(last?'#f5c451':'#04100b')+'" stroke="'+(last?'#f5c451':'#36e7a7')+'" stroke-width="2"/>';
+    s+='<text x="'+p[0]+'" y="'+(H-10)+'" text-anchor="middle" fill="'+(last?'#f5c451':'#7f968d')+'" font-size="12" font-weight="700">'+days[i].d+'</text>';
+  });
+  box.innerHTML=s+'</svg>';
+}
 
-  function t(k) { return T[S.lang][k] || T.ht[k] || ''; }
-  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
-  function token() { try { return localStorage.getItem(TOKEN_KEY) || ''; } catch (_) { return ''; } }
-  function api(method, path, body) {
-    return fetch(path, { method: method, cache: 'no-store',
-      headers: Object.assign({ Authorization: 'Bearer ' + token(), Accept: 'application/json' }, body ? { 'Content-Type': 'application/json' } : {}),
-      body: body ? JSON.stringify(body) : undefined
-    }).then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, status: r.status, data: d }; }); });
-  }
-  function connOn(c) {
-    if (!c) return false;
-    var s = String(c.status || '').toLowerCase();
-    if (s.indexOf('reauth') !== -1 || s === 'revoked' || s === 'expired') return false;
-    return c.connected === true || s === 'connected' || s === 'active';
-  }
-  function dialOpts(sel) {
-    var h = '';
-    if (typeof COUNTRIES !== 'undefined') COUNTRIES.forEach(function (c) { h += '<option value="' + esc(c.dial) + '"' + (String(c.dial) === String(sel) ? ' selected' : '') + '>' + esc(c.name) + ' (+' + esc(c.dial) + ')</option>'; });
-    return h;
-  }
-  function countryOf(sel) { var o = sel.options[sel.selectedIndex]; return o ? o.textContent.replace(/\s*\(\+\d+\)\s*$/, '') : ''; }
-  function say(text, kind) { var m = $('msg'); if (m) { m.textContent = text || ''; m.className = 'msg ' + (kind || ''); } }
-  function fmt(d, p) { return d && p ? '+' + d + ' ' + p : t('none'); }
-  function lastSyncLabel() {
-    var at = 0; try { at = Number(localStorage.getItem(LAST_KEY)) || 0; } catch (_) {}
-    if (!at) return '';
-    var d = new Date(at), p = function (n) { return n < 10 ? '0' + n : '' + n; };
-    return t('lastSync') + ' · ' + p(d.getDate()) + '/' + p(d.getMonth() + 1) + '/' + d.getFullYear() + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
-  }
 
-  function chrome() {
-    var u = S.session.user || {};
-    $('uName').textContent = u.name || (S.reg && S.reg.name) || '';
-    $('uMail').textContent = u.email || '';
-    if (u.avatarUrl) $('uAv').src = u.avatarUrl;
-    $('uAv').onerror = function () { this.onerror = null; this.src = 'icons/doberto-vcf-192.png'; };
-    var on = connOn(S.conn);
-    $('uChip').textContent = on ? t('on') : t('off'); $('uChip').className = 'chip' + (on ? '' : ' off');
-    $('homeLink').textContent = t('home');
-    var items = [['overview'], ['profile'], ['auto']];
-    var h = '<div class="nav-h">' + esc(t('overview').toUpperCase()) + '</div>';
-    items.forEach(function (i) { h += '<a data-tab="' + i[0] + '" class="' + (S.tab === i[0] ? 'on' : '') + '">' + ICON[i[0]] + t(i[0]) + '</a>'; });
-    h += '<div class="nav-h">' + esc(t('manage')) + '</div><a data-tab="account" class="' + (S.tab === 'account' ? 'on' : '') + '">' + ICON.account + t('account') + '</a>';
-    $('nav').innerHTML = h;
-    Array.prototype.forEach.call($('nav').querySelectorAll('a[data-tab]'), function (a) { a.addEventListener('click', function () { go(a.getAttribute('data-tab')); }); });
-    Array.prototype.forEach.call($('lang').querySelectorAll('button'), function (b) {
-      b.className = b.getAttribute('data-l') === S.lang ? 'on' : '';
-      b.onclick = function () { S.lang = b.getAttribute('data-l'); try { localStorage.setItem('doberto_lang', S.lang); } catch (_) {} document.documentElement.lang = S.lang; render(); };
-    });
-  }
-
-  function fichePreview() {
-    var r = S.reg, h = '<div class="fiche"><small>' + t('fiche') + '</small><strong>' + esc((S.prefix ? S.prefix + ' ' : '') + r.name) + '</strong><code>' + esc(fmt(r.dial_code, r.phone)) + '</code>';
-    if (r.phone2) h += '<code>' + esc(fmt(r.dial_code2, r.phone2)) + '</code>';
-    return h + '</div>';
-  }
-
-  function vOverview() {
-    var r = S.reg;
-    return '<h1>' + t('ovT') + '</h1><p class="sub">' + t('ovS') + '</p>' +
-      '<div class="grid"><div class="stat"><small>' + t('members') + '</small><b>' + esc(S.total) + '</b></div>' +
-      '<div class="stat"><small>' + t('gc') + '</small><b style="font-size:20px;margin-top:12px">' + (connOn(S.conn) ? t('connected') : t('notConn')) + '</b></div></div>' +
-      fichePreview() +
-      (r.phone2 ? '' : '<button class="btn" id="goSecond">' + t('addSecond') + '</button>');
-  }
-
-  function vProfile() {
-    var r = S.reg;
-    return '<h1>' + t('pT') + '</h1><p class="sub">' + t('pS') + '</p>' + fichePreview() +
-      '<label class="l">' + t('name') + '</label><input id="fName" maxlength="100" value="' + esc(r.name) + '" />' +
-      '<label class="l">' + t('num') + '</label><div class="hint">' + t('numH') + '</div><div class="ph"><select id="fD1">' + dialOpts(r.dial_code) + '</select><input id="fP1" type="tel" inputmode="numeric" placeholder="' + esc(t('ph')) + '" value="' + esc(r.phone) + '" /></div>' +
-      '<label class="l">' + t('num2') + '</label><div class="hint">' + t('num2H') + '</div><div class="ph"><select id="fD2">' + dialOpts(r.dial_code2 || r.dial_code) + '</select><input id="fP2" type="tel" inputmode="numeric" placeholder="' + esc(t('ph')) + '" value="' + esc(r.phone2 || '') + '" /></div>' +
-      '<button class="btn pri" id="fSave">' + t('save') + '</button><button class="btn" id="fCancel">' + t('cancel') + '</button><div class="msg" id="msg" role="status"></div>';
-  }
-  function bindProfile() {
-    $('fCancel').onclick = function () { go('overview'); };
-    $('fSave').onclick = function () {
-      var b = $('fSave'); b.disabled = true; say('');
-      api('PUT', '/api/registration', { name: $('fName').value, dialCode: $('fD1').value, phone: $('fP1').value, countryName: countryOf($('fD1')), dialCode2: $('fD2').value, phone2: $('fP2').value }).then(function (res) {
-        if (res.ok && res.data && res.data.registration) { S.reg = res.data.registration; render(); say(t('saved'), 'ok'); }
-        else { say((res.data && res.data.error) || t('err'), 'err'); b.disabled = false; }
-      }).catch(function () { say(t('err'), 'err'); b.disabled = false; });
-    };
-  }
-
-  function vAuto() {
-    var on = connOn(S.conn), reauth = S.conn && !on && /reauth|revoked|expired/i.test(String(S.conn.status || ''));
-    var h = '<h1>' + t('aT') + '</h1><p class="sub">' + t('aS') + '</p>';
-    if (on) h += '<div class="note">' + t('autoNote') + '</div>';
-    if (!on) h += '<div class="note">' + t('shizzyNote') + '</div>';
-    h += on ? '<button class="btn pri" id="bSync">' + t('resync') + '</button><button class="btn" id="bDisc">' + t('disc') + '</button>'
-            : '<button class="btn pri" id="bConn">' + t('connect') + '</button>' + (reauth ? '<button class="btn" id="bDisc">' + t('disc') + '</button>' : '');
-    return h + '<div class="msg" id="msg" role="status"></div>';
-  }
-  function setBusy(v) { S.busy = v; Array.prototype.forEach.call(document.querySelectorAll('#view .btn'), function (b) { b.disabled = v; }); }
-  function poll(id, n) {
-    api('GET', '/api/shizzy/jobs/' + encodeURIComponent(id)).then(function (res) {
-      var job = res.ok && res.data && res.data.job; if (!job) { say(t('err'), 'err'); setBusy(false); return; }
-      var st = String(job.status || '').toLowerCase();
-      if (st === 'completed') { var s = job.stats || {}; try { localStorage.setItem(LAST_KEY, String(Date.now())); } catch (_) {}
-        say(t('doneS') + ': ' + (s.created || 0) + ' ' + t('created') + ', ' + (s.updated || 0) + ' ' + t('updated') + ', ' + (s.failed || 0) + ' ' + t('failed') + '.', 'ok'); setBusy(false); }
-      else if (st === 'failed' || st === 'error') { say(job.error || t('err'), 'err'); setBusy(false); }
-      else if (n >= 75) { setBusy(false); }
-      else setTimeout(function () { poll(id, n + 1); }, 4000);
-    }).catch(function () { say(t('err'), 'err'); setBusy(false); });
-  }
-  function bindAuto() {
-    var c = $('bConn'), sy = $('bSync'), d = $('bDisc');
-    if (sy) { var l = lastSyncLabel(); if (l) say(l, 'ok');
-      sy.onclick = function () { if (S.busy) return; setBusy(true); say(t('syncing'), 'ok');
-        api('POST', '/api/shizzy/sync').then(function (res) {
-          if (res.ok && res.data && res.data.jobId) { poll(res.data.jobId, 0); return; }
-          say((res.data && res.data.error) || t('err'), 'err'); setBusy(false);
-        }).catch(function () { say(t('err'), 'err'); setBusy(false); }); }; }
-    if (c) c.onclick = function () { if (S.busy) return; setBusy(true); say(t('redirecting'), 'ok');
-      api('POST', '/api/shizzy/connect').then(function (res) {
-        if (res.ok && res.data && /^https:\/\//i.test(res.data.url || '')) { window.location.href = res.data.url; return; }
-        say((res.data && res.data.error) || t('err'), 'err'); setBusy(false);
-      }).catch(function () { say(t('err'), 'err'); setBusy(false); }); };
-    if (d) d.onclick = function () { if (S.busy || !window.confirm(t('confirmD'))) return; setBusy(true);
-      api('DELETE', '/api/shizzy/connection').then(function (res) {
-        if (res.ok) { S.conn = null; render(); say(t('discOk'), 'ok'); } else { say((res.data && res.data.error) || t('err'), 'err'); setBusy(false); }
-      }).catch(function () { say(t('err'), 'err'); setBusy(false); }); };
-  }
-
-  function vAccount() {
-    return '<h1>' + t('acT') + '</h1><p class="sub">' + t('acS') + '</p>' +
-      '<div class="row"><span>' + t('email') + '</span><strong>' + esc((S.session.user || {}).email || '') + '</strong></div>' +
-      '<div class="row"><span>' + t('fiche') + '</span><strong>' + esc((S.prefix ? S.prefix + ' ' : '') + S.reg.name) + '</strong></div>' +
-      '<button class="btn" id="bOut">' + t('logout') + '</button>' +
-      '<a class="btn" href="report.html">' + t('reportLink') + '</a>' +
-      '<div class="danger"><h2>' + t('delT') + '</h2><p class="hint">' + t('delP') + '</p>' +
-      '<button class="btn dng" id="bDelAsk">' + t('delBtn') + '</button>' +
-      '<div id="delBox" style="display:none"><label class="l">' + t('delType') + '</label><input id="delInput" autocomplete="off" autocapitalize="characters" />' +
-      '<button class="btn dng" id="bDelGo" disabled>' + t('delGo') + '</button></div>' +
-      '<div class="msg" id="msg" role="status"></div></div>';
-  }
-  function bindDelete() {
-    var ask = $('bDelAsk'), box = $('delBox'), inp = $('delInput'), go = $('bDelGo');
-    ask.onclick = function () { box.style.display = 'block'; ask.style.display = 'none'; inp.focus(); };
-    inp.oninput = function () { go.disabled = inp.value.trim().toUpperCase() !== t('delWord'); };
-    go.onclick = function () {
-      if (S.busy || go.disabled) return;
-      S.busy = true; go.disabled = true; say('');
-      api('DELETE', '/api/account', { confirm: true }).then(function (res) {
-        if (res.ok) {
-          try { localStorage.removeItem(TOKEN_KEY); localStorage.removeItem('dv_registered'); localStorage.removeItem(LAST_KEY); } catch (_) {}
-          say(t('delDone'), 'ok');
-          setTimeout(function () { location.href = '/'; }, 1500);
-        } else { S.busy = false; go.disabled = false; say((res.data && res.data.error) || t('err'), 'err'); }
-      }).catch(function () { S.busy = false; go.disabled = false; say(t('err'), 'err'); });
-    };
-  }
-
-  function render() {
-    chrome();
-    var v = $('view');
-    v.innerHTML = S.tab === 'profile' ? vProfile() : S.tab === 'auto' ? vAuto() : S.tab === 'account' ? vAccount() : vOverview();
-    if (S.tab === 'profile') bindProfile();
-    else if (S.tab === 'auto') bindAuto();
-    else if (S.tab === 'account') { $('bOut').onclick = function () { try { localStorage.removeItem(TOKEN_KEY); localStorage.removeItem('dv_registered'); } catch (_) {} location.href = 'register.html'; }; bindDelete(); }
-    else { var g = $('goSecond'); if (g) g.onclick = function () { go('profile'); }; }
-  }
-  function go(tab) {
-    S.tab = tab;
-    try { history.replaceState(null, '', 'dashboard.html?tab=' + tab); } catch (_) {}
-    render();
-  }
-
-  function init() {
-    try { S.lang = localStorage.getItem('doberto_lang') || 'ht'; } catch (_) {}
-    if (!T[S.lang]) S.lang = 'ht';
-    document.documentElement.lang = S.lang;
-    var q = new URLSearchParams(location.search).get('tab');
-    if (q && /^(overview|profile|auto|account)$/.test(q)) S.tab = q;
-    if (!token()) { location.replace('register.html'); return; }
-    Promise.all([api('GET', '/api/auth/session'), api('GET', '/api/stats'), api('GET', '/api/shizzy/status')]).then(function (r) {
-      var se = r[0];
-      if (!se.ok || !se.data || !se.data.registered || !se.data.registration) { location.replace('register.html'); return; }
-      S.session = se.data; S.reg = se.data.registration;
-      if (r[1].ok) { S.total = r[1].data.total || 0; S.prefix = r[1].data.namePrefix || ''; }
-      if (r[2].ok && r[2].data && r[2].data.configured !== false) S.conn = r[2].data.connection || null;
-      render();
-    }).catch(function () { location.replace('register.html'); });
-  }
-  function refreshConn() {
-    if (S.busy || !S.session) return;
-    api('GET', '/api/shizzy/status').then(function (r) {
-      if (!r.ok || !r.data || r.data.configured === false) return;
-      var was = connOn(S.conn); S.conn = r.data.connection || null;
-      if (connOn(S.conn) !== was) render();
-    }).catch(function () {});
-  }
-  window.addEventListener('pageshow', function (e) { if (e.persisted) refreshConn(); });
-  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') refreshConn(); });
-  init();
-})();
+var stats=null,sess=null;
+function load(){
+  Promise.all([
+    get('/api/stats').catch(function(){return null}),
+    get('/api/stats/daily').catch(function(){return null}),
+    get('/api/auth/session').catch(function(){return null})
+  ]).then(function(r){stats=Object.assign({},r[0]||{},r[1]||{});sess=r[2];fill(stats,sess)});
+}
+window.addEventListener('resize',chart);
+if(window.ResizeObserver)new ResizeObserver(chart).observe($('plot'));
+load();
+var mb=$('moreBtn'),mm=$('more');
+if(mb){mb.addEventListener('click',function(e){e.stopPropagation();var o=mm.hidden;mm.hidden=!o;mb.setAttribute('aria-expanded',o)});
+document.addEventListener('click',function(){mm.hidden=true;mb.setAttribute('aria-expanded',false)})}
 </script>
 </body>
 </html>

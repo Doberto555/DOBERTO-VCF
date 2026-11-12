@@ -589,6 +589,54 @@ app.get('/api/stats', publicReadLimiter, requireDatabase, async (req, res) => {
 });
 
 
+// ---------- GET /api/stats/daily : enskripsyon pa jou (fizo Ayiti), cache 60s ----------
+const STATS_TZ = 'America/Port-au-Prince';
+function tzParts(date) {
+  const o = {};
+  new Intl.DateTimeFormat('en-CA', { timeZone: STATS_TZ, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' })
+    .formatToParts(date).forEach(p => { o[p.type] = p.value; });
+  return o;
+}
+function tzOffsetMs(date) {
+  const o = tzParts(date);
+  return Date.UTC(+o.year, +o.month - 1, +o.day, +o.hour, +o.minute, +o.second) - Math.floor(date.getTime() / 1000) * 1000;
+}
+function localMidnightUtc(daysAgo) {
+  const o = tzParts(new Date());
+  const guess = Date.UTC(+o.year, +o.month - 1, +o.day - daysAgo, 0, 0, 0);
+  let t = guess - tzOffsetMs(new Date(guess));
+  t = guess - tzOffsetMs(new Date(t));
+  return new Date(t);
+}
+let dailyCache = null, dailyCacheAt = 0;
+app.get('/api/stats/daily', publicReadLimiter, requireDatabase, async (req, res) => {
+  try {
+    if (dailyCache && Date.now() - dailyCacheAt < 60000) return res.json(dailyCache);
+    const edges = [];
+    for (let k = 0; k <= 13; k++) edges.push(localMidnightUtc(k));
+    const counts = await Promise.all(edges.map((start, d) => {
+      let q = supabase.from('registrations').select('*', { count: 'exact', head: true }).gte('created_at', start.toISOString());
+      if (d > 0) q = q.lt('created_at', edges[d - 1].toISOString());
+      return q.then(r => { if (r.error) throw r.error; return r.count || 0; });
+    }));
+    const fmt = new Intl.DateTimeFormat('fr-FR', { timeZone: STATS_TZ, weekday: 'short' });
+    const days = [];
+    for (let d = 6; d >= 0; d--) {
+      const w = fmt.format(new Date(edges[d].getTime() + 12 * 3600 * 1000)).replace('.', '');
+      days.push({ d: w.charAt(0).toUpperCase() + w.slice(1, 3), n: counts[d] });
+    }
+    const sum = (a, b) => counts.slice(a, b).reduce((x, y) => x + y, 0);
+    const pct = (a, b) => (b > 0 ? Math.round(((a - b) / b) * 100) : (a > 0 ? 100 : 0));
+    const week = sum(0, 7), prev = sum(7, 14);
+    dailyCache = { today: counts[0], todayPct: pct(counts[0], counts[1]), week, weekPct: pct(week, prev), days };
+    dailyCacheAt = Date.now();
+    res.json(dailyCache);
+  } catch (err) {
+    console.error('[stats/daily]', err.message);
+    res.status(500).json({ code: 'server_error', error: 'Erè sèvè.' });
+  }
+});
+
 // ---------- DELETE /api/account : manm nan siprime kont li ----------
 app.delete('/api/account', accountLimiter, requireDatabase, verifyUser, async (req, res) => {
   try {
