@@ -11,6 +11,7 @@ const adminSystemHealthHandler = require('./api/admin-system-health');
 const googleLoginUrlHandler = require('./api/google-login-url');
 const googleCallbackHandler = require('./api/google-callback');
 const registerSecureHandler = require('./api/register-secure');
+const registrationUpdateHandler = require('./api/registration-update');
 const adminLoginSecureHandler = require('./api/admin-login-secure');
 const { createShizzyConnect, toPartnerContact, ShizzyError, pickConsentUrl, describeShape } = require('./lib/shizzy-connect');
 const maintenance = require('./lib/maintenance');
@@ -329,8 +330,15 @@ app.get('/api/auth/session', publicReadLimiter, requireDatabase, verifyUser, asy
   const { data: user, error: userError } = await supabase.from('app_users')
     .select('id, email, display_name, avatar_url').eq('id', req.user.userId).maybeSingle();
   if (userError || !user) return res.status(401).json({ code: 'session_expired', error: 'Sesyon an pa valid ankò.' });
-  const { data: registration, error: registrationError } = await supabase.from('registrations')
-    .select('id, name, email, dial_code, country_name, phone, full_number').eq('user_id', user.id).maybeSingle();
+  // Kolòn dezyèm nimewo yo (dial_code2, phone2, full_number2) ka manke si migrasyon an poko kouri.
+  // Nan ka sa a, nou tounen sou kolòn de baz yo pou sesyon an pa tonbe.
+  const REG_COLS_BASE = 'id, name, email, dial_code, country_name, phone, full_number';
+  let { data: registration, error: registrationError } = await supabase.from('registrations')
+    .select(REG_COLS_BASE + ', dial_code2, phone2, full_number2').eq('user_id', user.id).maybeSingle();
+  if (registrationError) {
+    ({ data: registration, error: registrationError } = await supabase.from('registrations')
+      .select(REG_COLS_BASE).eq('user_id', user.id).maybeSingle());
+  }
   if (registrationError) return res.status(500).json({ error: 'Nou pa ka chaje pwofil la.' });
   res.json({
     ok: true,
@@ -339,6 +347,9 @@ app.get('/api/auth/session', publicReadLimiter, requireDatabase, verifyUser, asy
     registration: registration || null
   });
 });
+
+// Manm nan modifye non/nimewo li (ak dezyèm nimewo opsyonèl) depi dashboard la
+app.put('/api/registration', registerLimiter, requireDatabase, registrationUpdateHandler);
 
 function removedGoogleContacts(req, res) {
   res.setHeader('Cache-Control', 'no-store');
