@@ -13,6 +13,7 @@ const googleCallbackHandler = require('./api/google-callback');
 const registerSecureHandler = require('./api/register-secure');
 const adminLoginSecureHandler = require('./api/admin-login-secure');
 const { createShizzyConnect, toPartnerContact, ShizzyError, pickConsentUrl, describeShape } = require('./lib/shizzy-connect');
+const maintenance = require('./lib/maintenance');
 
 const app = express();
 app.disable('x-powered-by');
@@ -98,6 +99,7 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(maintenance.gate);
 app.use(express.json({ limit: '256kb', strict: true }));
 app.use(express.static(path.join(__dirname, 'public'), {
   etag: true,
@@ -676,6 +678,24 @@ app.get('/api/ads/public', publicReadLimiter, (req,res) => {
 
 // ---------- Admin ----------
 app.post('/api/admin/login', adminLoginLimiter, (req, res) => adminLoginSecureHandler(req, res));
+
+app.get('/api/admin/maintenance', adminActionLimiter, verifyAdmin, (req, res) => {
+  res.setHeader('Cache-Control', 'private, no-store');
+  res.json({ ok: true, maintenance: maintenance.read() });
+});
+
+app.put('/api/admin/maintenance', adminActionLimiter, verifyAdmin, (req, res) => {
+  try {
+    const b = req.body || {};
+    const next = maintenance.write({ enabled: b.enabled === true, message: b.message });
+    console.log('[DOBERTO VCF] maintenance', next.enabled ? 'ON' : 'OFF');
+    res.setHeader('Cache-Control', 'private, no-store');
+    res.json({ ok: true, maintenance: next });
+  } catch (err) {
+    console.error('[DOBERTO VCF] maintenance write error:', err.message);
+    res.status(500).json({ error: 'Nou pa ka sove mod maintenance lan.' });
+  }
+});
 
 app.get('/api/admin/ads', adminActionLimiter, verifyAdmin, (req,res) => {
   res.setHeader('Cache-Control','private, no-store');
