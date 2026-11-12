@@ -13,6 +13,7 @@
       title: 'Sinkronize kontak yo nan Google',
       desc: 'Konekte Google Contacts ou atravè Shizzy Connect, epi manm yo ap ajoute otomatikman nan telefòn ou.',
       connect: 'Konekte Google Contacts',
+      shizzyNote: 'Google ap montre \u00ab Shizzy Connect \u00bb, patn\u00e8 sinkronizasyon nou an. Se n\u00f2mal: chwazi kont Google ou vle resevwa kontak yo.',
       sync: 'Sinkronize kontak yo',
       resync: 'Resinkronize',
       onMsg: '✓ Google Contacts konekte. Peze Resinkronize pou ajoute nouvo manm yo.',
@@ -33,6 +34,7 @@
       title: 'Synchroniser les contacts avec Google',
       desc: 'Connectez vos Google Contacts via Shizzy Connect : les membres sont ajoutés automatiquement à votre téléphone.',
       connect: 'Connecter Google Contacts',
+      shizzyNote: 'Google affichera \u00ab Shizzy Connect \u00bb, notre partenaire de synchronisation. C\u2019est normal : choisissez le compte Google qui recevra les contacts.',
       sync: 'Synchroniser les contacts',
       resync: 'Resynchroniser',
       onMsg: '✓ Google Contacts connecté. Appuyez sur Resynchroniser pour ajouter les nouveaux membres.',
@@ -53,6 +55,7 @@
       title: 'Sync contacts to Google',
       desc: 'Connect your Google Contacts through Shizzy Connect and members are added to your phone automatically.',
       connect: 'Connect Google Contacts',
+      shizzyNote: 'Google will show \u201cShizzy Connect\u201d, our sync partner. This is normal: choose the Google account that should receive the contacts.',
       sync: 'Sync contacts',
       resync: 'Resync',
       onMsg: '✓ Google Contacts connected. Press Resync to add new members.',
@@ -167,6 +170,7 @@
     els.disconnect.hidden = current === 'none';
     if (current === 'reauth' && !busy) say(t('reauth'), 'err');
     else if (current === 'on' && !busy) say(lastSyncLabel(), 'ok');
+    if (current === 'none' && !busy) say(t('shizzyNote'), '');
     els.root.hidden = false;
   }
 
@@ -238,6 +242,17 @@
       render(connState(res.data.connection));
       var sel = document.getElementById('langSelect');
       if (sel) sel.addEventListener('change', function () { setTimeout(function () { render(current); }, 50); });
+      // Lè moun nan tounen soti sou Shizzy/Google: mete estati a ajou otomatikman.
+      var refreshOnReturn = function () {
+        if (busy) return;
+        api('GET', '/api/shizzy/status').then(function (r) {
+          if (!r.ok || !r.data || r.data.configured === false) return;
+          var st = connState(r.data.connection);
+          if (st !== current) render(st);
+        }).catch(function () {});
+      };
+      window.addEventListener('pageshow', function (e) { if (e.persisted) refreshOnReturn(); });
+      document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') refreshOnReturn(); });
     }).catch(function () {});
   }
 

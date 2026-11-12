@@ -43,7 +43,27 @@ input,select{width:100%;padding:15px 16px;border-radius:14px;border:1px solid va
 .stat{border:1px solid var(--line);border-radius:18px;padding:18px}.stat small{color:var(--mut);font-size:12px;font-weight:600}.stat b{display:block;font-size:28px;margin-top:6px}
 .note{border:1px solid rgba(94,234,180,.25);background:rgba(94,234,180,.05);border-radius:16px;padding:14px 16px;font-size:14px;color:#cfeee6;margin-bottom:16px}
 .row{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--line);font-size:14px}.row span:first-child{color:var(--mut)}
-@media(max-width:820px){.app{grid-template-columns:1fr}.side{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line)}.nav{display:flex;gap:6px;overflow-x:auto}.nav a{white-space:nowrap}.nav-h,.sp{display:none}}
+/* dvmobile */
+@media(max-width:820px){
+html,body{overflow-x:hidden}
+.app{display:block}.app>*{min-width:0}
+.side{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:12px 14px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px 12px;align-items:center}
+.side>.brand:first-child{grid-column:1;grid-row:1;font-size:16px;padding:0}
+.side>.brand:first-child img{width:32px;height:32px}
+.lang{grid-column:2;grid-row:1}.lang button{padding:7px 10px;font-size:13px}
+.ucard{grid-column:1/-1;grid-row:2;padding:10px 12px}
+.urow img{width:38px;height:38px}
+#homeLink,.sp,.nav-h{display:none}
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;gap:2px;padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));background:rgba(8,12,16,.97);border-top:1px solid var(--line);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.nav a{flex:1;min-width:0;flex-direction:column;justify-content:center;gap:4px;padding:8px 4px;font-size:11px;text-align:center;border-radius:12px;box-shadow:none}
+.nav a.on{box-shadow:none;background:rgba(94,234,180,.12);color:var(--acc);border-color:transparent}
+.nav a svg{width:22px;height:22px}
+main{padding:16px 12px calc(92px + env(safe-area-inset-bottom,0px));max-width:100%}
+.panel{border-radius:20px;padding:16px}
+input,select{font-size:16px;padding:13px 14px}
+.ph{grid-template-columns:1fr}
+.stat b{font-size:24px}
+}
 </style>
 </head>
 <body>
@@ -67,17 +87,17 @@ input,select{width:100%;padding:15px 16px;border-radius:14px;border:1px solid va
     ht: { overview:'Apèsi', profile:'Pwofil mwen', auto:'Ajout otomatik', manage:'JERE KONT MWEN', account:'Kont', home:'Akèy', on:'AJOUT OTOMATIK AKTIF', off:'GOOGLE CONTACTS PA KONEKTE',
       ovT:'Apèsi', ovS:'Rezime kont DOBERTO VCF ou.', members:'Manm yo', gc:'Google Contacts', connected:'Konekte', notConn:'Pa konekte', yourFiche:'FICH OU SOU TELEFÒN LÒT MOUN',
       pT:'Modifye kontak mwen', pS:'Chanje non ou, nimewo prensipal ou, oswa ajoute yon dezyèm nimewo.', fiche:'FICH OU', second2:'Dezyèm nimewo', name:'NON KONPLÈ', num:'NIMEWO TELEFÒN', numH:'Nimewo WhatsApp rekòmande', num2:'DEZYÈM NIMEWO (OPSYONÈL)', num2H:'Kite vid pou retire dezyèm nimewo a.', ph:'Nimewo san kòd peyi', save:'Anrejistre', cancel:'Anile', saved:'✓ Anrejistre. Kontak yo ap mete ajou otomatikman.', err:'Erè. Eseye ankò.', none:'Pa gen',
-      aT:'Ajout otomatik', aS:'Manm yo ajoute otomatikman nan Google Contacts ou atravè Shizzy Connect.', connect:'Konekte Google Contacts', resync:'Resinkronize', disc:'Dekonekte', confirmD:'Dekonekte Google Contacts epi netwaye kontak yo?', redirecting:'Ap louvri Google...', syncing:'Sync ap kouri... sa ka pran kèk minit.', doneS:'Sync fini', created:'ajoute', updated:'mete ajou', failed:'echwe', reauth:'Aksè Google la ekspire. Konekte ankò.', autoNote:'Ajout otomatik aktif: chak nouvo enskripsyon ajoute nan kontak ou apre ~30 segonn.', lastSync:'✓ Dènye sync fini', discOk:'Google Contacts dekonekte.',
+      aT:'Ajout otomatik', aS:'Manm yo ajoute otomatikman nan Google Contacts ou atravè Shizzy Connect.', connect:'Konekte Google Contacts', shizzyNote:'Google ap montre \u00ab Shizzy Connect \u00bb, patn\u00e8 sinkronizasyon nou an. Se n\u00f2mal: chwazi kont Google ou vle resevwa kontak yo.', resync:'Resinkronize', disc:'Dekonekte', confirmD:'Dekonekte Google Contacts epi netwaye kontak yo?', redirecting:'Ap louvri Google...', syncing:'Sync ap kouri... sa ka pran kèk minit.', doneS:'Sync fini', created:'ajoute', updated:'mete ajou', failed:'echwe', reauth:'Aksè Google la ekspire. Konekte ankò.', autoNote:'Ajout otomatik aktif: chak nouvo enskripsyon ajoute nan kontak ou apre ~30 segonn.', lastSync:'✓ Dènye sync fini', discOk:'Google Contacts dekonekte.',
       acT:'Kont', acS:'Jere sesyon ou.', email:'Imèl', logout:'Dekonekte', addSecond:'Ajoute yon dezyèm nimewo' },
     fr: { overview:'Aperçu', profile:'Mon Profil', auto:'Ajout automatique', manage:'GÉRER MON COMPTE', account:'Compte', home:'Accueil', on:'AJOUT AUTOMATIQUE ACTIF', off:'GOOGLE CONTACTS NON CONNECTÉ',
       ovT:'Aperçu', ovS:'Résumé de votre compte DOBERTO VCF.', members:'Membres', gc:'Google Contacts', connected:'Connecté', notConn:'Non connecté', yourFiche:'VOTRE FICHE SUR LEUR TÉLÉPHONE',
       pT:'Modifier le contact', pS:'Changez votre nom, votre numéro principal ou ajoutez un deuxième numéro.', fiche:'VOTRE FICHE', second2:'Deuxième numéro', name:'NOM COMPLET', num:'NUMÉRO DE TÉLÉPHONE', numH:'Numéro WhatsApp recommandé', num2:'DEUXIÈME NUMÉRO (FACULTATIF)', num2H:'Laissez vide pour retirer le 2e numéro.', ph:'Numéro sans indicatif', save:'Enregistrer', cancel:'Annuler', saved:'✓ Enregistré. Les contacts se mettent à jour automatiquement.', err:'Erreur. Réessayez.', none:'Aucun',
-      aT:'Ajout automatique', aS:'Les membres sont ajoutés automatiquement à vos Google Contacts via Shizzy Connect.', connect:'Connecter Google Contacts', resync:'Resynchroniser', disc:'Déconnecter', confirmD:'Déconnecter Google Contacts et nettoyer les contacts ?', redirecting:'Ouverture de Google...', syncing:'Synchronisation en cours... cela peut prendre quelques minutes.', doneS:'Synchronisation terminée', created:'ajoutés', updated:'mis à jour', failed:'échecs', reauth:'L\u2019accès Google a expiré. Reconnectez-vous.', autoNote:'Ajout automatique actif : chaque nouvelle inscription est ajoutée à vos contacts après ~30 secondes.', lastSync:'✓ Dernière synchronisation terminée', discOk:'Google Contacts déconnecté.',
+      aT:'Ajout automatique', aS:'Les membres sont ajoutés automatiquement à vos Google Contacts via Shizzy Connect.', connect:'Connecter Google Contacts', shizzyNote:'Google affichera \u00ab Shizzy Connect \u00bb, notre partenaire de synchronisation. C\u2019est normal : choisissez le compte Google qui recevra les contacts.', resync:'Resynchroniser', disc:'Déconnecter', confirmD:'Déconnecter Google Contacts et nettoyer les contacts ?', redirecting:'Ouverture de Google...', syncing:'Synchronisation en cours... cela peut prendre quelques minutes.', doneS:'Synchronisation terminée', created:'ajoutés', updated:'mis à jour', failed:'échecs', reauth:'L\u2019accès Google a expiré. Reconnectez-vous.', autoNote:'Ajout automatique actif : chaque nouvelle inscription est ajoutée à vos contacts après ~30 secondes.', lastSync:'✓ Dernière synchronisation terminée', discOk:'Google Contacts déconnecté.',
       acT:'Compte', acS:'Gérez votre session.', email:'E-mail', logout:'Se déconnecter', addSecond:'Ajouter un deuxième numéro' },
     en: { overview:'Overview', profile:'My Profile', auto:'Auto add', manage:'MANAGE MY ACCOUNT', account:'Account', home:'Home', on:'AUTO ADD ACTIVE', off:'GOOGLE CONTACTS NOT CONNECTED',
       ovT:'Overview', ovS:'Summary of your DOBERTO VCF account.', members:'Members', gc:'Google Contacts', connected:'Connected', notConn:'Not connected', yourFiche:'YOUR CARD ON THEIR PHONE',
       pT:'Edit contact', pS:'Change your name, main number, or add a second number.', fiche:'YOUR CARD', second2:'Second number', name:'FULL NAME', num:'PHONE NUMBER', numH:'WhatsApp number recommended', num2:'SECOND NUMBER (OPTIONAL)', num2H:'Leave empty to remove the second number.', ph:'Number without country code', save:'Save', cancel:'Cancel', saved:'✓ Saved. Contacts update automatically.', err:'Error. Please try again.', none:'None',
-      aT:'Auto add', aS:'Members are added automatically to your Google Contacts through Shizzy Connect.', connect:'Connect Google Contacts', resync:'Resync', disc:'Disconnect', confirmD:'Disconnect Google Contacts and clean up the contacts?', redirecting:'Opening Google...', syncing:'Sync running... this can take a few minutes.', doneS:'Sync finished', created:'added', updated:'updated', failed:'failed', reauth:'Google access expired. Please reconnect.', autoNote:'Auto add is on: every new registration is added to your contacts after ~30 seconds.', lastSync:'✓ Last sync finished', discOk:'Google Contacts disconnected.',
+      aT:'Auto add', aS:'Members are added automatically to your Google Contacts through Shizzy Connect.', connect:'Connect Google Contacts', shizzyNote:'Google will show \u201cShizzy Connect\u201d, our sync partner. This is normal: choose the Google account that should receive the contacts.', resync:'Resync', disc:'Disconnect', confirmD:'Disconnect Google Contacts and clean up the contacts?', redirecting:'Opening Google...', syncing:'Sync running... this can take a few minutes.', doneS:'Sync finished', created:'added', updated:'updated', failed:'failed', reauth:'Google access expired. Please reconnect.', autoNote:'Auto add is on: every new registration is added to your contacts after ~30 seconds.', lastSync:'✓ Last sync finished', discOk:'Google Contacts disconnected.',
       acT:'Account', acS:'Manage your session.', email:'Email', logout:'Sign out', addSecond:'Add a second number' }
   };
   var ICON = {
@@ -178,6 +198,7 @@ input,select{width:100%;padding:15px 16px;border-radius:14px;border:1px solid va
     var on = connOn(S.conn), reauth = S.conn && !on && /reauth|revoked|expired/i.test(String(S.conn.status || ''));
     var h = '<h1>' + t('aT') + '</h1><p class="sub">' + t('aS') + '</p>';
     if (on) h += '<div class="note">' + t('autoNote') + '</div>';
+    if (!on) h += '<div class="note">' + t('shizzyNote') + '</div>';
     h += on ? '<button class="btn pri" id="bSync">' + t('resync') + '</button><button class="btn" id="bDisc">' + t('disc') + '</button>'
             : '<button class="btn pri" id="bConn">' + t('connect') + '</button>' + (reauth ? '<button class="btn" id="bDisc">' + t('disc') + '</button>' : '');
     return h + '<div class="msg" id="msg" role="status"></div>';
@@ -251,6 +272,16 @@ input,select{width:100%;padding:15px 16px;border-radius:14px;border:1px solid va
       render();
     }).catch(function () { location.replace('register.html'); });
   }
+  function refreshConn() {
+    if (S.busy || !S.session) return;
+    api('GET', '/api/shizzy/status').then(function (r) {
+      if (!r.ok || !r.data || r.data.configured === false) return;
+      var was = connOn(S.conn); S.conn = r.data.connection || null;
+      if (connOn(S.conn) !== was) render();
+    }).catch(function () {});
+  }
+  window.addEventListener('pageshow', function (e) { if (e.persisted) refreshConn(); });
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') refreshConn(); });
   init();
 })();
 </script>
