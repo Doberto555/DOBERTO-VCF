@@ -84,20 +84,69 @@ a:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
   .more a{padding:12px 14px;border-radius:10px;font-weight:600}.more a:hover{background:rgba(255,255,255,.05)}
 }
 @media(max-width:360px){.stats{grid-template-columns:minmax(0,1fr)}}
+[hidden]{display:none!important}
+.kick{color:var(--sun);font-size:12px;font-weight:800;letter-spacing:.14em;margin-bottom:6px}
+#syncSec{max-width:760px}
+.sy-row{display:flex;align-items:center;justify-content:space-between;gap:16px;border:1px solid var(--line);border-radius:16px;padding:16px;margin:18px 0 12px}
+.sy-row b{display:block}.sy-row span{color:var(--muted);font-size:13px}
+.sw{flex:none;width:52px;height:30px;border-radius:99px;border:1px solid var(--line);background:#1b2a24;position:relative;cursor:pointer;transition:.2s}
+.sw i{position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#8aa0a0;transition:.2s}
+.sw.on{background:rgba(54,231,167,.25);border-color:rgba(54,231,167,.5)}
+.sw.on i{left:25px;background:var(--signal)}
+.sw:disabled{opacity:.5;cursor:not-allowed}
+.sy-two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.sy-box{border:1px solid var(--line);border-radius:14px;padding:14px}
+.sy-box small{display:block;color:var(--muted);font-size:11px;letter-spacing:.12em;margin-bottom:6px}
+.sy-btn{width:100%;padding:14px;border-radius:14px;border:1px solid var(--line);background:var(--panel-solid);color:var(--text);font:inherit;font-weight:700;cursor:pointer}
+.sy-btn:disabled{opacity:.5;cursor:not-allowed}
+.sy-msg{margin-top:12px;padding:12px 14px;border-radius:12px;border:1px solid rgba(54,231,167,.3);color:var(--signal);font-size:14px}
+.sy-msg.bad{border-color:rgba(245,196,81,.4);color:var(--sun)}
+.sy-note{color:var(--muted);font-size:13px;margin-top:14px}
+@media(max-width:520px){.sy-two{grid-template-columns:1fr}}
+.tsec{max-width:760px}
+.fld{display:block;margin:16px 0 0}
+.fld>span{display:block;color:var(--sun);font-size:12px;font-weight:800;letter-spacing:.12em;margin-bottom:8px}
+.fld small{display:block;color:var(--muted);font-size:13px;margin:-4px 0 8px}
+.in{width:100%;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.02);color:var(--text);font:inherit;outline:0}
+.in:focus{border-color:rgba(54,231,167,.5)}
+textarea.in{min-height:120px;resize:vertical}
+select.in option{background:#0a1a13;color:var(--text)}
+.phrow{display:grid;grid-template-columns:minmax(0,170px) 1fr;gap:10px}
+.fcta{width:100%;margin-top:18px;padding:15px;border-radius:14px;border:0;background:var(--text);color:var(--ink);font:inherit;font-weight:800;cursor:pointer}
+.fcta:disabled{opacity:.5;cursor:not-allowed}
+.hp{position:absolute;left:-9999px;opacity:0;height:0;width:0}
+.chk{display:flex;gap:10px;align-items:flex-start;margin-top:16px;color:var(--muted);font-size:13px}
+.cnt{color:var(--muted);font-size:12px;text-align:right;margin-top:4px}
+@media(max-width:520px){.phrow{grid-template-columns:1fr}}
+.brand img.logo{width:34px;height:34px;border-radius:10px;object-fit:cover;flex:none;display:block}
+.ac-card{margin-top:14px}
+.ac-top{display:flex;align-items:center;gap:14px}
+.ac-top>div{flex:1;min-width:0}
+.ac-top b{display:block}
+.ac-av{flex:none;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#57f0b5,#12d78e);color:#04110c;display:grid;place-items:center;font-weight:900;font-size:20px;overflow:hidden}
+.ac-av img{width:100%;height:100%;object-fit:cover;display:block}
+.ac-k{display:block;color:var(--sun);font-size:11px;font-weight:800;letter-spacing:.14em;margin-bottom:6px}
+.ac-mail{display:block;color:var(--muted);font-size:14px;overflow:hidden;text-overflow:ellipsis}
+.ac-note{color:var(--muted);font-size:13px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.seg{display:inline-flex;gap:4px;border:1px solid var(--line);border-radius:14px;padding:4px;margin-top:12px;flex-wrap:wrap}
+.seg button{padding:10px 16px;border-radius:10px;border:0;background:none;color:var(--muted);font:inherit;font-weight:700;cursor:pointer}
+.seg button.on{background:rgba(255,255,255,.08);color:var(--text)}
 </style>
 </head>
 <body>
-<header class="mtop"><a class="brand" href="index.html"><i>D</i>DOBERTO VCF</a><a class="mhome" href="index.html">Accueil</a></header>
+<header class="mtop"><a class="brand" href="index.html"><img class="logo" src="icons/doberto-vcf-192.png?v=20260904-1" width="34" height="34" alt="" decoding="async">DOBERTO VCF</a><a class="mhome" href="index.html">Accueil</a></header>
 <aside class="side">
-  <a class="brand" href="index.html"><i>D</i>DOBERTO VCF</a>
+  <a class="brand" href="index.html"><img class="logo" src="icons/doberto-vcf-192.png?v=20260904-1" width="34" height="34" alt="" decoding="async">DOBERTO VCF</a>
   <div class="me"><b id="uName">Membre</b><span id="uMail">—</span></div>
   <nav aria-label="Navigation">
     <small>Accueil</small>
     <a class="on" href="dashboard.html">Aperçu</a>
-    <a href="register.html">Mon profil</a>
+    <a href="dashboard.html?tab=profile" id="navProfile">Mon profil</a>
     <a href="list.html">Membres</a>
+    <a href="dashboard.html?tab=sync" id="navSync">Ajout automatique</a>
     <small>Gérer mon compte</small>
-    <a href="report.html">Signalement</a>
+    <a href="dashboard.html?tab=reports" id="navReports">Signalement</a>
+    <a href="dashboard.html?tab=account" id="navAccount">Compte</a>
     <a href="privacy.html">Confidentialité</a>
   </nav>
   <a class="home" href="index.html">Accueil</a>
@@ -131,23 +180,81 @@ a:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
         <div class="row"><dt>Numéro WhatsApp</dt><dd id="vPhone">—</dd></div>
         <div class="row"><dt>Notifications e-mail</dt><dd id="vMail">—</dd></div>
       </dl>
-      <a class="cta" id="vCta" href="register.html">Mon profil</a>
+      <a class="cta" id="vCta" href="register.html?stay=1">Mon profil</a>
     </aside>
   </section>
 
   <section class="actions">
     <a class="card" href="list.html"><b>Membres</b><span>Voir et télécharger les contacts</span></a>
-    <a class="card" href="register.html"><b>Mon profil</b><span>Modifier mon nom et mon numéro</span></a>
-    <a class="card" href="report.html"><b>Signalement</b><span>Signaler un problème</span></a>
+    <a class="card" href="dashboard.html?tab=profile"><b>Mon profil</b><span>Modifier mon nom et mon numéro</span></a>
+    <a class="card" href="dashboard.html?tab=reports"><b>Signalement</b><span>Signaler un problème</span></a>
   </section>
+<section class="card" id="syncSec" hidden>
+  <p class="kick">GOOGLE CONTACTS</p>
+  <h1>Ajout automatique</h1>
+  <p class="sub">Les nouveaux membres sont ajoutés à vos Google Contacts peu après leur inscription.</p>
+  <div class="sy-row"><div><b>Ajout automatique</b><span id="syDesc">Désactivé</span></div><button class="sw" id="syToggle" type="button" role="switch" aria-checked="false" aria-label="Ajout automatique"><i></i></button></div>
+  <div class="sy-two"><div class="sy-box"><small>CONNEXION GOOGLE</small><b id="syConn">—</b></div><div class="sy-box"><small>DERNIÈRE MISE À JOUR</small><b id="syLast">Pas encore mis à jour</b></div></div>
+  <button class="sy-btn" id="syNow" type="button" disabled>Mettre à jour maintenant</button>
+  <p class="sy-msg" id="syMsg" hidden></p>
+  <p class="sy-note">Google affichera « Shizzy Connect », notre partenaire de synchronisation. C’est normal : choisissez le compte Google qui recevra les contacts. Ajoutez d’abord votre numéro dans Mon profil.</p>
+</section>
+<section class="card tsec" id="profSec" hidden>
+  <p class="kick">MON COMPTE</p>
+  <h1>Mon profil</h1>
+  <p class="sub">Votre nom et votre numéro apparaissent dans la liste des membres.</p>
+  <form id="pfForm" novalidate>
+    <label class="fld"><span>NOM COMPLET</span><input class="in" id="pfName" maxlength="80" autocomplete="name" placeholder="ex. Jean Constant"></label>
+    <div class="fld"><span>NUMÉRO DE TÉLÉPHONE</span><small>Numéro WhatsApp recommandé</small>
+      <div class="phrow"><select class="in" id="pfCountry" aria-label="Pays"></select><input class="in" id="pfPhone" inputmode="tel" autocomplete="tel-national" placeholder="3123 4567"></div></div>
+    <label class="chk" id="pfConsentRow" hidden><input type="checkbox" id="pfConsent"><span>J’accepte la politique de confidentialité (voir Confidentialité).</span></label>
+    <button class="fcta" id="pfSave" type="submit">Enregistrer</button>
+  </form>
+  <p class="sy-msg" id="pfMsg" hidden></p>
+</section>
+<section class="card tsec" id="repSec" hidden>
+  <p class="kick">SÉCURITÉ</p>
+  <h1>Signaler un membre</h1>
+  <p class="sub">Signalez un mauvais comportement ou un faux numéro. Nous examinerons votre signalement.</p>
+  <form id="rpForm" novalidate>
+    <label class="fld"><span>NUMÉRO DU MEMBRE</span><input class="in" id="rpTarget" maxlength="120" placeholder="+509 3123 4567"></label>
+    <label class="fld"><span>POURQUOI LE SIGNALEZ-VOUS ?</span><select class="in" id="rpReason"></select></label>
+    <label class="fld"><span>DÉTAILS</span><textarea class="in" id="rpDetails" maxlength="1000" placeholder="Expliquez le problème..."></textarea><div class="cnt" id="rpCnt">0 / 1000</div></label>
+    <label class="fld"><span>CONTACT (optionnel)</span><input class="in" id="rpContact" maxlength="120" placeholder="E-mail ou numéro WhatsApp"></label>
+    <input class="hp" id="rpWeb" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <button class="fcta" id="rpSend" type="submit">Envoyer le signalement</button>
+  </form>
+  <p class="sy-msg" id="rpMsg" hidden></p>
+</section>
+<section class="tsec" id="accSec" hidden>
+  <p class="kick">VOTRE COMPTE</p>
+  <h1>Compte</h1>
+  <p class="sub">Gérez votre compte et la langue du site.</p>
+  <div class="card ac-card">
+    <div class="ac-top"><span class="ac-av" id="acAv">D</span><div><small class="ac-k">COMPTE GOOGLE</small><b id="acName">—</b><span class="ac-mail" id="acMail">—</span></div><span class="pill" id="acPill">—</span></div>
+    <p class="ac-note">Google protège votre compte et vérifie votre connexion.</p>
+  </div>
+  <div class="card ac-card">
+    <small class="ac-k">LANGUE DU SITE</small>
+    <p class="sub" style="margin:0">Votre choix est enregistré sur cet appareil.</p>
+    <div class="seg" id="acLang"><button type="button" data-l="en">English</button><button type="button" data-l="fr">Français</button><button type="button" data-l="ht">Kreyòl</button></div>
+  </div>
+  <div class="card ac-card">
+    <small class="ac-k">SESSION</small>
+    <p class="sub" style="margin:0">Déconnectez cet appareil. Vous pourrez vous reconnecter avec Google à tout moment.</p>
+    <button class="sy-btn" id="acLogout" type="button" style="margin-top:14px">Se déconnecter de cet appareil</button>
+  </div>
+  <p class="sy-msg" id="acMsg" hidden></p>
+</section>
 </main>
 
 
-<div class="more" id="more" hidden><a href="privacy.html">Confidentialité</a><a href="terms.html">Conditions</a><a href="about.html">À propos</a><a href="index.html">Accueil</a></div>
-<div class="tabbar" role="navigation" aria-label="Navigation principale"><a class="tab on" href="dashboard.html"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg><span>Aperçu</span></a><a class="tab" href="register.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>Mon profil</span></a><a class="tab" href="list.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 20v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1M9.5 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M21 20v-1a4 4 0 0 0-3-3.9M16 4.1a3.5 3.5 0 0 1 0 6.8"/></svg><span>Membres</span></a><a class="tab" href="report.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg><span>Signalement</span></a><button class="tab" id="moreBtn" type="button" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>Plus</span></button></div>
+<div class="more" id="more" hidden><a href="dashboard.html?tab=sync">Ajout automatique</a><a href="dashboard.html?tab=account">Compte</a><a href="privacy.html">Confidentialité</a><a href="terms.html">Conditions</a><a href="about.html">À propos</a><a href="index.html">Accueil</a></div>
+<div class="tabbar" role="navigation" aria-label="Navigation principale"><a class="tab on" href="dashboard.html"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg><span>Aperçu</span></a><a class="tab" data-tab="profile" href="dashboard.html?tab=profile"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>Mon profil</span></a><a class="tab" href="list.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 20v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1M9.5 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M21 20v-1a4 4 0 0 0-3-3.9M16 4.1a3.5 3.5 0 0 1 0 6.8"/></svg><span>Membres</span></a><a class="tab" data-tab="reports" href="dashboard.html?tab=reports"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg><span>Signalement</span></a><button class="tab" id="moreBtn" type="button" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>Plus</span></button></div>
 <script>
 function $(id){return document.getElementById(id)}
-function get(p){return fetch(p,{credentials:'include',cache:'no-store'}).then(function(r){if(!r.ok)throw r.status;return r.json()})}
+function tok(){try{return localStorage.getItem('dv_auth_token')||''}catch(_){return ''}}
+function get(p){var hd={Accept:'application/json'},t=tok();if(t)hd.Authorization='Bearer '+t;return fetch(p,{credentials:'include',cache:'no-store',headers:hd}).then(function(r){if(!r.ok)throw r.status;return r.json()})}
 function num(v){return typeof v==='number'?v:'—'}
 function delta(el,v){if(typeof v!=='number'){el.style.display='none';return}el.style.display='';el.textContent=(v>=0?'+':'')+v+'%';el.className='delta'+(v<0?' down':'')}
 var days=null;
@@ -209,6 +316,212 @@ load();
 var mb=$('moreBtn'),mm=$('more');
 if(mb){mb.addEventListener('click',function(e){e.stopPropagation();var o=mm.hidden;mm.hidden=!o;mb.setAttribute('aria-expanded',o)});
 document.addEventListener('click',function(){mm.hidden=true;mb.setAttribute('aria-expanded',false)})}
+
+(function(){
+  if(new URLSearchParams(location.search).get('tab')!=='sync')return;
+  var sec=$('syncSec'); if(!sec)return;
+  document.querySelectorAll('main > h1, main > .sub, main > .stats, main > .grid, main > .actions').forEach(function(e){e.hidden=true});
+  sec.hidden=false; document.title='Ajout automatique — DOBERTO VCF';
+  var cur=document.querySelector('nav a.on'); if(cur)cur.classList.remove('on');
+  var ns=$('navSync'); if(ns)ns.classList.add('on');
+  var LAST='dv_sync_last', conn=null, busy=false;
+  function say(t,bad){var m=$('syMsg');m.hidden=!t;m.textContent=t||'';m.className='sy-msg'+(bad?' bad':'')}
+  function api(method,path){
+    var hd={Accept:'application/json'},t=tok(); if(t)hd.Authorization='Bearer '+t;
+    return fetch(path,{method:method,headers:hd,credentials:'include',cache:'no-store'}).then(function(r){
+      return r.json().catch(function(){return {}}).then(function(d){d.__status=r.status;return d})});
+  }
+  function isOn(c){if(!c)return false;var s=String(c.status||'').toLowerCase();
+    if(s.indexOf('reauth')>-1||s==='revoked'||s==='expired')return false;
+    return c.connected===true||s==='connected'||s==='active'}
+  function lastTxt(){try{var n=Number(localStorage.getItem(LAST))||0;return n?new Date(n).toLocaleString('fr-FR'):'Pas encore mis à jour'}catch(_){return 'Pas encore mis à jour'}}
+  function render(){
+    var on=isOn(conn), sw=$('syToggle');
+    sw.classList.toggle('on',on); sw.setAttribute('aria-checked',on?'true':'false'); sw.disabled=busy||!tok();
+    $('syConn').textContent=on?'Connecté':(conn?'À reconnecter':'Non connecté');
+    $('syDesc').textContent=on?'Activé — les nouveaux membres arrivent dans vos contacts.':'Désactivé — connectez Google Contacts pour activer.';
+    $('syLast').textContent=lastTxt();
+    $('syNow').disabled=!on||busy;
+  }
+  function done(sent){try{localStorage.setItem(LAST,String(Date.now()))}catch(_){}
+    busy=false; say('Contacts mis à jour'+(sent?' ('+sent+' envoyés).':'.')); render()}
+  function poll(id,n,sent){
+    if(n>40){busy=false;render();say('La mise à jour continue en arrière-plan.');return}
+    setTimeout(function(){
+      api('GET','/api/shizzy/jobs/'+encodeURIComponent(id)).then(function(d){
+        var st=String((d.job&&d.job.status)||'').toLowerCase();
+        if(['succeeded','success','completed','done'].indexOf(st)>-1)done(sent);
+        else if(['failed','error'].indexOf(st)>-1){busy=false;render();say((d.job&&d.job.error)||'La mise à jour a échoué.',true)}
+        else poll(id,n+1,sent);
+      }).catch(function(){poll(id,n+1,sent)});
+    },1500);
+  }
+  $('syToggle').addEventListener('click',function(){
+    if(busy)return;
+    if(!isOn(conn)){
+      busy=true; render(); say('Ouverture de Google…');
+      api('POST','/api/shizzy/connect').then(function(d){
+        if(d.ok&&d.url){location.assign(d.url);return}
+        busy=false; render(); say(d.error||'Connexion impossible.',true);
+      });
+    }else{
+      if(!confirm('Désactiver l’ajout automatique ?'))return;
+      busy=true; render();
+      api('DELETE','/api/shizzy/connection').then(function(d){
+        busy=false; if(d.ok){conn=null;say('Ajout automatique désactivé.')}else say(d.error||'Échec.',true); render();
+      });
+    }
+  });
+  $('syNow').addEventListener('click',function(){
+    if(busy)return; busy=true; render(); say('Mise à jour en cours…');
+    api('POST','/api/shizzy/sync').then(function(d){
+      if(!d.ok){busy=false;render();
+        say(d.code==='not_registered'?'Ajoutez d’abord votre numéro dans Mon profil.':(d.error||'Échec de la mise à jour.'),true);return}
+      if(!d.jobId){done(d.sent);return}
+      poll(d.jobId,0,d.sent);
+    });
+  });
+  if(!tok()){render();$('syConn').textContent='Non connecté';say('Connectez-vous d’abord avec Google pour utiliser cette option.',true);return}
+  api('GET','/api/shizzy/status').then(function(d){
+    if(d.configured===false){say('Le service de synchronisation n’est pas encore configuré.',true);return}
+    if(!d.ok){say(d.error||'Impossible de lire le statut.',true);return}
+    conn=d.connection||null; render();
+  }).catch(function(){say('Impossible de lire le statut.',true)});
+})();
+
+(function(){
+  var tab=new URLSearchParams(location.search).get('tab');
+  if(tab!=='profile'&&tab!=='reports')return;
+  document.querySelectorAll('main > h1, main > .sub, main > .stats, main > .grid, main > .actions').forEach(function(e){e.hidden=true});
+  var cur=document.querySelector('nav a.on'); if(cur)cur.classList.remove('on');
+  var tOn=document.querySelector('.tabbar .tab.on'); if(tOn)tOn.classList.remove('on');
+  var nv=$(tab==='profile'?'navProfile':'navReports'); if(nv)nv.classList.add('on');
+  var tb=document.querySelector('.tabbar .tab[data-tab="'+tab+'"]'); if(tb)tb.classList.add('on');
+
+  function say(id,t,bad){var m=$(id);m.hidden=!t;m.textContent=t||'';m.className='sy-msg'+(bad?' bad':'')}
+  function hd(){var h={Accept:'application/json','Content-Type':'application/json'},t=tok();if(t)h.Authorization='Bearer '+t;return h}
+  function post(path,body){
+    return fetch(path,{method:'POST',headers:hd(),credentials:'include',body:JSON.stringify(body)}).then(function(r){
+      return r.json().catch(function(){return {}}).then(function(d){return {ok:r.ok,d:d}})});
+  }
+  function loadCountries(){
+    return fetch('js/countries.js',{cache:'force-cache'}).then(function(r){return r.text()}).then(function(t){
+      try{var l=new Function(t+'\n;return typeof COUNTRIES!=="undefined"?COUNTRIES:null;')();return Array.isArray(l)&&l.length?l:null}catch(_){return null}
+    }).catch(function(){return null});
+  }
+
+  function profileTab(){
+    $('profSec').hidden=false; document.title='Mon profil — DOBERTO VCF';
+    var list=[{name:'Ayiti (Haiti)',iso:'HT',dial:'509',len:8}], reg=null, busy=false, needLogin=false, sel=$('pfCountry');
+    function fillSel(){sel.innerHTML='';list.forEach(function(c,i){var o=document.createElement('option');o.value=String(i);o.textContent=c.iso+' +'+c.dial;sel.appendChild(o)})}
+    function setCountry(r){
+      var idx=-1,d=String(r.dial_code||'').replace(/\D/g,'');
+      list.forEach(function(c,i){if(idx<0&&r.country_name&&c.name===r.country_name)idx=i});
+      if(idx<0)list.forEach(function(c,i){if(idx<0&&c.dial===d)idx=i});
+      if(idx>=0)sel.value=String(idx);
+    }
+    fillSel();
+    $('pfForm').addEventListener('submit',function(e){
+      e.preventDefault(); if(busy)return;
+      if(needLogin||!tok()){location.assign('register.html?stay=1');return}
+      var name=$('pfName').value.replace(/\s+/g,' ').trim(), c=list[Number(sel.value)||0], phone=$('pfPhone').value.replace(/\D/g,'');
+      if(name.length<2){say('pfMsg','Entrez votre nom complet.',true);return}
+      if(c.len?phone.length!==c.len:(phone.length<6||phone.length>15)){say('pfMsg',c.len?'Le numéro doit avoir '+c.len+' chiffres.':'Numéro invalide.',true);return}
+      if(!reg&&!$('pfConsent').checked){say('pfMsg','Acceptez la politique de confidentialité.',true);return}
+      busy=true; $('pfSave').disabled=true; say('pfMsg','Enregistrement…');
+      post('/api/register',{name:name,dialCode:c.dial,countryName:c.name,phone:phone}).then(function(res){
+        busy=false; $('pfSave').disabled=false;
+        if(res.ok){reg=res.d.registration||{name:name};$('pfConsentRow').hidden=true;say('pfMsg','Profil enregistré. Vous pouvez maintenant activer l’ajout automatique.')}
+        else say('pfMsg',res.d.error||'Enregistrement impossible. Réessayez.',true);
+      }).catch(function(){busy=false;$('pfSave').disabled=false;say('pfMsg','Erreur réseau. Réessayez.',true)});
+    });
+    if(!tok()){needLogin=true;say('pfMsg','Connectez-vous d’abord avec Google pour modifier votre profil.',true);$('pfSave').textContent='Se connecter avec Google';return}
+    Promise.all([loadCountries(),get('/api/auth/session').catch(function(){return null})]).then(function(r){
+      if(r[0]){list=r[0];fillSel()}
+      var se=r[1];
+      if(!se||!se.ok){needLogin=true;say('pfMsg','Session expirée. Reconnectez-vous avec Google.',true);$('pfSave').textContent='Se connecter avec Google';return}
+      reg=se.registration||se.profile||null;
+      if(reg){$('pfName').value=reg.name||'';setCountry(reg);$('pfPhone').value=reg.phone||''}
+      else $('pfConsentRow').hidden=false;
+    });
+  }
+
+  function reportsTab(){
+    $('repSec').hidden=false; document.title='Signalement — DOBERTO VCF';
+    var R=[['fake','Faux numéro'],['spam','Spam'],['harassment','Harcèlement'],['privacy','Vie privée'],['bug','Problème technique'],['other','Autre']], busy=false;
+    R.forEach(function(x){var o=document.createElement('option');o.value=x[0];o.textContent=x[1];$('rpReason').appendChild(o)});
+    var pre=new URLSearchParams(location.search).get('target'); if(pre)$('rpTarget').value=pre.slice(0,120);
+    $('rpDetails').addEventListener('input',function(){$('rpCnt').textContent=this.value.length+' / 1000'});
+    $('rpForm').addEventListener('submit',function(e){
+      e.preventDefault(); if(busy)return;
+      var details=$('rpDetails').value.trim();
+      if(details.length<10){say('rpMsg','Écrivez une petite explication (au moins 10 caractères).',true);return}
+      busy=true; $('rpSend').disabled=true; say('rpMsg','Envoi…');
+      post('/api/report',{reason:$('rpReason').value,target:$('rpTarget').value,details:details,contact:$('rpContact').value,website:$('rpWeb').value}).then(function(res){
+        busy=false; $('rpSend').disabled=false;
+        if(res.ok){$('rpForm').reset();$('rpCnt').textContent='0 / 1000';say('rpMsg','Merci ! Votre signalement a été envoyé.')}
+        else say('rpMsg',res.d.error||'Envoi impossible. Réessayez.',true);
+      }).catch(function(){busy=false;$('rpSend').disabled=false;say('rpMsg','Erreur réseau. Réessayez.',true)});
+    });
+  }
+
+  if(tab==='profile')profileTab(); else reportsTab();
+})();
+
+(function(){
+  if(new URLSearchParams(location.search).get('tab')!=='account')return;
+  var sec=$('accSec'); if(!sec)return;
+  document.querySelectorAll('main > h1, main > .sub, main > .stats, main > .grid, main > .actions').forEach(function(e){e.hidden=true});
+  sec.hidden=false; document.title='Compte — DOBERTO VCF';
+  var cur=document.querySelector('nav a.on'); if(cur)cur.classList.remove('on');
+  var tOn=document.querySelector('.tabbar .tab.on'); if(tOn)tOn.classList.remove('on');
+  var na=$('navAccount'); if(na)na.classList.add('on');
+  var mb2=$('moreBtn'); if(mb2)mb2.classList.add('on');
+
+  function say(t,bad){var m=$('acMsg');m.hidden=!t;m.textContent=t||'';m.className='sy-msg'+(bad?' bad':'')}
+  function lang(){try{return localStorage.getItem('doberto_lang')||'ht'}catch(_){return 'ht'}}
+  function markLang(){var l=lang();document.querySelectorAll('#acLang button').forEach(function(b){b.className=b.getAttribute('data-l')===l?'on':''})}
+  document.querySelectorAll('#acLang button').forEach(function(b){
+    b.addEventListener('click',function(){
+      try{localStorage.setItem('doberto_lang',b.getAttribute('data-l'))}catch(_){}
+      markLang(); say('Langue enregistrée sur cet appareil.');
+    });
+  });
+  markLang();
+
+  function wipe(){
+    try{Object.keys(localStorage).forEach(function(k){
+      if(k==='doberto_lang'||/onesignal|install/i.test(k))return;
+      if(/^dv_|google|auth|session|token/i.test(k))localStorage.removeItem(k);
+    })}catch(_){}
+    try{sessionStorage.clear()}catch(_){}
+  }
+  function loginMode(msg){
+    $('acPill').textContent='Non connecté'; $('acPill').className='pill';
+    $('acName').textContent='Non connecté'; $('acMail').textContent='—';
+    $('acLogout').textContent='Se connecter avec Google'; $('acLogout').setAttribute('data-login','1');
+    if(msg)say(msg,true);
+  }
+  $('acLogout').addEventListener('click',function(){
+    if(this.getAttribute('data-login')){location.assign('register.html?stay=1');return}
+    if(!confirm('Se déconnecter de cet appareil ?'))return;
+    wipe(); location.replace('index.html');
+  });
+
+  if(!tok()){loginMode('Connectez-vous avec Google pour gérer votre compte.');return}
+  get('/api/auth/session').then(function(se){
+    if(!se||!se.ok||!se.user){loginMode('Session expirée. Reconnectez-vous avec Google.');return}
+    var u=se.user, nm=u.name||'Membre';
+    $('acName').textContent=nm; $('acMail').textContent=u.email||'—';
+    $('acPill').textContent='Connecté'; $('acPill').className='pill ok';
+    $('acAv').textContent=(String(nm).trim().charAt(0)||'D').toUpperCase();
+    var pic=u.picture||u.avatar||u.avatarUrl||u.avatar_url;
+    if(pic&&/^https:\/\//.test(pic)){
+      var im=document.createElement('img'); im.alt=''; im.referrerPolicy='no-referrer'; im.src=pic;
+      $('acAv').textContent=''; $('acAv').appendChild(im);
+    }
+  }).catch(function(){loginMode('Session expirée. Reconnectez-vous avec Google.')});
+})();
 </script>
 </body>
 </html>
