@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ht">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>DOBERTO VCF — Akèy</title>
+<meta name="description" content="Join the DOBERTO VCF WhatsApp network, register your profile, connect with members, and sync them to Google Contacts.">
+<meta name="robots" content="noindex,nofollow">
+<meta name="application-name" content="DOBERTO VCF">
+<link rel="canonical" href="https://dobertovcf.online/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="DOBERTO VCF">
+<meta property="og:title" content="DOBERTO VCF — WhatsApp Network">
+<meta property="og:description" content="Join the DOBERTO VCF WhatsApp network, register your profile, connect with members, and sync them to Google Contacts.">
+<meta property="og:url" content="https://dobertovcf.online/">
+<meta property="og:image" content="https://dobertovcf.online/icons/doberto-vcf-512.png">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#04100b">
+<link rel="manifest" href="manifest.webmanifest?v=20260917-3">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/doberto-vcf-192.png?v=20260904-1">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#04100b;--panel:#09181260;--panel:#0a1a13;--line:rgba(143,255,203,.10);--text:#eafff5;--muted:#8aa196;--signal:#36e7a7;--sun:#f5c451}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{font:16px/1.6 Inter,system-ui,"Segoe UI",sans-serif;background:radial-gradient(1100px 520px at 75% -8%,rgba(54,231,167,.10),transparent),var(--ink);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit}
+.wrap{width:min(1180px,100% - 40px);margin-inline:auto}
+.hl{color:var(--sun)}
+.eyebrow{display:flex;align-items:center;gap:12px;color:var(--sun);font-size:12px;font-weight:800;letter-spacing:.16em;margin-bottom:18px}
+.eyebrow::before{content:"";width:34px;height:1px;background:var(--sun)}
+h2{font-size:clamp(30px,4.6vw,52px);line-height:1.08;letter-spacing:-.03em;font-weight:800;max-width:900px}
+.sub{color:var(--muted);font-size:18px;max-width:640px;margin-top:16px}
+section{padding:84px 0}
+/* nav */
+.nav{position:sticky;top:0;z-index:50;background:rgba(4,16,11,.84);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:22px;height:72px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:.01em}
+.brand img{width:36px;height:36px;border-radius:10px;display:block}
+.links{display:flex;gap:26px;margin-left:14px;font-weight:600;color:#bcd0c6}
+.links a:hover{color:#fff}
+.sp{flex:1}
+.lang{display:inline-flex;border:1px solid var(--line);border-radius:14px;padding:4px;gap:2px}
+.lang button{padding:7px 12px;border:0;border-radius:10px;background:none;color:var(--muted);font-weight:700;font-size:13px;cursor:pointer}
+.lang button.on{background:rgba(255,255,255,.09);color:var(--text)}
+.nlogin{font-weight:600;color:#cfe0d7}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:15px 26px;border-radius:16px;font-weight:800;border:1px solid var(--line);cursor:pointer}
+.btn.light{background:var(--text);color:var(--ink);border-color:transparent}
+.btn.light:hover{background:#fff}
+.btn.ghost{background:var(--panel);color:var(--text)}
+.btn.ghost:hover{border-color:rgba(54,231,167,.4)}
+.btn.sm{padding:11px 18px;border-radius:14px}
+.arrow::after{content:"→"}
+.btn{white-space:nowrap}
+.have{color:var(--muted);font-size:14px;margin-top:10px}.have a{font-weight:700;color:var(--signal)}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
+/* hero */
+.hero{padding:70px 0 40px}
+.hgrid{display:grid;grid-template-columns:1.15fr 1fr;gap:48px;align-items:center}
+.live{display:inline-flex;align-items:center;gap:12px;border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:7px 18px 7px 8px;font-size:14px;color:#cfe0d7;margin-bottom:26px;max-width:100%}
+.live b{background:rgba(54,231,167,.14);color:var(--signal);border-radius:999px;padding:4px 12px;font-size:12px;letter-spacing:.06em}
+h1{font-size:clamp(40px,6.6vw,84px);line-height:1.02;letter-spacing:-.035em;font-weight:800}
+.lead{color:var(--muted);font-size:19px;max-width:560px;margin-top:24px}
+.cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:34px}
+.trust{color:var(--muted);font-size:14px;margin-top:22px}
+.trust::before{content:"✓ ";color:var(--signal)}
+.mock{border:1px solid var(--line);border-radius:26px;background:var(--panel);overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.mh{display:flex;align-items:center;gap:8px;padding:16px 20px;border-bottom:1px solid var(--line)}
+.mh i{width:11px;height:11px;border-radius:50%;background:#26382f;display:block}
+.mh b{margin-left:8px;font-size:15px}
+.tag{margin-left:auto;font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--sun);border:1px solid rgba(245,196,81,.35);border-radius:10px;padding:5px 10px}
+.mrows{padding:10px}
+.mrow,.lrow{display:flex;align-items:center;gap:14px;padding:13px 14px;border-radius:16px}
+.mrow.first{border:1px solid rgba(245,196,81,.35);background:rgba(245,196,81,.05)}
+.av{flex:none;width:44px;height:44px;border-radius:50%;background:#10241b;display:grid;place-items:center;font-weight:800}
+.first .av{background:var(--sun);color:#1b1500}
+.mw{min-width:0}.mw b{display:block;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mw small{color:var(--muted);font-size:13px}
+.bdg{margin-left:auto;font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--sun);background:rgba(245,196,81,.12);border-radius:10px;padding:5px 10px}
+.mf{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:15px 22px;border-top:1px solid var(--line);font-size:14px}
+.mf .ok{color:var(--signal);font-weight:600}.mf .ok::before{content:"● ";font-size:10px}
+.mf .mu{color:var(--muted)}
+.sk .av,.sk .mw b,.sk .mw small{background:#10241b;color:transparent;border-radius:8px;animation:pl 1.2s infinite ease-in-out}
+.sk .mw b{width:120px;height:14px;margin-bottom:6px}.sk .mw small{display:block;width:70px;height:10px}
+@keyframes pl{50%{opacity:.45}}
+/* live */
+.lgrid{display:grid;grid-template-columns:1.15fr 1fr;gap:16px;margin-top:40px}
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:24px;padding:28px}
+.stat small{display:block;color:var(--muted);font-size:12px;font-weight:800;letter-spacing:.14em}
+.stat strong{display:block;font-size:56px;line-height:1.1;font-weight:800;letter-spacing:-.03em;margin-top:10px;font-variant-numeric:tabular-nums}
+.lhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.lhead b{font-size:18px}
+.lhead span{color:var(--signal);font-size:12px;font-weight:800;letter-spacing:.12em}.lhead span::before{content:"● ";font-size:10px}
+.lrow{border-top:1px solid var(--line);border-radius:0;padding:14px 4px}
+.lrow:first-of-type{border-top:0}
+.lrow .av{width:40px;height:40px;font-size:15px}
+.lrow .rt{margin-left:auto;color:var(--muted);font-size:13px;text-align:right;white-space:nowrap}
+.empty{color:var(--muted);padding:20px 4px}
+.refrow{display:flex;align-items:center;justify-content:flex-end;gap:12px;color:var(--muted);font-size:14px;margin-top:-30px}
+.ref{width:44px;height:44px;border-radius:14px;border:1px solid var(--line);background:var(--panel);cursor:pointer;font-size:18px}
+.ref:hover{border-color:rgba(54,231,167,.4)}
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:44px}
+.step .no{display:flex;align-items:center;gap:14px;color:var(--muted);font-family:ui-monospace,Consolas,monospace;font-size:14px;letter-spacing:.14em}
+.ic{width:52px;height:52px;border-radius:15px;border:1px solid rgba(245,196,81,.4);display:grid;place-items:center}
+.ic svg{width:24px;height:24px;fill:none;stroke:var(--sun);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.step h3,.fc h3{font-size:22px;letter-spacing:-.02em;margin:22px 0 10px}
+.step p,.fc p{color:var(--muted)}
+.chip{display:inline-block;margin-top:20px;border:1px solid var(--line);border-radius:12px;padding:8px 14px;color:#cfe0d7;font-size:14px}
+/* features */
+.f1{display:grid;grid-template-columns:1.6fr 1fr;gap:16px;margin-top:44px}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+.fc .ic{margin-bottom:6px}
+.fc.row{display:flex;gap:18px}.fc.row h3{margin-top:0}
+.checks{list-style:none;padding:0;margin-top:22px;display:grid;gap:12px}
+.checks li{display:flex;gap:12px;color:#cfe0d7}.checks li::before{content:"✓";color:var(--sun);font-weight:800}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.chips span{border:1px solid var(--line);border-radius:12px;padding:7px 12px;font-size:13px;color:#cfe0d7;font-family:ui-monospace,Consolas,monospace}
+/* why */
+.wgrid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.wcard{display:grid;gap:12px}
+.wr{display:flex;gap:14px;align-items:center;border:1px solid var(--line);border-radius:16px;padding:16px 18px;background:rgba(255,255,255,.02)}
+.wr::before{content:"✓";flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:rgba(54,231,167,.14);color:var(--signal);font-weight:800}
+.wr.res{border-color:rgba(54,231,167,.4);color:var(--signal);font-weight:700}
+/* faq */
+.faq{column-count:2;column-gap:14px;margin-top:40px}
+details{break-inside:avoid;border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:0 22px;margin-bottom:14px}
+summary{cursor:pointer;list-style:none;padding:20px 0;font-weight:700;display:flex;justify-content:space-between;gap:14px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"⌄";color:var(--muted);transition:transform .2s}
+details[open] summary::after{transform:rotate(180deg)}
+details p{color:var(--muted);padding:0 0 20px}
+/* final */
+.final{border:1px solid var(--line);border-radius:32px;padding:80px 24px;text-align:center;background:radial-gradient(700px 260px at 50% 100%,rgba(245,196,81,.07),transparent),var(--panel)}
+.final .eyebrow{justify-content:center}
+.final h2{margin-inline:auto}
+.final .sub{margin-inline:auto}
+.final .cta{justify-content:center}
+/* footer */
+footer{border-top:1px solid var(--line);padding:60px 0 36px;margin-top:40px}
+.fg{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px}
+.fg h4{font-size:12px;letter-spacing:.16em;color:var(--muted);margin-bottom:16px}
+.fg a{display:block;color:#cfe0d7;margin-bottom:10px}.fg a:hover{color:#fff}
+.fg p{color:var(--muted);margin:14px 0 10px;max-width:320px}
+.cnt{font-family:ui-monospace,Consolas,monospace;color:var(--muted);font-size:14px}
+.fb{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;border-top:1px solid var(--line);margin-top:40px;padding-top:26px;color:var(--muted);font-size:14px}
+@media(max-width:1000px){.hgrid,.lgrid,.wgrid,.f1{grid-template-columns:1fr}.steps{grid-template-columns:1fr}.fg{grid-template-columns:1fr 1fr}.refrow{margin-top:14px}}
+@media(max-width:900px){.links{display:none}}
+@media(max-width:720px){section{padding:60px 0}.faq{column-count:1}.f2{grid-template-columns:1fr}.hero{padding-top:40px}.nav .wrap{gap:12px;height:64px}.sgrid{grid-template-columns:1fr 1fr}.stat strong{font-size:40px}.card{padding:22px}}
+@media(max-width:560px){.fg{grid-template-columns:1fr}}
+@media(max-width:720px){.nav .nlogin,.nav .btn.sm{display:none}.lang button{padding:7px 10px}}
+@media(max-width:430px){.btn{width:100%}}
+@media(max-width:340px){.brand span{display:none}}
+</style>
+</head>
+<body>
+<script src="js/stability.js?v=20260917-10"></script>
+
+<header class="nav"><div class="wrap">
+  <a class="brand" href="/"><img src="icons/doberto-vcf-192.png?v=20260904-1" width="36" height="36" alt=""><span>DOBERTO VCF</span></a>
+  <nav class="links" aria-label="Menu"><a href="#how" data-i="nHow"></a><a href="#why" data-i="nWhy"></a><a href="#faq" data-i="nFaq"></a></nav>
+  <span class="sp"></span>
+  <div class="lang" role="group" aria-label="Langue"><button type="button" data-l="ht">HT</button><button type="button" data-l="fr">FR</button><button type="button" data-l="en">EN</button></div>
+  <a class="nlogin js-login" href="/api/auth/google/url?flow=login&amp;redirect=1" data-i="nLogin"></a>
+  <a class="btn light sm js-start" href="register.html" data-i="nStart"></a>
+</div></header>
+
+<main>
+<section class="hero"><div class="wrap hgrid">
+  <div>
+    <div class="live"><b>DIRECT</b><span id="liveTxt">—</span></div>
+    <h1 data-h="hTitle"></h1>
+    <p class="lead" data-i="hLead"></p>
+    <div class="cta">
+      <a class="btn light arrow js-start" href="register.html" data-i="ctaA"></a>
+      <a class="btn ghost" href="#how" data-i="ctaB"></a>
+    </div>
+    <p class="trust" data-i="hTrust"></p>
+    <p class="have" id="have"><span data-i="haveQ"></span> <a class="js-login" href="/api/auth/google/url?flow=login&amp;redirect=1" data-i="nLogin"></a></p>
+  </div>
+  <div class="mock">
+    <div class="mh"><i></i><i></i><i></i><b>Google Contacts</b><span class="tag" data-i="mTag"></span></div>
+    <div class="mrows" id="mRows"></div>
+    <div class="mf"><span class="ok" data-i="mOn"></span><span class="mu" data-i="mUpd"></span></div>
+  </div>
+</div></section>
+
+<section id="live"><div class="wrap">
+  <div class="eyebrow" data-i="lEy"></div>
+  <h2 data-h="lH"></h2>
+  <div class="lgrid" style="margin-top:56px">
+    <div class="sgrid">
+      <div class="card stat"><small data-i="sTotal"></small><strong id="nTotal">—</strong></div>
+      <div class="card stat"><small data-i="sCountries"></small><strong id="nCountries">—</strong></div>
+      <div class="card stat"><small data-i="sToday"></small><strong id="nToday">—</strong></div>
+      <div class="card stat"><small data-i="sWeek"></small><strong id="nWeek">—</strong></div>
+    </div>
+    <div class="card">
+      <div class="lhead"><b data-i="lList"></b><span data-i="lDirect"></span></div>
+      <div id="lRows"></div>
+    </div>
+  </div>
+  <div class="refrow"><span data-i="lNote"></span><button class="ref" id="refBtn" type="button" aria-label="Refresh">↻</button></div>
+</div></section>
+
+<section id="how"><div class="wrap">
+  <div class="eyebrow" data-i="hwEy"></div>
+  <h2 data-h="hwH"></h2>
+  <p class="sub" data-i="hwSub"></p>
+  <div class="steps">
+    <div class="card step"><div class="no"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span>01</div><h3 data-i="s1"></h3><p data-i="s1d"></p><span class="chip">Google</span></div>
+    <div class="card step"><div class="no"><span class="ic"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18h2"/></svg></span>02</div><h3 data-i="s2"></h3><p data-i="s2d"></p><span class="chip">Mon profil</span></div>
+    <div class="card step"><div class="no"><span class="ic"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 1-14 5.3M4 12a8 8 0 0 1 14-5.3M18 3v4h-4M6 21v-4h4"/></svg></span>03</div><h3 data-i="s3"></h3><p data-i="s3d"></p><span class="chip" data-i="s3c"></span></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow" data-i="ftEy"></div>
+  <h2 data-h="ftH"></h2>
+  <div class="f1">
+    <div class="card fc"><span class="ic"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 1-14 5.3M4 12a8 8 0 0 1 14-5.3M18 3v4h-4M6 21v-4h4"/></svg></span><h3 data-i="f1"></h3><p data-i="f1d"></p>
+      <ul class="checks"><li data-i="f1a"></li><li data-i="f1b"></li><li data-i="f1c"></li></ul></div>
+    <div class="card fc"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span><h3 data-i="f2"></h3><p data-i="f2d"></p>
+      <div class="chips"><span>HT +509</span><span>US +1</span><span>CA +1</span><span>FR +33</span><span>DO +1</span><span>BR +55</span></div></div>
+  </div>
+  <div class="f2">
+    <div class="card fc row"><span class="ic" style="flex:none"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg></span><div><h3 data-i="f3"></h3><p data-i="f3d"></p></div></div>
+    <div class="card fc row"><span class="ic" style="flex:none"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span><div><h3 data-i="f4"></h3><p data-i="f4d"></p></div></div>
+  </div>
+</div></section>
+
+<section id="why"><div class="wrap wgrid">
+  <div><div class="eyebrow" data-i="wEy"></div><h2 data-h="wH"></h2><p class="sub" data-i="wP"></p></div>
+  <div class="card wcard"><div class="wr" data-i="w1"></div><div class="wr" data-i="w2"></div><div class="wr res" data-i="w3"></div></div>
+</div></section>
+
+<section id="faq"><div class="wrap">
+  <div class="eyebrow">FAQ</div>
+  <h2 data-i="fqH"></h2>
+  <div class="faq" id="faqBox"></div>
+</div></section>
+
+<section><div class="wrap"><div class="final">
+  <div class="eyebrow" data-i="cEy"></div>
+  <h2 data-h="cH"></h2>
+  <p class="sub" data-i="cP"></p>
+  <div class="cta">
+    <a class="btn light arrow js-start" href="register.html" data-i="ctaA"></a>
+    <a class="btn ghost js-login" href="/api/auth/google/url?flow=login&amp;redirect=1" data-i="cLogin"></a>
+  </div>
+</div></div></section>
+</main>
+
+<footer><div class="wrap">
+  <div class="fg">
+    <div><a class="brand" href="/" style="margin-bottom:0"><img src="icons/doberto-vcf-192.png?v=20260904-1" width="36" height="36" alt=""><span>DOBERTO VCF</span></a><p data-i="fTag"></p><div class="cnt" id="fCount">—</div></div>
+    <div><h4 data-i="fP"></h4><a href="#how" data-i="nHow"></a><a href="#why" data-i="nWhy"></a><a href="#faq" data-i="nFaq"></a><a href="list.html" data-i="fMem"></a></div>
+    <div><h4 data-i="fA"></h4><a class="js-start" href="register.html" data-i="fCreate"></a><a class="js-login" href="/api/auth/google/url?flow=login&amp;redirect=1" data-i="nLogin"></a><a href="dashboard.html" data-i="fDash"></a></div>
+    <div><h4>LEGAL</h4><a href="privacy.html" data-i="fPriv"></a><a href="terms.html" data-i="fTerms"></a><a href="about.html" data-i="fAbout"></a></div>
+  </div>
+  <div class="fb"><span>© 2026 DOBERTO VCF</span><div class="lang" role="group" aria-label="Langue"><button type="button" data-l="ht">HT</button><button type="button" data-l="fr">FR</button><button type="button" data-l="en">EN</button></div></div>
+</div></footer>
+
+<script>
+(function(){
+'use strict';
+var T={
+ht:{title:'DOBERTO VCF — Plis kontak WhatsApp, plis vi sou stati ou yo',
+nHow:'Kijan sa mache',nWhy:'Poukisa sa mache',nFaq:'FAQ',nLogin:'Konekte',haveQ:'Ou deja manm?',nStart:'Kòmanse gratis',dash:'Tablo bò',
+liveTxt:'{n} manm · {c} peyi · kontak mete ajou otomatikman',
+hTitle:'Plis kontak WhatsApp, <span class="hl">plis vi sou stati ou yo.</span>',
+hLead:'Antre nan lis manm DOBERTO VCF. Ajoute nimewo yo nan Google Contacts otomatikman. Manm ki anrejistre nimewo w tou ka wè stati WhatsApp ou.',
+ctaA:'Kreye yon kont gratis',ctaB:'Kijan sa mache',hTrust:'Koneksyon Google · Okenn modpas · Gratis',
+mTag:'AJOUT OTOMATIK',mOn:'Ajout otomatik aktive',mUpd:'Mizajou apre chak nouvo enskripsyon',mNew:'NOUVO',
+lEy:'MANM AN DIRÈK',lH:'Chif manm yo, <span class="hl">mete ajou an dirèk.</span>',sTotal:'MANM',sCountries:'PEYI',sToday:'ENSKRI JODI A',sWeek:'SEMÈN SA A',
+lList:'Nouvo manm',lDirect:'DIRÈK',lNote:'Lis la mete ajou chak 45 segonn',lEmpty:'Poko gen manm pou montre.',
+hwEy:'KIJAN SA MACHE',hwH:'Ajoute kontak WhatsApp nan <span class="hl">twa etap.</span>',hwSub:'Pa gen aplikasyon pou enstale. Konekte, ajoute nimewo w, answit aktive ajout otomatik la.',
+s1:'Konekte ak Google',s1d:'Koneksyon an pran kèk segonn. Nou pa kenbe okenn modpas.',
+s2:'Ajoute nimewo w',s2d:'Antre non w ak nimewo WhatsApp ou nan Mon profil. Fich ou parèt nan lis manm yo.',
+s3:'Aktive ajout otomatik',s3d:'Konekte Google Contacts yon sèl fwa: nouvo manm yo ajoute nan telefòn ou otomatikman.',s3c:'Ajout otomatik',
+ftEy:'SA W JWENN',ftH:'Yon fason senp pou jwenn <span class="hl">nouvo kontak.</span>',
+f1:'Ajout otomatik nan Google Contacts',f1d:'Konekte kont Google ou yon sèl fwa. Apre chak nouvo enskripsyon, nouvo manm yo ajoute nan kontak ou.',
+f1a:'Se sèlman nouvo manm yo ki ajoute',f1b:'Ou ka sispann ajout otomatik la nenpòt ki lè',f1c:'Si Google dekonekte w, rekonekte kont ou nan tablo bò a',
+f2:'Nimewo tout peyi',f2d:'Ayiti, Etazini, Kanada, Ewòp ak plis ankò. Nimewo yo anrejistre nan fòma entènasyonal.',
+f3:'Yon tablo bò senp',f3d:'Jere pwofil ou, ajout otomatik la ak siyalman ou yo sou yon sèl paj, fasil pou itilize sou telefòn.',
+f4:'Nou itilize kèk enfòmasyon sèlman',f4d:'Nou itilize non w ak nimewo w pou lis manm yo. Koneksyon an fèt ak Google, nou pa kenbe okenn modpas.',
+wEy:'POUKISA SA MACHE',wH:'Pou wè stati yo, de moun yo dwe <span class="hl">anrejistre nimewo lòt la.</span>',
+wP:'WhatsApp montre yon stati sèlman bay kontak ki anrejistre. Lè ou menm ak yon manm gen nimewo lòt la anrejistre, nou ka wè stati youn lòt.',
+w1:'Ou anrejistre nimewo li',w2:'Li anrejistre pa w la',w3:'Rezilta: nou ka wè stati youn lòt',
+fqH:'Kesyon sou kontak WhatsApp ou yo',
+faq:[['Kisa DOBERTO VCF ye?','DOBERTO VCF se yon lis moun ki vle jwenn nouvo kontak WhatsApp. Kreye yon kont, ajoute nimewo w, answit ajoute kontak yo nan telefòn ou.'],
+['Kijan pou m kòmanse?','Klike sou « Kreye yon kont gratis », konekte ak Google, answit antre non w ak nimewo w.'],
+['Ki kote pou m ajoute nimewo m?','Nan tablo bò a, onglè « Mon profil ».'],
+['Èske m dwe tounen sou sit la apre m aktive ajout otomatik la?','Non. Depi Google Contacts konekte, nouvo manm yo ajoute poukont yo. Tounen sèlman pou chanje pwofil ou oswa sispann ajout la.'],
+['Kijan sa ogmante vi stati WhatsApp mwen?','Pou wè stati youn lòt, de moun yo dwe anrejistre nimewo lòt la. Lis la ede w jwenn plis kontak ki ka wè stati ou.'],
+['Èske done m yo an sekirite?','Koneksyon an fèt ak Google epi nou pa kenbe okenn modpas. Sit la sèvi ak HTTPS. Ou ka siyale yon fo nimewo oswa move konpòtman nan tablo bò a.']],
+cEy:'PRE POU KÒMANSE?',cH:'Jwenn plis kontak <span class="hl">pou stati WhatsApp ou yo.</span>',cP:'Antre nan moun k ap itilize DOBERTO VCF pou ajoute nouvo kontak WhatsApp san yo pa fè l youn pa youn.',cLogin:'Konekte',
+fTag:'Yon lis kontak pou ede plis moun wè stati WhatsApp ou.',fCount:'{n} manm nan lis la',fP:'PWODWI',fA:'KONT',fMem:'Manm yo',fCreate:'Kreye yon kont',fDash:'Tablo bò',fPriv:'Konfidansyalite',fTerms:'Kondisyon',fAbout:'Apwopo',ago:['min','h','j']},
+fr:{title:'DOBERTO VCF — Plus de contacts WhatsApp, plus de vues sur vos statuts',
+nHow:'Comment ça marche',nWhy:'Pourquoi ça marche',nFaq:'FAQ',nLogin:'Connexion',haveQ:'Déjà membre ?',nStart:'Commencer gratuitement',dash:'Tableau de bord',
+liveTxt:'{n} membres · {c} pays · contacts mis à jour automatiquement',
+hTitle:'Plus de contacts WhatsApp, <span class="hl">plus de vues sur vos statuts.</span>',
+hLead:'Rejoignez la liste des membres DOBERTO VCF. Ajoutez leurs numéros à Google Contacts automatiquement. Les membres qui ont aussi enregistré votre numéro peuvent voir vos statuts WhatsApp.',
+ctaA:'Créer un compte gratuit',ctaB:'Comment ça marche',hTrust:'Connexion Google · Aucun mot de passe · Gratuit',
+mTag:'AJOUT AUTOMATIQUE',mOn:'Ajout automatique activé',mUpd:'Mise à jour après chaque inscription',mNew:'NOUVEAU',
+lEy:'MEMBRES EN DIRECT',lH:'Les chiffres des membres, <span class="hl">mis à jour en direct.</span>',sTotal:'MEMBRES',sCountries:'PAYS',sToday:'INSCRITS AUJOURD’HUI',sWeek:'CETTE SEMAINE',
+lList:'Nouveaux membres',lDirect:'DIRECT',lNote:'Liste mise à jour toutes les 45 secondes',lEmpty:'Aucun membre à afficher pour le moment.',
+hwEy:'COMMENT ÇA MARCHE',hwH:'Ajoutez des contacts WhatsApp en <span class="hl">trois étapes.</span>',hwSub:'Aucune application à installer. Connectez-vous, ajoutez votre numéro, puis activez l’ajout automatique.',
+s1:'Connectez-vous avec Google',s1d:'La connexion prend quelques secondes. Aucun mot de passe n’est stocké.',
+s2:'Ajoutez votre numéro',s2d:'Entrez votre nom et votre numéro WhatsApp dans Mon profil. Votre fiche apparaît dans la liste des membres.',
+s3:'Activez l’ajout automatique',s3d:'Connectez Google Contacts une seule fois : les nouveaux membres sont ajoutés à votre téléphone automatiquement.',s3c:'Ajout automatique',
+ftEy:'CE QUE VOUS OBTENEZ',ftH:'Un moyen simple de trouver <span class="hl">de nouveaux contacts.</span>',
+f1:'Ajout automatique dans Google Contacts',f1d:'Connectez votre compte Google une seule fois. Après chaque nouvelle inscription, les nouveaux membres sont ajoutés à vos contacts.',
+f1a:'Seuls les nouveaux membres sont ajoutés',f1b:'Vous pouvez arrêter l’ajout automatique quand vous voulez',f1c:'Si Google vous déconnecte, reconnectez votre compte depuis le tableau de bord',
+f2:'Numéros de tous les pays',f2d:'Haïti, États-Unis, Canada, Europe et plus. Les numéros sont enregistrés au format international.',
+f3:'Un tableau de bord simple',f3d:'Gérez votre profil, l’ajout automatique et vos signalements depuis une seule page, facile à utiliser sur téléphone.',
+f4:'Nous utilisons peu d’informations',f4d:'Nous utilisons votre nom et votre numéro pour la liste des membres. La connexion se fait avec Google, aucun mot de passe n’est stocké.',
+wEy:'POURQUOI ÇA MARCHE',wH:'Pour voir vos statuts, les deux personnes doivent <span class="hl">enregistrer le numéro de l’autre.</span>',
+wP:'WhatsApp montre un statut seulement aux contacts enregistrés. Quand vous et un membre avez enregistré le numéro de l’autre, vous pouvez voir les statuts l’un de l’autre.',
+w1:'Vous enregistrez son numéro',w2:'Il enregistre le vôtre',w3:'Résultat : vous pouvez voir les statuts l’un de l’autre',
+fqH:'Questions sur vos contacts WhatsApp',
+faq:[['C’est quoi DOBERTO VCF ?','DOBERTO VCF est une liste de personnes qui veulent trouver de nouveaux contacts WhatsApp. Créez un compte, ajoutez votre numéro, puis ajoutez les contacts de la liste à votre téléphone.'],
+['Comment commencer ?','Cliquez sur « Créer un compte gratuit », connectez-vous avec Google, puis entrez votre nom et votre numéro.'],
+['Où ajouter mon numéro de téléphone ?','Dans le tableau de bord, onglet « Mon profil ».'],
+['Dois-je revenir sur le site après avoir activé l’ajout automatique ?','Non. Une fois Google Contacts connecté, les nouveaux membres sont ajoutés tout seuls. Revenez seulement pour modifier votre profil ou arrêter l’ajout.'],
+['Comment cela augmente-t-il mes vues de statut WhatsApp ?','Pour voir les statuts l’un de l’autre, les deux personnes doivent avoir enregistré le numéro de l’autre. La liste vous aide à avoir plus de contacts qui peuvent voir vos statuts.'],
+['Mes données sont-elles en sécurité ?','La connexion se fait avec Google et aucun mot de passe n’est stocké. Le site utilise HTTPS. Vous pouvez signaler un faux numéro ou un mauvais comportement depuis le tableau de bord.']],
+cEy:'PRÊT À COMMENCER ?',cH:'Trouvez plus de contacts <span class="hl">pour vos statuts WhatsApp.</span>',cP:'Rejoignez les personnes qui utilisent DOBERTO VCF pour ajouter de nouveaux contacts WhatsApp sans le faire un par un.',cLogin:'Se connecter',
+fTag:'Une liste de contacts pour aider plus de personnes à voir vos statuts WhatsApp.',fCount:'{n} membres dans la liste',fP:'PRODUIT',fA:'COMPTE',fMem:'Membres',fCreate:'Créer un compte',fDash:'Tableau de bord',fPriv:'Confidentialité',fTerms:'Conditions',fAbout:'À propos',ago:['min','h','j']},
+en:{title:'DOBERTO VCF — More WhatsApp contacts, more views on your statuses',
+nHow:'How it works',nWhy:'Why it works',nFaq:'FAQ',nLogin:'Log in',haveQ:'Already a member?',nStart:'Start for free',dash:'Dashboard',
+liveTxt:'{n} members · {c} countries · contacts updated automatically',
+hTitle:'More WhatsApp contacts, <span class="hl">more views on your statuses.</span>',
+hLead:'Join the DOBERTO VCF member list. Add their numbers to Google Contacts automatically. Members who also saved your number can see your WhatsApp statuses.',
+ctaA:'Create a free account',ctaB:'How it works',hTrust:'Google sign-in · No password · Free',
+mTag:'AUTO-ADD',mOn:'Auto-add enabled',mUpd:'Updated after every new signup',mNew:'NEW',
+lEy:'LIVE MEMBERS',lH:'Member numbers, <span class="hl">updated live.</span>',sTotal:'MEMBERS',sCountries:'COUNTRIES',sToday:'JOINED TODAY',sWeek:'THIS WEEK',
+lList:'New members',lDirect:'LIVE',lNote:'List refreshes every 45 seconds',lEmpty:'No members to show yet.',
+hwEy:'HOW IT WORKS',hwH:'Add WhatsApp contacts in <span class="hl">three steps.</span>',hwSub:'Nothing to install. Sign in, add your number, then turn on auto-add.',
+s1:'Sign in with Google',s1d:'Sign-in takes a few seconds. No password is stored.',
+s2:'Add your number',s2d:'Enter your name and WhatsApp number in My profile. Your card appears in the member list.',
+s3:'Turn on auto-add',s3d:'Connect Google Contacts once: new members are added to your phone automatically.',s3c:'Auto-add',
+ftEy:'WHAT YOU GET',ftH:'A simple way to find <span class="hl">new contacts.</span>',
+f1:'Auto-add to Google Contacts',f1d:'Connect your Google account once. After every new signup, new members are added to your contacts.',
+f1a:'Only new members are added',f1b:'You can stop auto-add whenever you want',f1c:'If Google signs you out, reconnect your account from the dashboard',
+f2:'Numbers from every country',f2d:'Haiti, United States, Canada, Europe and more. Numbers are stored in international format.',
+f3:'A simple dashboard',f3d:'Manage your profile, auto-add and your reports from one page, easy to use on a phone.',
+f4:'We use very little information',f4d:'We use your name and number for the member list. Sign-in is with Google and no password is stored.',
+wEy:'WHY IT WORKS',wH:'To see each other’s statuses, both people must <span class="hl">save the other’s number.</span>',
+wP:'WhatsApp shows a status only to saved contacts. When you and a member have each saved the other’s number, you can see each other’s statuses.',
+w1:'You save their number',w2:'They save yours',w3:'Result: you can see each other’s statuses',
+fqH:'Questions about your WhatsApp contacts',
+faq:[['What is DOBERTO VCF?','DOBERTO VCF is a list of people who want to find new WhatsApp contacts. Create an account, add your number, then add the contacts from the list to your phone.'],
+['How do I get started?','Click “Create a free account”, sign in with Google, then enter your name and number.'],
+['Where do I add my phone number?','In the dashboard, on the “My profile” tab.'],
+['Do I need to come back after turning on auto-add?','No. Once Google Contacts is connected, new members are added on their own. Come back only to edit your profile or stop auto-add.'],
+['How does this increase my WhatsApp status views?','To see each other’s statuses, both people must have saved the other’s number. The list helps you get more contacts who can see your statuses.'],
+['Is my data safe?','Sign-in is with Google and no password is stored. The site uses HTTPS. You can report a fake number or bad behavior from the dashboard.']],
+cEy:'READY TO START?',cH:'Find more contacts <span class="hl">for your WhatsApp statuses.</span>',cP:'Join the people using DOBERTO VCF to add new WhatsApp contacts without doing it one by one.',cLogin:'Log in',
+fTag:'A contact list to help more people see your WhatsApp statuses.',fCount:'{n} members in the list',fP:'PRODUCT',fA:'ACCOUNT',fMem:'Members',fCreate:'Create an account',fDash:'Dashboard',fPriv:'Privacy',fTerms:'Terms',fAbout:'About',ago:['min','h','d']}
+};
+var lang='ht',stats={},members=[],logged=false;
+try{var s=localStorage.getItem('doberto_lang');if(T[s])lang=s}catch(_){}
+try{logged=!!localStorage.getItem('dv_auth_token')}catch(_){}
+function t(k){return (T[lang]&&T[lang][k])||T.ht[k]||''}
+function $(id){return document.getElementById(id)}
+function num(v){return typeof v==='number'?v.toLocaleString(lang==='en'?'en-US':'fr-FR'):'—'}
+function mask(n){var p=String(n||'').trim().split(/\s+/).filter(Boolean);if(!p.length)return '—';var f=Array.from(p[0]).slice(0,16).join('');var l=Array.from(p[p.length-1])[0]||'';return (p.length>1&&/\p{L}/u.test(l))?f+' '+l.toUpperCase()+'.':f}
+function country(m){return String(m.country_name||m.countryName||'').split('(')[0].trim()}
+function ago(ts){var d=Date.parse(ts);if(!d)return '';var m=Math.max(1,Math.round((Date.now()-d)/60000)),u=t('ago');if(m<60)return m+' '+u[0];var h=Math.round(m/60);if(h<24)return h+u[1];return Math.round(h/24)+u[2]}
+function pick(d){if(Array.isArray(d))return d;if(d&&typeof d==='object'){var ks=['items','members','list','data','rows','registrations','results'];for(var i=0;i<ks.length;i++)if(Array.isArray(d[ks[i]]))return d[ks[i]]}return []}
+function mk(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e}
+function initial(n){return (Array.from(String(n||'?').trim())[0]||'?').toUpperCase()}
+
+function renderMock(){
+  var box=$('mRows');box.innerHTML='';
+  if(!members.length){for(var k=0;k<5;k++){var s=mk('div','mrow sk');s.append(mk('span','av'),(function(){var w=mk('div','mw');w.append(mk('b'),mk('small'));return w})());box.appendChild(s)}return}
+  members.slice(0,5).forEach(function(m,i){
+    var r=mk('div','mrow'+(i===0?' first':'')),w=mk('div','mw');
+    w.append(mk('b','',mask(m.name)),mk('small','',country(m)));
+    r.append(mk('span','av',initial(m.name)),w);
+    if(i===0)r.append(mk('span','bdg',t('mNew')));
+    box.appendChild(r);
+  });
+}
+function renderList(){
+  var box=$('lRows');box.innerHTML='';
+  if(!members.length){box.appendChild(mk('p','empty',t('lEmpty')));return}
+  members.slice(0,6).forEach(function(m){
+    var r=mk('div','lrow'),w=mk('div','mw'),rt=mk('div','rt');
+    w.append(mk('b','',mask(m.name)),mk('small','',ago(m.created_at||m.createdAt)));
+    rt.textContent=country(m);
+    r.append(mk('span','av',initial(m.name)),w,rt);
+    box.appendChild(r);
+  });
+}
+function renderStats(){
+  $('nTotal').textContent=num(stats.total);$('nCountries').textContent=num(stats.countries);
+  $('nToday').textContent=num(stats.today);$('nWeek').textContent=num(stats.week);
+  $('liveTxt').textContent=t('liveTxt').replace('{n}',typeof stats.total==='number'?stats.total.toLocaleString('fr-FR'):'…').replace('{c}',typeof stats.countries==='number'?stats.countries:'…');
+  $('fCount').textContent=typeof stats.total==='number'?t('fCount').replace('{n}',stats.total.toLocaleString('fr-FR')):'—';
+}
+function renderFaq(){
+  var box=$('faqBox');box.innerHTML='';
+  t('faq').forEach(function(q,i){var d=mk('details');if(i===0)d.open=true;var s=mk('summary','',q[0]);d.append(s,mk('p','',q[1]));box.appendChild(d)});
+}
+function apply(){
+  document.documentElement.lang=lang;document.title=t('title');
+  document.querySelectorAll('[data-i]').forEach(function(e){e.textContent=t(e.getAttribute('data-i'))});
+  document.querySelectorAll('[data-h]').forEach(function(e){e.innerHTML=t(e.getAttribute('data-h'))});
+  document.querySelectorAll('.lang button').forEach(function(b){b.className=b.getAttribute('data-l')===lang?'on':''});
+  if(logged){
+    document.querySelectorAll('.js-login,.js-start').forEach(function(a){a.setAttribute('href','dashboard.html');a.textContent=t('dash')});
+    document.querySelectorAll('.nav .nlogin').forEach(function(a){a.style.display='none'});
+    var hv=document.getElementById('have');if(hv)hv.hidden=true;
+  }
+  renderStats();renderMock();renderList();renderFaq();
+}
+document.querySelectorAll('.lang button').forEach(function(b){
+  b.addEventListener('click',function(){lang=b.getAttribute('data-l');try{localStorage.setItem('doberto_lang',lang)}catch(_){}apply()});
+});
+function jget(p){return fetch(p,{cache:'no-store',headers:{Accept:'application/json'}}).then(function(r){if(!r.ok)throw r.status;return r.json()})}
+function load(){
+  jget('/api/stats').then(function(d){stats=d||{};renderStats()}).catch(function(){});
+  jget('/api/public-list?page=1').then(function(d){
+    var l=pick(d).filter(function(m){return m&&m.name});
+    l.sort(function(a,b){return (Date.parse(b.created_at||b.createdAt)||0)-(Date.parse(a.created_at||a.createdAt)||0)});
+    members=l;renderMock();renderList();
+  }).catch(function(){renderMock();renderList()});
+}
+$('refBtn').addEventListener('click',load);
+setInterval(function(){if(!document.hidden)load()},45000);
+apply();load();
+})();
+</script>
+</body>
+</html>

@@ -53,6 +53,8 @@ section{padding:84px 0}
 .btn.ghost:hover{border-color:rgba(54,231,167,.4)}
 .btn.sm{padding:11px 18px;border-radius:14px}
 .arrow::after{content:"→"}
+.btn{white-space:nowrap}
+.have{color:var(--muted);font-size:14px;margin-top:10px}.have a{font-weight:700;color:var(--signal)}
 a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
 /* hero */
 .hero{padding:70px 0 40px}
@@ -148,8 +150,10 @@ footer{border-top:1px solid var(--line);padding:60px 0 36px;margin-top:40px}
 @media(max-width:1000px){.hgrid,.lgrid,.wgrid,.f1{grid-template-columns:1fr}.steps{grid-template-columns:1fr}.fg{grid-template-columns:1fr 1fr}.refrow{margin-top:14px}}
 @media(max-width:900px){.links{display:none}}
 @media(max-width:720px){section{padding:60px 0}.faq{column-count:1}.f2{grid-template-columns:1fr}.hero{padding-top:40px}.nav .wrap{gap:12px;height:64px}.sgrid{grid-template-columns:1fr 1fr}.stat strong{font-size:40px}.card{padding:22px}}
-@media(max-width:560px){.nlogin{display:none}.fg{grid-template-columns:1fr}}
-@media(max-width:430px){.brand span{display:none}.btn{width:100%}.btn.sm{width:auto}}
+@media(max-width:560px){.fg{grid-template-columns:1fr}}
+@media(max-width:720px){.nav .nlogin,.nav .btn.sm{display:none}.lang button{padding:7px 10px}}
+@media(max-width:430px){.btn{width:100%}}
+@media(max-width:340px){.brand span{display:none}}
 </style>
 </head>
 <body>
@@ -175,6 +179,7 @@ footer{border-top:1px solid var(--line);padding:60px 0 36px;margin-top:40px}
       <a class="btn ghost" href="#how" data-i="ctaB"></a>
     </div>
     <p class="trust" data-i="hTrust"></p>
+    <p class="have" id="have"><span data-i="haveQ"></span> <a class="js-login" href="/api/auth/google/url?flow=login&amp;redirect=1" data-i="nLogin"></a></p>
   </div>
   <div class="mock">
     <div class="mh"><i></i><i></i><i></i><b>Google Contacts</b><span class="tag" data-i="mTag"></span></div>
@@ -264,7 +269,7 @@ footer{border-top:1px solid var(--line);padding:60px 0 36px;margin-top:40px}
 'use strict';
 var T={
 ht:{title:'DOBERTO VCF — Plis kontak WhatsApp, plis vi sou stati ou yo',
-nHow:'Kijan sa mache',nWhy:'Poukisa sa mache',nFaq:'FAQ',nLogin:'Konekte',nStart:'Kòmanse gratis',dash:'Tablo bò',
+nHow:'Kijan sa mache',nWhy:'Poukisa sa mache',nFaq:'FAQ',nLogin:'Konekte',haveQ:'Ou deja manm?',nStart:'Kòmanse gratis',dash:'Tablo bò',
 liveTxt:'{n} manm · {c} peyi · kontak mete ajou otomatikman',
 hTitle:'Plis kontak WhatsApp, <span class="hl">plis vi sou stati ou yo.</span>',
 hLead:'Antre nan lis manm DOBERTO VCF. Ajoute nimewo yo nan Google Contacts otomatikman. Manm ki anrejistre nimewo w tou ka wè stati WhatsApp ou.',
@@ -295,7 +300,7 @@ faq:[['Kisa DOBERTO VCF ye?','DOBERTO VCF se yon lis moun ki vle jwenn nouvo kon
 cEy:'PRE POU KÒMANSE?',cH:'Jwenn plis kontak <span class="hl">pou stati WhatsApp ou yo.</span>',cP:'Antre nan moun k ap itilize DOBERTO VCF pou ajoute nouvo kontak WhatsApp san yo pa fè l youn pa youn.',cLogin:'Konekte',
 fTag:'Yon lis kontak pou ede plis moun wè stati WhatsApp ou.',fCount:'{n} manm nan lis la',fP:'PWODWI',fA:'KONT',fMem:'Manm yo',fCreate:'Kreye yon kont',fDash:'Tablo bò',fPriv:'Konfidansyalite',fTerms:'Kondisyon',fAbout:'Apwopo',ago:['min','h','j']},
 fr:{title:'DOBERTO VCF — Plus de contacts WhatsApp, plus de vues sur vos statuts',
-nHow:'Comment ça marche',nWhy:'Pourquoi ça marche',nFaq:'FAQ',nLogin:'Connexion',nStart:'Commencer gratuitement',dash:'Tableau de bord',
+nHow:'Comment ça marche',nWhy:'Pourquoi ça marche',nFaq:'FAQ',nLogin:'Connexion',haveQ:'Déjà membre ?',nStart:'Commencer gratuitement',dash:'Tableau de bord',
 liveTxt:'{n} membres · {c} pays · contacts mis à jour automatiquement',
 hTitle:'Plus de contacts WhatsApp, <span class="hl">plus de vues sur vos statuts.</span>',
 hLead:'Rejoignez la liste des membres DOBERTO VCF. Ajoutez leurs numéros à Google Contacts automatiquement. Les membres qui ont aussi enregistré votre numéro peuvent voir vos statuts WhatsApp.',
@@ -326,7 +331,7 @@ faq:[['C’est quoi DOBERTO VCF ?','DOBERTO VCF est une liste de personnes qui v
 cEy:'PRÊT À COMMENCER ?',cH:'Trouvez plus de contacts <span class="hl">pour vos statuts WhatsApp.</span>',cP:'Rejoignez les personnes qui utilisent DOBERTO VCF pour ajouter de nouveaux contacts WhatsApp sans le faire un par un.',cLogin:'Se connecter',
 fTag:'Une liste de contacts pour aider plus de personnes à voir vos statuts WhatsApp.',fCount:'{n} membres dans la liste',fP:'PRODUIT',fA:'COMPTE',fMem:'Membres',fCreate:'Créer un compte',fDash:'Tableau de bord',fPriv:'Confidentialité',fTerms:'Conditions',fAbout:'À propos',ago:['min','h','j']},
 en:{title:'DOBERTO VCF — More WhatsApp contacts, more views on your statuses',
-nHow:'How it works',nWhy:'Why it works',nFaq:'FAQ',nLogin:'Log in',nStart:'Start for free',dash:'Dashboard',
+nHow:'How it works',nWhy:'Why it works',nFaq:'FAQ',nLogin:'Log in',haveQ:'Already a member?',nStart:'Start for free',dash:'Dashboard',
 liveTxt:'{n} members · {c} countries · contacts updated automatically',
 hTitle:'More WhatsApp contacts, <span class="hl">more views on your statuses.</span>',
 hLead:'Join the DOBERTO VCF member list. Add their numbers to Google Contacts automatically. Members who also saved your number can see your WhatsApp statuses.',
@@ -409,6 +414,8 @@ function apply(){
   document.querySelectorAll('.lang button').forEach(function(b){b.className=b.getAttribute('data-l')===lang?'on':''});
   if(logged){
     document.querySelectorAll('.js-login,.js-start').forEach(function(a){a.setAttribute('href','dashboard.html');a.textContent=t('dash')});
+    document.querySelectorAll('.nav .nlogin').forEach(function(a){a.style.display='none'});
+    var hv=document.getElementById('have');if(hv)hv.hidden=true;
   }
   renderStats();renderMock();renderList();renderFaq();
 }
