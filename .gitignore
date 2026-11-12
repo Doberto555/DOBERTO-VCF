@@ -13,3 +13,4 @@ node_modules/
 *.bak
 *.v3bak
 *.bak-*
+*.bak*
