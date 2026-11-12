@@ -114,6 +114,7 @@
   }
   function shouldOfferInstall() { return !installComplete(); }
   function shouldOfferNotification() {
+    return false; // notifications popup disabled
     if (!('Notification' in window)) return false;
     if (!window.DobertoPush) return true;
     if (window.DobertoPush.state.configured === false) return false;

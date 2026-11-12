@@ -14,6 +14,9 @@
       desc: 'Konekte Google Contacts ou atravè Shizzy Connect, epi manm yo ap ajoute otomatikman nan telefòn ou.',
       connect: 'Konekte Google Contacts',
       sync: 'Sinkronize kontak yo',
+      resync: 'Resinkronize',
+      onMsg: '✓ Google Contacts konekte. Peze Resinkronize pou ajoute nouvo manm yo.',
+      lastSync: '✓ Dènye sync fini',
       disconnect: 'Dekonekte',
       confirmDisconnect: 'Ou sèten ou vle dekonekte Google Contacts epi netwaye kontak yo?',
       stNone: 'PA KONEKTE', stOn: 'KONEKTE', stReauth: 'RKONEKTE',
@@ -31,6 +34,9 @@
       desc: 'Connectez vos Google Contacts via Shizzy Connect : les membres sont ajoutés automatiquement à votre téléphone.',
       connect: 'Connecter Google Contacts',
       sync: 'Synchroniser les contacts',
+      resync: 'Resynchroniser',
+      onMsg: '✓ Google Contacts connecté. Appuyez sur Resynchroniser pour ajouter les nouveaux membres.',
+      lastSync: '✓ Dernière synchronisation terminée',
       disconnect: 'Déconnecter',
       confirmDisconnect: 'Déconnecter Google Contacts et nettoyer les contacts ?',
       stNone: 'NON CONNECTÉ', stOn: 'CONNECTÉ', stReauth: 'RECONNEXION',
@@ -48,6 +54,9 @@
       desc: 'Connect your Google Contacts through Shizzy Connect and members are added to your phone automatically.',
       connect: 'Connect Google Contacts',
       sync: 'Sync contacts',
+      resync: 'Resync',
+      onMsg: '✓ Google Contacts connected. Press Resync to add new members.',
+      lastSync: '✓ Last sync finished',
       disconnect: 'Disconnect',
       confirmDisconnect: 'Disconnect Google Contacts and clean up the contacts?',
       stNone: 'NOT CONNECTED', stOn: 'CONNECTED', stReauth: 'RECONNECT',
@@ -68,6 +77,15 @@
     return T[l] ? l : 'ht';
   }
   function t(key) { return T[lang()][key] || T.ht[key] || ''; }
+  var LAST_KEY = 'dv_last_sync';
+  function lastSyncAt() { try { return Number(localStorage.getItem(LAST_KEY)) || 0; } catch (_) { return 0; } }
+  function saveLastSync() { try { localStorage.setItem(LAST_KEY, String(Date.now())); } catch (_) {} }
+  function lastSyncLabel() {
+    var at = lastSyncAt();
+    if (!at) return t('onMsg');
+    var d = new Date(at), pad = function (n) { return n < 10 ? '0' + n : '' + n; };
+    return t('lastSync') + ' · ' + pad(d.getDate()) + '/' + pad(d.getMonth() + 1) + '/' + d.getFullYear() + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+  }
   function token() { try { return localStorage.getItem(TOKEN_KEY) || ''; } catch (_) { return ''; } }
 
   function api(method, path) {
@@ -141,13 +159,14 @@
     els.title.textContent = t('title');
     els.desc.textContent = t('desc');
     els.connect.textContent = state === 'reauth' || current === 'reauth' ? t('connect') : t('connect');
-    els.sync.textContent = t('sync');
+    els.sync.textContent = current === 'on' ? t('resync') : t('sync');
     els.disconnect.textContent = t('disconnect');
     els.state.textContent = current === 'on' ? t('stOn') : (current === 'reauth' ? t('stReauth') : t('stNone'));
     els.connect.hidden = current === 'on';
     els.sync.hidden = current !== 'on';
     els.disconnect.hidden = current === 'none';
     if (current === 'reauth' && !busy) say(t('reauth'), 'err');
+    else if (current === 'on' && !busy) say(lastSyncLabel(), 'ok');
     els.root.hidden = false;
   }
 
@@ -180,6 +199,7 @@
       if (status === 'completed') {
         var s = job.stats || {};
         say(t('done') + ': ' + (s.created || 0) + ' ' + t('created') + ', ' + (s.updated || 0) + ' ' + t('updated') + ', ' + (s.failed || 0) + ' ' + t('failed') + '.', 'ok');
+        saveLastSync();
         setBusy(false);
       } else if (status === 'failed' || status === 'error') {
         say(job.error || t('err'), 'err'); setBusy(false);
