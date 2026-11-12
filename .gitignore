@@ -14,3 +14,5 @@ node_modules/
 *.v3bak
 *.bak-*
 *.bak*
+*.bak*
+public/index-test.html
