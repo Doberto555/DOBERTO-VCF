@@ -117,6 +117,8 @@ const adminActionLimiter = rateLimit({ ...limiterDefaults, windowMs: 60 * 60 * 1
 const pushSendLimiter = rateLimit({ ...limiterDefaults, windowMs: 60 * 60 * 1000, limit: 12 });
 const publicReadLimiter = rateLimit({ ...limiterDefaults, windowMs: 60 * 1000, limit: 300 });
 const shizzyActionLimiter = rateLimit({ ...limiterDefaults, windowMs: 60 * 60 * 1000, limit: 12 });
+const accountLimiter = rateLimit({ ...limiterDefaults, windowMs: 60 * 60 * 1000, limit: 10 });
+const reportLimiter = rateLimit({ ...limiterDefaults, windowMs: 60 * 60 * 1000, limit: 8 });
 
 // ---------- Itilitè ----------
 function normalizeAdSettings(input = {}) {
@@ -574,6 +576,67 @@ app.get('/api/stats', publicReadLimiter, requireDatabase, async (req, res) => {
 });
 
 
+// ---------- DELETE /api/account : manm nan siprime kont li ----------
+app.delete('/api/account', accountLimiter, requireDatabase, verifyUser, async (req, res) => {
+  try {
+    if (!req.body || req.body.confirm !== true) {
+      return res.status(400).json({ code: 'confirm_required', error: 'Konfime siprèsyon an anvan.' });
+    }
+    const userId = req.user.userId;
+    // 1) Dekonekte Shizzy si li konfigire. Si sa echwe, siprèsyon kont lan kontinye.
+    if (shizzy.configured) {
+      try { await shizzy.deleteConnection(userId); }
+      catch (e) { if (!(e instanceof ShizzyError && e.status === 404)) console.error('[account] shizzy cleanup:', e.message); }
+    }
+    // 2) Efase enskripsyon an, answit kont Google a (registrations.user_id -> app_users.id)
+    const { error: regError } = await supabase.from('registrations').delete().eq('user_id', userId);
+    if (regError) throw regError;
+    const { error: userError } = await supabase.from('app_users').delete().eq('id', userId);
+    if (userError) throw userError;
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('[account] delete failed:', err.message);
+    res.status(500).json({ code: 'server_error', error: 'Nou pa t kapab siprime kont lan. Eseye ankò.' });
+  }
+});
+
+// ---------- POST /api/report : signalement (piblik, ak limit) ----------
+const REPORT_REASONS = ['fake', 'spam', 'harassment', 'privacy', 'bug', 'other'];
+const REPORT_STATUSES = ['new', 'reviewed', 'resolved'];
+const oneLine = (v, n) => String(v == null ? '' : v).replace(/\s+/g, ' ').trim().slice(0, n);
+const multiLine = (v, n) => String(v == null ? '' : v).replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g, ' ').trim().slice(0, n);
+
+app.post('/api/report', reportLimiter, requireDatabase, async (req, res) => {
+  try {
+    const b = req.body || {};
+    if (String(b.website || '').trim()) return res.json({ ok: true }); // honeypot: bot yo pa wè erè
+    const reason = String(b.reason || '').trim();
+    if (!REPORT_REASONS.includes(reason)) {
+      return res.status(400).json({ code: 'invalid_reason', error: 'Chwazi yon rezon.' });
+    }
+    const details = multiLine(b.details, 1000);
+    if (details.length < 10) {
+      return res.status(400).json({ code: 'details_required', error: 'Ekri yon ti eksplikasyon (omwen 10 karaktè).' });
+    }
+    const target = oneLine(b.target, 120);
+    const contact = oneLine(b.contact, 120);
+    const session = optionalUserSession(req);
+    const { error } = await supabase.from('reports').insert({
+      reason,
+      target: target || null,
+      details,
+      contact: contact || null,
+      reporter_user_id: session ? session.userId : null
+    });
+    if (error) throw error;
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('[report] insert failed:', err.message);
+    res.status(500).json({ code: 'server_error', error: 'Nou pa t kapab voye siyalman an. Eseye ankò.' });
+  }
+});
+
+
 // ---------- GET /api/push/config ----------
 app.get('/api/push/config', publicReadLimiter, (req, res) => {
   res.json({
@@ -709,6 +772,50 @@ app.delete('/api/admin/delete/:id', adminActionLimiter, verifyAdmin, requireData
     res.json({ ok: true });
   } catch (err) {
     console.error(err);
+    res.status(500).json({ code: 'server_error', error: 'Erè sèvè.' });
+  }
+});
+
+app.get('/api/admin/reports', adminActionLimiter, verifyAdmin, requireDatabase, async (req, res) => {
+  try {
+    const status = String(req.query.status || '').trim();
+    let q = supabase.from('reports')
+      .select('id, reason, target, details, contact, status, reporter_user_id, created_at')
+      .order('created_at', { ascending: false }).limit(200);
+    if (REPORT_STATUSES.includes(status)) q = q.eq('status', status);
+    const { data, error } = await q;
+    if (error) throw error;
+    res.json({ ok: true, reports: data || [] });
+  } catch (err) {
+    console.error('[admin reports]', err.message);
+    res.status(500).json({ code: 'server_error', error: 'Erè sèvè.' });
+  }
+});
+
+app.put('/api/admin/reports/:id', adminActionLimiter, verifyAdmin, requireDatabase, async (req, res) => {
+  try {
+    const id = String(req.params.id || '').trim();
+    const status = String((req.body || {}).status || '').trim();
+    if (!/^[0-9a-f-]{36}$/i.test(id)) return res.status(400).json({ error: 'ID lan pa valid.' });
+    if (!REPORT_STATUSES.includes(status)) return res.status(400).json({ error: 'Estati a pa valid.' });
+    const { error } = await supabase.from('reports').update({ status }).eq('id', id);
+    if (error) throw error;
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('[admin reports]', err.message);
+    res.status(500).json({ code: 'server_error', error: 'Erè sèvè.' });
+  }
+});
+
+app.delete('/api/admin/reports/:id', adminActionLimiter, verifyAdmin, requireDatabase, async (req, res) => {
+  try {
+    const id = String(req.params.id || '').trim();
+    if (!/^[0-9a-f-]{36}$/i.test(id)) return res.status(400).json({ error: 'ID lan pa valid.' });
+    const { error } = await supabase.from('reports').delete().eq('id', id);
+    if (error) throw error;
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('[admin reports]', err.message);
     res.status(500).json({ code: 'server_error', error: 'Erè sèvè.' });
   }
 });

@@ -43,6 +43,7 @@ input,select{width:100%;padding:15px 16px;border-radius:14px;border:1px solid va
 .stat{border:1px solid var(--line);border-radius:18px;padding:18px}.stat small{color:var(--mut);font-size:12px;font-weight:600}.stat b{display:block;font-size:28px;margin-top:6px}
 .note{border:1px solid rgba(94,234,180,.25);background:rgba(94,234,180,.05);border-radius:16px;padding:14px 16px;font-size:14px;color:#cfeee6;margin-bottom:16px}
 .row{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--line);font-size:14px}.row span:first-child{color:var(--mut)}
+.danger{margin-top:28px;padding-top:20px;border-top:1px solid var(--line)}.danger h2{margin:0 0 6px;font-size:18px}.btn.dng{border-color:rgba(255,138,138,.45);color:var(--err)}.btn.dng:not(:disabled):hover{background:rgba(255,138,138,.08)}a.btn{display:block;text-align:center;text-decoration:none}
 /* dvmobile */
 @media(max-width:820px){
 html,body{overflow-x:hidden}
@@ -88,17 +89,17 @@ input,select{font-size:16px;padding:13px 14px}
       ovT:'Apèsi', ovS:'Rezime kont DOBERTO VCF ou.', members:'Manm yo', gc:'Google Contacts', connected:'Konekte', notConn:'Pa konekte', yourFiche:'FICH OU SOU TELEFÒN LÒT MOUN',
       pT:'Modifye kontak mwen', pS:'Chanje non ou, nimewo prensipal ou, oswa ajoute yon dezyèm nimewo.', fiche:'FICH OU', second2:'Dezyèm nimewo', name:'NON KONPLÈ', num:'NIMEWO TELEFÒN', numH:'Nimewo WhatsApp rekòmande', num2:'DEZYÈM NIMEWO (OPSYONÈL)', num2H:'Kite vid pou retire dezyèm nimewo a.', ph:'Nimewo san kòd peyi', save:'Anrejistre', cancel:'Anile', saved:'✓ Anrejistre. Kontak yo ap mete ajou otomatikman.', err:'Erè. Eseye ankò.', none:'Pa gen',
       aT:'Ajout otomatik', aS:'Manm yo ajoute otomatikman nan Google Contacts ou atravè Shizzy Connect.', connect:'Konekte Google Contacts', shizzyNote:'Google ap montre \u00ab Shizzy Connect \u00bb, patn\u00e8 sinkronizasyon nou an. Se n\u00f2mal: chwazi kont Google ou vle resevwa kontak yo.', resync:'Resinkronize', disc:'Dekonekte', confirmD:'Dekonekte Google Contacts epi netwaye kontak yo?', redirecting:'Ap louvri Google...', syncing:'Sync ap kouri... sa ka pran kèk minit.', doneS:'Sync fini', created:'ajoute', updated:'mete ajou', failed:'echwe', reauth:'Aksè Google la ekspire. Konekte ankò.', autoNote:'Ajout otomatik aktif: chak nouvo enskripsyon ajoute nan kontak ou apre ~30 segonn.', lastSync:'✓ Dènye sync fini', discOk:'Google Contacts dekonekte.',
-      acT:'Kont', acS:'Jere sesyon ou.', email:'Imèl', logout:'Dekonekte', addSecond:'Ajoute yon dezyèm nimewo' },
+      delT:'Siprime kont mwen',delP:'Sa efase pwofil ou ak kont Google ou nan DOBERTO VCF. Ou pap nan lis manm yo ankò. Kopi ki deja sove sou telefòn lòt moun pa anba kontwòl nou. Aksyon sa a pa ka defèt.',delBtn:'Siprime kont mwen',delType:'TAPE "SIPRIME" POU KONFIME',delGo:'Siprime pou tout bon',delWord:'SIPRIME',delDone:'Kont ou siprime. Orevwa.',reportLink:'Siyale yon pwoblèm',acT:'Kont', acS:'Jere sesyon ou.', email:'Imèl', logout:'Dekonekte', addSecond:'Ajoute yon dezyèm nimewo' },
     fr: { overview:'Aperçu', profile:'Mon Profil', auto:'Ajout automatique', manage:'GÉRER MON COMPTE', account:'Compte', home:'Accueil', on:'AJOUT AUTOMATIQUE ACTIF', off:'GOOGLE CONTACTS NON CONNECTÉ',
       ovT:'Aperçu', ovS:'Résumé de votre compte DOBERTO VCF.', members:'Membres', gc:'Google Contacts', connected:'Connecté', notConn:'Non connecté', yourFiche:'VOTRE FICHE SUR LEUR TÉLÉPHONE',
       pT:'Modifier le contact', pS:'Changez votre nom, votre numéro principal ou ajoutez un deuxième numéro.', fiche:'VOTRE FICHE', second2:'Deuxième numéro', name:'NOM COMPLET', num:'NUMÉRO DE TÉLÉPHONE', numH:'Numéro WhatsApp recommandé', num2:'DEUXIÈME NUMÉRO (FACULTATIF)', num2H:'Laissez vide pour retirer le 2e numéro.', ph:'Numéro sans indicatif', save:'Enregistrer', cancel:'Annuler', saved:'✓ Enregistré. Les contacts se mettent à jour automatiquement.', err:'Erreur. Réessayez.', none:'Aucun',
       aT:'Ajout automatique', aS:'Les membres sont ajoutés automatiquement à vos Google Contacts via Shizzy Connect.', connect:'Connecter Google Contacts', shizzyNote:'Google affichera \u00ab Shizzy Connect \u00bb, notre partenaire de synchronisation. C\u2019est normal : choisissez le compte Google qui recevra les contacts.', resync:'Resynchroniser', disc:'Déconnecter', confirmD:'Déconnecter Google Contacts et nettoyer les contacts ?', redirecting:'Ouverture de Google...', syncing:'Synchronisation en cours... cela peut prendre quelques minutes.', doneS:'Synchronisation terminée', created:'ajoutés', updated:'mis à jour', failed:'échecs', reauth:'L\u2019accès Google a expiré. Reconnectez-vous.', autoNote:'Ajout automatique actif : chaque nouvelle inscription est ajoutée à vos contacts après ~30 secondes.', lastSync:'✓ Dernière synchronisation terminée', discOk:'Google Contacts déconnecté.',
-      acT:'Compte', acS:'Gérez votre session.', email:'E-mail', logout:'Se déconnecter', addSecond:'Ajouter un deuxième numéro' },
+      delT:'Supprimer mon compte',delP:'Cela efface votre profil et votre compte Google dans DOBERTO VCF. Vous ne serez plus dans la liste des membres. Les copies déjà enregistrées sur le téléphone d\u2019autres personnes ne sont pas sous notre contrôle. Cette action est irréversible.',delBtn:'Supprimer mon compte',delType:'TAPEZ \u00ab SUPPRIMER \u00bb POUR CONFIRMER',delGo:'Supprimer définitivement',delWord:'SUPPRIMER',delDone:'Votre compte a été supprimé. À bientôt.',reportLink:'Signaler un problème',acT:'Compte', acS:'Gérez votre session.', email:'E-mail', logout:'Se déconnecter', addSecond:'Ajouter un deuxième numéro' },
     en: { overview:'Overview', profile:'My Profile', auto:'Auto add', manage:'MANAGE MY ACCOUNT', account:'Account', home:'Home', on:'AUTO ADD ACTIVE', off:'GOOGLE CONTACTS NOT CONNECTED',
       ovT:'Overview', ovS:'Summary of your DOBERTO VCF account.', members:'Members', gc:'Google Contacts', connected:'Connected', notConn:'Not connected', yourFiche:'YOUR CARD ON THEIR PHONE',
       pT:'Edit contact', pS:'Change your name, main number, or add a second number.', fiche:'YOUR CARD', second2:'Second number', name:'FULL NAME', num:'PHONE NUMBER', numH:'WhatsApp number recommended', num2:'SECOND NUMBER (OPTIONAL)', num2H:'Leave empty to remove the second number.', ph:'Number without country code', save:'Save', cancel:'Cancel', saved:'✓ Saved. Contacts update automatically.', err:'Error. Please try again.', none:'None',
       aT:'Auto add', aS:'Members are added automatically to your Google Contacts through Shizzy Connect.', connect:'Connect Google Contacts', shizzyNote:'Google will show \u201cShizzy Connect\u201d, our sync partner. This is normal: choose the Google account that should receive the contacts.', resync:'Resync', disc:'Disconnect', confirmD:'Disconnect Google Contacts and clean up the contacts?', redirecting:'Opening Google...', syncing:'Sync running... this can take a few minutes.', doneS:'Sync finished', created:'added', updated:'updated', failed:'failed', reauth:'Google access expired. Please reconnect.', autoNote:'Auto add is on: every new registration is added to your contacts after ~30 seconds.', lastSync:'✓ Last sync finished', discOk:'Google Contacts disconnected.',
-      acT:'Account', acS:'Manage your session.', email:'Email', logout:'Sign out', addSecond:'Add a second number' }
+      delT:'Delete my account',delP:'This erases your profile and your Google account link in DOBERTO VCF. You will no longer be in the member list. Copies already saved on other people\u2019s phones are outside our control. This cannot be undone.',delBtn:'Delete my account',delType:'TYPE "DELETE" TO CONFIRM',delGo:'Delete permanently',delWord:'DELETE',delDone:'Your account was deleted. Goodbye.',reportLink:'Report a problem',acT:'Account', acS:'Manage your session.', email:'Email', logout:'Sign out', addSecond:'Add a second number' }
   };
   var ICON = {
     overview:'<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>',
@@ -238,7 +239,29 @@ input,select{font-size:16px;padding:13px 14px}
     return '<h1>' + t('acT') + '</h1><p class="sub">' + t('acS') + '</p>' +
       '<div class="row"><span>' + t('email') + '</span><strong>' + esc((S.session.user || {}).email || '') + '</strong></div>' +
       '<div class="row"><span>' + t('fiche') + '</span><strong>' + esc((S.prefix ? S.prefix + ' ' : '') + S.reg.name) + '</strong></div>' +
-      '<button class="btn" id="bOut">' + t('logout') + '</button>';
+      '<button class="btn" id="bOut">' + t('logout') + '</button>' +
+      '<a class="btn" href="report.html">' + t('reportLink') + '</a>' +
+      '<div class="danger"><h2>' + t('delT') + '</h2><p class="hint">' + t('delP') + '</p>' +
+      '<button class="btn dng" id="bDelAsk">' + t('delBtn') + '</button>' +
+      '<div id="delBox" style="display:none"><label class="l">' + t('delType') + '</label><input id="delInput" autocomplete="off" autocapitalize="characters" />' +
+      '<button class="btn dng" id="bDelGo" disabled>' + t('delGo') + '</button></div>' +
+      '<div class="msg" id="msg" role="status"></div></div>';
+  }
+  function bindDelete() {
+    var ask = $('bDelAsk'), box = $('delBox'), inp = $('delInput'), go = $('bDelGo');
+    ask.onclick = function () { box.style.display = 'block'; ask.style.display = 'none'; inp.focus(); };
+    inp.oninput = function () { go.disabled = inp.value.trim().toUpperCase() !== t('delWord'); };
+    go.onclick = function () {
+      if (S.busy || go.disabled) return;
+      S.busy = true; go.disabled = true; say('');
+      api('DELETE', '/api/account', { confirm: true }).then(function (res) {
+        if (res.ok) {
+          try { localStorage.removeItem(TOKEN_KEY); localStorage.removeItem('dv_registered'); localStorage.removeItem(LAST_KEY); } catch (_) {}
+          say(t('delDone'), 'ok');
+          setTimeout(function () { location.href = '/'; }, 1500);
+        } else { S.busy = false; go.disabled = false; say((res.data && res.data.error) || t('err'), 'err'); }
+      }).catch(function () { S.busy = false; go.disabled = false; say(t('err'), 'err'); });
+    };
   }
 
   function render() {
@@ -247,7 +270,7 @@ input,select{font-size:16px;padding:13px 14px}
     v.innerHTML = S.tab === 'profile' ? vProfile() : S.tab === 'auto' ? vAuto() : S.tab === 'account' ? vAccount() : vOverview();
     if (S.tab === 'profile') bindProfile();
     else if (S.tab === 'auto') bindAuto();
-    else if (S.tab === 'account') $('bOut').onclick = function () { try { localStorage.removeItem(TOKEN_KEY); localStorage.removeItem('dv_registered'); } catch (_) {} location.href = 'register.html'; };
+    else if (S.tab === 'account') { $('bOut').onclick = function () { try { localStorage.removeItem(TOKEN_KEY); localStorage.removeItem('dv_registered'); } catch (_) {} location.href = 'register.html'; }; bindDelete(); }
     else { var g = $('goSecond'); if (g) g.onclick = function () { go('profile'); }; }
   }
   function go(tab) {
