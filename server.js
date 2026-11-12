@@ -481,7 +481,63 @@ app.delete('/api/shizzy/connection', shizzyActionLimiter, verifyUser, requireShi
 });
 
 // ---------- POST /api/register ----------
-app.post('/api/register', registerLimiter, requireDatabase, (req, res) => registerSecureHandler(req, res));
+// ---------- Auto-sync: apre chak nouvo enskripsyon, voye lis la bay tout moun ki konekte nan Shizzy ----------
+const SHIZZY_AUTO_SYNC = String(process.env.SHIZZY_AUTO_SYNC || '1') !== '0';
+const SHIZZY_AUTO_DEBOUNCE_MS = Math.max(5000, parseInt(process.env.SHIZZY_AUTO_DEBOUNCE_MS || '30000', 10) || 30000);
+let shizzyAutoTimer = null;
+let shizzyAutoRunning = false;
+let shizzyAutoAgain = false;
+
+function shizzyConnIsOn(c) {
+  if (!c) return false;
+  const st = String(c.status || '').toLowerCase();
+  if (st.includes('reauth') || st === 'revoked' || st === 'expired') return false;
+  return c.connected === true || st === 'connected' || st === 'active';
+}
+
+async function runShizzyAutoSync() {
+  if (shizzyAutoRunning) { shizzyAutoAgain = true; return; }
+  shizzyAutoRunning = true;
+  const stats = { pushed: 0, skipped: 0, failed: 0 };
+  try {
+    const rows = await fetchRegistrationsForSync(SHIZZY_BATCH_SIZE);
+    const userIds = [...new Set(rows.map((r) => r.user_id).filter(Boolean))];
+    for (const userId of userIds) {
+      try {
+        const conn = await shizzy.getConnection(userId);
+        if (!shizzyConnIsOn(conn)) { stats.skipped++; continue; }
+        const contacts = rows
+          .filter((r) => r.user_id !== userId)
+          .map((r) => toPartnerContact(r, NAME_PREFIX))
+          .filter(Boolean);
+        if (!contacts.length) { stats.skipped++; continue; }
+        await shizzy.putContacts(userId, contacts, 'replace');
+        stats.pushed++;
+      } catch (err) {
+        if (err instanceof ShizzyError && err.status === 404) { stats.skipped++; continue; }
+        stats.failed++;
+        console.error('[DOBERTO VCF] shizzy auto-sync user failed:', err && err.code || '', err && err.message || err);
+      }
+    }
+    console.log('[DOBERTO VCF] shizzy auto-sync done:', JSON.stringify(stats), 'users:', userIds.length);
+  } catch (err) {
+    console.error('[DOBERTO VCF] shizzy auto-sync error:', err && err.message || err);
+  } finally {
+    shizzyAutoRunning = false;
+    if (shizzyAutoAgain) { shizzyAutoAgain = false; scheduleShizzyAutoSync(); }
+  }
+}
+
+function scheduleShizzyAutoSync() {
+  if (!SHIZZY_AUTO_SYNC || !shizzy.configured) return;
+  clearTimeout(shizzyAutoTimer);
+  shizzyAutoTimer = setTimeout(runShizzyAutoSync, SHIZZY_AUTO_DEBOUNCE_MS);
+}
+
+app.post('/api/register', registerLimiter, requireDatabase, (req, res) => {
+  res.on('finish', () => { if (res.statusCode >= 200 && res.statusCode < 300) scheduleShizzyAutoSync(); });
+  return registerSecureHandler(req, res);
+});
 
 // ---------- GET /api/stats ----------
 app.get('/api/stats', publicReadLimiter, requireDatabase, async (req, res) => {
