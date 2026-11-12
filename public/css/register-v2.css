@@ -1,22 +1,38 @@
-/* Register v2 — kat divize: agòch tit + avantaj, adwat aksyon an. CSS sèlman. */
-.registration-shell{display:grid;grid-template-columns:1.1fr .9fr;grid-template-rows:auto 1fr;max-width:1080px;margin:32px auto;padding:0;border:1px solid var(--line,rgba(156,255,213,.12));border-radius:28px;background:linear-gradient(135deg,var(--bg-panel,#07110e),var(--bg,#030806));overflow:hidden;box-shadow:var(--premium-glow,0 24px 80px rgba(0,0,0,.42))}
-.registration-shell>*{grid-column:1/-1}
-.registration-layout{display:contents}
-.registration-intro{grid-column:1;grid-row:1;padding:40px 40px 8px;margin:0;text-align:left}
-.registration-intro h1{margin:10px 0 12px;line-height:1.08;font-size:clamp(1.9rem,3.4vw,2.8rem)}
-.registration-intro p{margin:0;color:var(--text-dim,#91a29c);line-height:1.65}
-.registration-side{grid-column:1;grid-row:2;display:grid;align-content:start;gap:12px;padding:20px 40px 40px;margin:0;background:none;border:0}
-.registration-side .sync-tier-card{display:grid;grid-template-columns:auto 1fr;column-gap:14px;align-items:center;padding:14px 16px;border:1px solid var(--line,rgba(156,255,213,.12));border-radius:18px;background:rgba(255,255,255,.02)}
-.registration-side .tier-label{grid-row:1/3;display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:var(--signal-soft,rgba(54,231,167,.12));color:var(--signal,#36e7a7);font-weight:700;font-size:.8rem}
-.registration-side .sync-tier-card strong{font-size:.98rem}
-.registration-side .sync-tier-card p{margin:2px 0 0;color:var(--text-dim,#91a29c);font-size:.85rem;line-height:1.5}
-.registration-main{grid-column:2;grid-row:1/3;margin:0;padding:40px;border:0;border-left:1px solid var(--line,rgba(156,255,213,.12));border-radius:0;box-shadow:none;background:rgba(0,0,0,.22);display:flex;flex-direction:column;justify-content:center}
-@media(max-width:860px){
-.registration-shell{grid-template-columns:1fr;grid-template-rows:none;margin:16px;border-radius:22px}
-.registration-intro,.registration-side,.registration-main{grid-column:1;grid-row:auto}
-.registration-intro{order:1;padding:28px 22px 8px}
-.registration-main{order:2;padding:22px;border-left:0;border-top:1px solid var(--line,rgba(156,255,213,.12));border-bottom:1px solid var(--line,rgba(156,255,213,.12))}
-.registration-side{order:3;padding:20px 22px 28px}
+/* register v4 — yon kat, 2 kolòn. Sèlman anvan enskripsyon (pa touche dv-registered). */
+body.register-v17:not(.dv-registered) main.registration-shell{
+  margin:44px auto 40px!important;padding:0!important;
+  border:1px solid rgba(156,255,213,.14);border-radius:28px;
+  background:radial-gradient(800px 420px at 0% 0%,rgba(54,231,167,.08),transparent 60%),linear-gradient(160deg,#07110e,#030806);
+  box-shadow:0 30px 90px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.04)}
+body.register-v17:not(.dv-registered) main.registration-shell .registration-main{
+  border:0!important;background:transparent!important;box-shadow:none!important;border-radius:0!important;margin:0!important}
+body.register-v17:not(.dv-registered) main.registration-shell .registration-main::before,
+body.register-v17:not(.dv-registered) main.registration-shell .registration-main::after{display:none!important}
+body.register-v17:not(.dv-registered) main.registration-shell .registration-side{display:grid!important;grid-template-columns:1fr!important;gap:10px}
+body.register-v17:not(.dv-registered) main.registration-shell .sync-tier-card{display:grid;grid-template-columns:auto 1fr;column-gap:14px;align-items:start;padding:14px 16px;border:1px solid rgba(156,255,213,.1);border-radius:16px;background:rgba(255,255,255,.025)}
+body.register-v17:not(.dv-registered) main.registration-shell .sync-tier-card .tier-label{grid-row:1/span 6;display:grid;place-items:center;width:40px;height:40px;margin:0;border-radius:12px;background:var(--signal-soft,rgba(54,231,167,.12));color:var(--signal,#36e7a7);font-weight:700;font-size:.8rem}
+body.register-v17:not(.dv-registered) main.registration-shell .sync-tier-card>*:not(.tier-label){grid-column:2}
+body.register-v17:not(.dv-registered) main.registration-shell .sync-tier-card a{margin-top:8px;justify-self:start}
+
+@media(min-width:861px){
+body.register-v17:not(.dv-registered) main.registration-shell{
+  display:grid!important;width:min(1120px,calc(100% - 40px))!important;max-width:none!important;
+  grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);grid-template-rows:1fr auto auto 1fr auto}
+body.register-v17:not(.dv-registered) main.registration-shell .registration-layout{display:contents!important}
+body.register-v17:not(.dv-registered) main.registration-shell .registration-intro{grid-column:1;grid-row:2;max-width:none!important;margin:0!important;padding:44px 48px 8px;text-align:left}
+body.register-v17:not(.dv-registered) main.registration-shell .registration-intro h1{margin:10px 0 12px;font-size:clamp(2rem,3.2vw,2.7rem);letter-spacing:-.02em;line-height:1.08}
+body.register-v17:not(.dv-registered) main.registration-shell .registration-intro p{max-width:46ch;margin:0}
+body.register-v17:not(.dv-registered) main.registration-shell .registration-side{grid-column:1;grid-row:3;margin:0!important;padding:16px 48px 44px}
+body.register-v17:not(.dv-registered) main.registration-shell .registration-main{
+  grid-column:2;grid-row:1/5;display:grid;align-content:center;
+  padding:44px!important;border-left:1px solid rgba(156,255,213,.12)!important;
+  border-radius:0 28px 28px 0!important;background:rgba(0,0,0,.26)!important}
+body.register-v17:not(.dv-registered) main.registration-shell .dv-footer{grid-column:1/-1;grid-row:5;margin:0!important;padding:18px 48px 24px!important;border-top:1px solid rgba(156,255,213,.1)}
 }
-.registration-side .sync-tier-card .tier-label{grid-row:1/span 6;align-self:start}
-.registration-side .sync-tier-card a{grid-column:2;margin-top:8px;justify-self:start}
+@media(max-width:860px){
+body.register-v17:not(.dv-registered) main.registration-shell{margin:14px auto 24px!important;width:calc(100% - 24px)!important;border-radius:22px}
+body.register-v17:not(.dv-registered) main.registration-shell .registration-intro{padding:24px 20px 6px;margin:0!important}
+body.register-v17:not(.dv-registered) main.registration-shell .registration-main{padding:20px!important}
+body.register-v17:not(.dv-registered) main.registration-shell .registration-side{padding:4px 20px 22px}
+body.register-v17:not(.dv-registered) main.registration-shell .dv-footer{margin:0!important;padding:16px 20px 22px!important}
+}
