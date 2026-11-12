@@ -540,11 +540,33 @@ app.post('/api/register', registerLimiter, requireDatabase, (req, res) => {
 });
 
 // ---------- GET /api/stats ----------
+let countryCountCache = { at: 0, value: null };
+async function getCountryCount() {
+  if (countryCountCache.value !== null && Date.now() - countryCountCache.at < 60000) return countryCountCache.value;
+  const seen = new Set();
+  const PAGE = 1000;
+  for (let from = 0; from < 50000; from += PAGE) {
+    const { data, error } = await supabase.from('registrations')
+      .select('country_name').order('id', { ascending: true }).range(from, from + PAGE - 1);
+    if (error) throw error;
+    for (const row of data || []) {
+      const c = String(row.country_name || '').trim().toLowerCase();
+      if (c) seen.add(c);
+    }
+    if (!data || data.length < PAGE) break;
+  }
+  countryCountCache = { at: Date.now(), value: seen.size };
+  return seen.size;
+}
+
 app.get('/api/stats', publicReadLimiter, requireDatabase, async (req, res) => {
   const { count, error } = await supabase.from('registrations').select('*', { count: 'exact', head: true });
   if (error) return res.status(500).json({ code: 'server_error', error: 'Erè sèvè.' });
+  let countries = null;
+  try { countries = await getCountryCount(); } catch (e) { console.error('[stats] countries:', e.message); }
   res.json({
     total: count || 0,
+    countries,
     namePrefix: NAME_PREFIX,
     emailNotificationsEnabled: emailNotificationsConfigured(),
     pushNotificationsEnabled: pushNotificationsConfigured()
