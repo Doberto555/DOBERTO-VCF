@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>DOBERTO VCF — Plus de contacts WhatsApp, plus de vues sur vos statuts</title>
+<meta name="description" content="Rejoignez une liste de membres WhatsApp, ajoutez leurs numéros à Google Contacts ou par fichier VCF, et gagnez des vues sur vos statuts.">
+<meta name="theme-color" content="#04110d">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icons/brand-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#04110d;--bg2:#08201a;--card:rgba(255,255,255,.035);--line:rgba(255,255,255,.09);--tx:#eafff6;--mut:#8fa89d;--g:#22c58b;--gold:#f2c14e}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:radial-gradient(900px 500px at 78% -5%,rgba(34,197,139,.16),transparent 60%),radial-gradient(700px 400px at 5% 10%,rgba(242,193,78,.07),transparent 60%),var(--bg);color:var(--tx);line-height:1.5;-webkit-font-smoothing:antialiased;padding-top:env(safe-area-inset-top)}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+nav{position:sticky;top:0;z-index:20;background:rgba(4,17,13,.8);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nv{display:flex;align-items:center;gap:22px;height:64px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:.3px}
+.logo img{width:30px;height:30px}
+.links{display:flex;gap:22px;margin-left:18px;color:var(--mut);font-size:14px;font-weight:500}
+.links a:hover{color:var(--tx)}
+.sp{flex:1}
+.lang{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.lang button{background:none;border:0;color:var(--mut);font:700 11px Inter;padding:7px 10px;cursor:pointer}
+.lang button.on{background:rgba(255,255,255,.1);color:var(--tx)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 22px;border-radius:13px;font-weight:700;font-size:14px;border:1px solid var(--line);background:var(--card);cursor:pointer;transition:.2s}
+.btn:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.22)}
+.btn.p{background:#eafff6;color:#04110d;border-color:#eafff6}
+.btn.sm{padding:10px 16px;font-size:13px}
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;padding:64px 0 40px}
+.pill{display:inline-flex;align-items:center;gap:9px;padding:7px 14px;border:1px solid var(--line);border-radius:999px;background:var(--card);font-size:11px;color:var(--mut);font-weight:600}
+.pill b{color:var(--g);letter-spacing:1px;font-size:10px;background:rgba(34,197,139,.14);padding:3px 8px;border-radius:6px}
+h1{font-size:clamp(38px,6vw,68px);line-height:1.02;font-weight:900;letter-spacing:-2px;margin:22px 0 18px}
+h1 em{font-style:normal;color:var(--gold)}
+.lead{color:var(--mut);font-size:17px;max-width:520px}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin:28px 0 20px}
+.ticks{display:flex;gap:18px;flex-wrap:wrap;color:var(--mut);font-size:13px}
+.ticks span:before{content:"✓ ";color:var(--g);font-weight:800}
+.demo{border:1px solid var(--line);border-radius:20px;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.015));box-shadow:0 30px 80px rgba(0,0,0,.5);padding:16px;position:relative}
+.dh{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--mut);padding:2px 4px 14px;border-bottom:1px solid var(--line)}
+.dh i{width:8px;height:8px;border-radius:50%;background:#2a3d36;display:inline-block;margin-right:3px}
+.dh .tag{margin-left:auto;color:var(--gold);border:1px solid rgba(242,193,78,.35);padding:3px 9px;border-radius:7px;font-size:10px;font-weight:700;letter-spacing:.6px}
+.feed{height:292px;overflow:hidden;padding-top:10px;display:flex;flex-direction:column;gap:8px}
+.ct{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;border:1px solid transparent;animation:in .5s ease both}
+.ct.new{background:rgba(242,193,78,.08);border-color:rgba(242,193,78,.4)}
+.av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:13px;background:#12312a;color:var(--g);flex:none}
+.ct.new .av{background:var(--gold);color:#1a1300}
+.ct b{display:block;font-size:13px}
+.ct small{color:var(--mut);font-size:11px;font-variant-numeric:tabular-nums}
+.ct .nw{margin-left:auto;font-size:9px;font-weight:800;letter-spacing:.8px;color:var(--gold);border:1px solid rgba(242,193,78,.4);padding:3px 7px;border-radius:6px}
+.df{display:flex;justify-content:space-between;font-size:11px;color:var(--mut);padding-top:12px;border-top:1px solid var(--line)}
+.df .on:before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--g);margin-right:7px;box-shadow:0 0 10px var(--g)}
+.ex{text-align:center;font-size:11px;color:var(--mut);margin-top:12px}
+@keyframes in{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:none}}
+section{padding:70px 0}
+.eb{color:var(--gold);font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase}
+h2{font-size:clamp(28px,4vw,42px);letter-spacing:-1px;margin:10px 0 36px;font-weight:800}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{border:1px solid var(--line);background:var(--card);border-radius:18px;padding:26px}
+.card .n{width:38px;height:38px;border-radius:11px;background:rgba(34,197,139,.14);color:var(--g);display:grid;place-items:center;font-weight:900;margin-bottom:16px}
+.card h3{font-size:18px;margin-bottom:8px}
+.card p{color:var(--mut);font-size:14px}
+.band{background:linear-gradient(180deg,transparent,rgba(34,197,139,.06),transparent)}
+details{border:1px solid var(--line);border-radius:14px;background:var(--card);padding:18px 20px;margin-bottom:10px}
+summary{cursor:pointer;font-weight:700;list-style:none;display:flex;justify-content:space-between}
+summary:after{content:"+";color:var(--g);font-size:20px;line-height:1}
+details[open] summary:after{content:"–"}
+details p{color:var(--mut);font-size:14px;margin-top:10px}
+.fin{text-align:center;border:1px solid var(--line);border-radius:26px;padding:60px 20px;background:radial-gradient(600px 240px at 50% 0,rgba(34,197,139,.18),transparent 70%),var(--card)}
+.fin h2{margin-bottom:12px}.fin p{color:var(--mut);margin-bottom:26px}
+footer{border-top:1px solid var(--line);padding:28px 0 calc(28px + env(safe-area-inset-bottom));color:var(--mut);font-size:12px}
+footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
+footer a:hover{color:var(--tx)}
+@media(max-width:900px){.hero{grid-template-columns:1fr;padding-top:36px;gap:34px}.grid{grid-template-columns:1fr}.links{display:none}}
+@media(max-width:520px){.nv .btn{display:none}.feed{height:268px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<nav><div class="wrap nv">
+  <a class="logo" href="/"><img src="/icons/brand-mark.svg" alt="">DOBERTO VCF</a>
+  <div class="links"><a href="#how" data-i="n1">Comment ça marche</a><a href="#why" data-i="n2">Pourquoi</a><a href="/list.html" data-i="n3">Liste</a><a href="#faq">FAQ</a></div>
+  <div class="sp"></div>
+  <div class="lang"><button data-l="fr" class="on">FR</button><button data-l="ht">KR</button></div>
+  <a class="btn sm" href="/dashboard.html" data-i="login">Connexion</a>
+  <a class="btn sm p" href="/register.html" data-i="start">Commencer gratuitement →</a>
+</div></nav>
+
+<main class="wrap">
+<div class="hero">
+  <div>
+    <span class="pill"><b data-i="live">DIRECT</b><span id="cnt" data-i="sub">12 pays · contacts mis à jour automatiquement</span></span>
+    <h1><span data-i="h1a">Votre liste de contacts WhatsApp,</span> <em data-i="h1b">qui grandit toute seule.</em></h1>
+    <p class="lead" data-i="lead">Rejoignez une liste de membres du monde entier. Ajoutez leurs numéros à Google Contacts automatiquement ou avec un fichier VCF, et ceux qui vous ont aussi ajouté verront vos statuts WhatsApp.</p>
+    <div class="cta"><a class="btn p" href="/register.html" data-i="cta1">Créer un compte gratuit →</a><a class="btn" href="#how" data-i="cta2">Comment ça marche</a></div>
+    <div class="ticks"><span data-i="t1">Compte gratuit</span><span data-i="t2">Connexion Google</span><span data-i="t3">Rien à installer</span></div>
+  </div>
+  <div>
+    <div class="demo" aria-hidden="true">
+      <div class="dh"><i></i><i></i><i></i> Google Contacts <span class="tag">DOBERTO VCF</span></div>
+      <div class="feed" id="feed"></div>
+      <div class="df"><span class="on" data-i="auto">Ajout automatique activé</span><span data-i="upd">Mise à jour toutes les 15 min</span></div>
+    </div>
+    <p class="ex" data-i="ex">Exemple de contacts ajoutés à votre téléphone (noms fictifs).</p>
+  </div>
+</div>
+
+<section id="how" class="band"><div class="eb" data-i="e1">Comment ça marche</div><h2 data-i="h2a">Trois étapes, deux minutes.</h2>
+  <div class="grid">
+    <div class="card"><div class="n">1</div><h3 data-i="s1t">Inscrivez-vous</h3><p data-i="s1p">Connectez-vous avec Google et enregistrez votre numéro WhatsApp. Il apparaît dans la liste des membres.</p></div>
+    <div class="card"><div class="n">2</div><h3 data-i="s2t">Ajoutez les contacts</h3><p data-i="s2p">Activez l’ajout automatique vers Google Contacts, ou téléchargez un fichier VCF et importez-le.</p></div>
+    <div class="card"><div class="n">3</div><h3 data-i="s3t">Gagnez des vues</h3><p data-i="s3p">Les membres qui ont aussi votre numéro voient vos statuts WhatsApp. Plus de contacts, plus de vues.</p></div>
+  </div>
+</section>
+
+<section id="why"><div class="eb" data-i="e2">Pourquoi DOBERTO VCF</div><h2 data-i="h2b">Simple, gratuit et fait pour vous.</h2>
+  <div class="grid">
+    <div class="card"><h3 data-i="w1t">Liste mondiale</h3><p data-i="w1p">Des membres de plusieurs pays, avec le bon indicatif pour chaque numéro.</p></div>
+    <div class="card"><h3 data-i="w2t">Automatique</h3><p data-i="w2p">Les nouveaux membres arrivent dans vos contacts sans que vous fassiez rien.</p></div>
+    <div class="card"><h3 data-i="w3t">Vous gardez le contrôle</h3><p data-i="w3p">Modifiez votre profil ou supprimez votre compte à tout moment depuis votre tableau de bord.</p></div>
+  </div>
+</section>
+
+<section id="faq"><div class="eb">FAQ</div><h2 data-i="h2c">Questions fréquentes</h2>
+  <details><summary data-i="q1">Est-ce gratuit ?</summary><p data-i="a1">Oui, la création de compte et l’accès à la liste sont gratuits.</p></details>
+  <details><summary data-i="q2">Mon numéro est-il visible ?</summary><p data-i="a2">Votre nom et votre numéro apparaissent dans la liste des membres. Vous pouvez les modifier ou supprimer votre compte quand vous voulez.</p></details>
+  <details><summary data-i="q3">Dois-je installer une application ?</summary><p data-i="a3">Non. Tout se fait depuis le site, sur téléphone ou ordinateur.</p></details>
+</section>
+
+<section><div class="fin"><h2 data-i="fh">Prêt à agrandir votre liste ?</h2><p data-i="fp">Rejoignez les membres déjà inscrits.</p><a class="btn p" href="/register.html" data-i="cta1">Créer un compte gratuit →</a></div></section>
+</main>
+
+<footer><div class="wrap"><span>© 2026 DOBERTO VCF</span><span><a href="/privacy.html" data-i="fl1">Confidentialité</a> · <a href="/terms.html" data-i="fl2">Conditions</a> · <a href="/about.html" data-i="fl3">À propos</a></span></div></footer>
+
+<script>
+(function(){
+var T={fr:{},ht:{
+n1:"Kijan sa mache",n2:"Poukisa",n3:"Lis",login:"Konekte",start:"Kòmanse gratis →",live:"AN DIRÈK",sub:"12 peyi · kontak ajoute otomatikman",
+h1a:"Lis kontak WhatsApp ou a,",h1b:"ki grandi poukont li.",
+lead:"Antre nan yon lis manm toupatou nan lemond. Ajoute nimewo yo nan Google Contacts otomatikman oswa ak yon fichye VCF, epi moun ki ajoute ou tou ap wè estati WhatsApp ou yo.",
+cta1:"Kreye yon kont gratis →",cta2:"Kijan sa mache",t1:"Kont gratis",t2:"Koneksyon Google",t3:"Pa gen anyen pou enstale",
+auto:"Ajout otomatik aktive",upd:"Mizajou chak 15 minit",ex:"Egzanp kontak ki ajoute nan telefòn ou (non fiktif).",
+e1:"Kijan sa mache",h2a:"Twa etap, de minit.",
+s1t:"Enskri",s1p:"Konekte ak Google epi anrejistre nimewo WhatsApp ou. Li parèt nan lis manm yo.",
+s2t:"Ajoute kontak yo",s2p:"Aktive ajout otomatik nan Google Contacts, oswa telechaje yon fichye VCF epi enpòte l.",
+s3t:"Jwenn plis vi",s3p:"Manm ki gen nimewo ou tou wè estati WhatsApp ou yo. Plis kontak, plis vi.",
+e2:"Poukisa DOBERTO VCF",h2b:"Senp, gratis epi fèt pou ou.",
+w1t:"Lis mondyal",w1p:"Manm nan plizyè peyi, ak bon endikatif pou chak nimewo.",
+w2t:"Otomatik",w2p:"Nouvo manm yo antre nan kontak ou san ou pa fè anyen.",
+w3t:"Ou gen kontwòl",w3p:"Modifye pwofil ou oswa efase kont ou nenpòt ki lè nan dashboard ou.",
+h2c:"Kesyon moun poze souvan",q1:"Èske l gratis ?",a1:"Wi, kreye kont lan ak aksè nan lis la gratis.",
+q2:"Èske nimewo m vizib ?",a2:"Non ou ak nimewo ou parèt nan lis manm yo. Ou ka modifye yo oswa efase kont ou nenpòt ki lè.",
+q3:"Èske m dwe enstale yon aplikasyon ?",a3:"Non. Tout bagay fèt sou sit la, sou telefòn oswa òdinatè.",
+fh:"Pare pou agrandi lis ou ?",fp:"Antre nan mitan manm ki deja enskri yo.",fl1:"Konfidansyalite",fl2:"Kondisyon",fl3:"Sou nou"}};
+var els=[].slice.call(document.querySelectorAll('[data-i]'));
+els.forEach(function(e){T.fr[e.dataset.i]=e.textContent});
+function setLang(l){
+  document.documentElement.lang=l==='ht'?'ht':'fr';
+  els.forEach(function(e){var v=(T[l]&&T[l][e.dataset.i])||T.fr[e.dataset.i];if(v)e.textContent=v});
+  [].forEach.call(document.querySelectorAll('.lang button'),function(b){b.classList.toggle('on',b.dataset.l===l)});
+  try{localStorage.setItem('dv_home_lang',l)}catch(_){}
+  if(window._cnt)setCount(window._cnt,l);
+}
+[].forEach.call(document.querySelectorAll('.lang button'),function(b){b.onclick=function(){setLang(b.dataset.l)}});
+function setCount(n,l){var e=document.getElementById('cnt');e.textContent=n.toLocaleString(l==='ht'?'fr':'fr')+(l==='ht'?' manm · kontak ajoute otomatikman':' membres · contacts mis à jour automatiquement')}
+fetch('/api/stats',{cache:'no-store'}).then(function(r){return r.json()}).then(function(d){
+  var n=[d&&d.total,d&&d.count,d&&d.members,d&&d.total_members,d&&d.registrations].filter(function(x){return typeof x==='number'&&x>0})[0];
+  if(n){window._cnt=n;setCount(n,document.documentElement.lang==='ht'?'ht':'fr')}
+}).catch(function(){});
+try{var s=localStorage.getItem('dv_home_lang');if(s==='ht')setLang('ht')}catch(_){}
+
+var N=['Jean-Marc P.','Nadia R.','Élodie M.','Kwame A.','Priya S.','Luis F.','Amara O.','Marc-André D.','Sophia L.','Daniel T.'];
+var C=['+509','+1','+33','+225','+1','+34','+234','+509','+55','+1'];
+var feed=document.getElementById('feed'),i=0,items=[];
+function add(){
+  var k=i++%N.length,el=document.createElement('div');
+  el.className='ct new';
+  el.innerHTML='<div class="av">'+N[k][0]+'</div><div><b>DV '+N[k]+'</b><small>'+C[k]+' •••• ••'+(10+(i*7)%90)+'</small></div><span class="nw">NOUVEAU</span>';
+  items.forEach(function(o){o.classList.remove('new');var b=o.querySelector('.nw');if(b)b.remove()});
+  feed.insertBefore(el,feed.firstChild);items.unshift(el);
+  while(items.length>5){items.pop().remove()}
+}
+for(var j=0;j<5;j++)add();
+if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches)setInterval(add,2400);
+})();
+</script>
+<script src="/js/ad-runtime-v34.js?v=20260927-1" defer></script>
+</body>
+</html>
