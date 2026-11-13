@@ -1,0 +1,17 @@
+/* DOBERTO VCF - list, style Shizzy */
+body.list-page{background:#07080b;color:#e7e9f2}
+body.list-page main.container{max-width:1040px;margin:28px auto 40px;padding:0 16px}
+body.list-page .members-hero-v14.list-page-hero{padding:44px 40px 36px;margin:0 0 16px;background:linear-gradient(145deg,#0e1018,#0a0c13);border:1px solid #1e2130;border-radius:24px;box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 120px rgba(34,229,168,.07)}
+body.list-page .list-kicker{display:block;margin-bottom:14px;color:#22e5a8;font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase}
+body.list-page .list-page-hero h1{margin:0 0 12px;font-size:clamp(26px,3.2vw,38px);line-height:1.1;font-weight:800;color:#e7e9f2}
+body.list-page .list-page-hero p{margin:0;color:#8890a6;font-size:14px;line-height:1.6;max-width:520px}
+body.list-page .member-directory-panel{padding:28px 32px;background:linear-gradient(145deg,#0e1018,#0a0c13);border:1px solid #1e2130;border-radius:24px;box-shadow:0 30px 80px rgba(0,0,0,.55)}
+body.list-page .member-directory-head h2{color:#e7e9f2;font-weight:800}
+body.list-page .member-directory-head p{color:#8890a6;font-size:13px}
+body.list-page .member-directory-panel input,body.list-page .member-directory-panel select{background:rgba(255,255,255,.03);border:1px solid #1e2130;border-radius:14px;color:#e7e9f2}
+body.list-page .member-directory-panel input:focus,body.list-page .member-directory-panel select:focus{outline:0;border-color:#22e5a8;box-shadow:0 0 0 3px rgba(34,229,168,.12)}
+body.list-page .member-directory-panel table{border-collapse:collapse;width:100%}
+body.list-page .member-directory-panel th{color:#8890a6;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+body.list-page .member-directory-panel td{color:#e7e9f2;border-bottom:1px solid #1e2130}
+body.list-page .dv-footer{color:#8890a6;border-top:1px solid #1e2130}
+@media (max-width:640px){body.list-page .members-hero-v14.list-page-hero{padding:28px 20px 24px;border-radius:20px}body.list-page .member-directory-panel{padding:20px 16px;border-radius:20px}}
