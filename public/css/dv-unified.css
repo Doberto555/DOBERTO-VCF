@@ -1,0 +1,27 @@
+/* DOBERTO VCF - style komen (paj legal + a propos), menm gou ak Shizzy */
+:root{--dv-line:rgba(143,255,203,.12);--dv-muted:#a9bdb4;--dv-signal:#36e7a7;--dv-sun:#f5c451}
+
+/* header: yon sèl logo, ba ak liy anba */
+.legal-head::before,.legal-head::after,.legal-head .brand::before,.legal-head .brand::after{content:none!important;display:none!important}
+.legal-page{max-width:980px!important;margin:0 auto!important;padding:0 20px 60px!important}
+.legal-head{display:flex!important;align-items:center;justify-content:space-between;gap:16px;padding:16px 0!important;margin:0 0 34px!important;border-bottom:1px solid var(--dv-line)}
+.legal-head .brand{display:inline-flex;align-items:center;gap:10px;font-weight:800;font-size:1.05rem;color:#fff;text-decoration:none}
+.legal-head .brand-logo{width:34px!important;height:34px!important;border-radius:10px}
+
+/* kontni: san gwo kat, kolòn etwat */
+.legal-page>.panel{max-width:none!important;margin:0!important;padding:0!important;background:none!important;border:0!important;box-shadow:none!important;border-radius:0!important}
+.legal-page .member-directory-kicker{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid var(--dv-line);border-radius:999px;background:rgba(255,255,255,.03);color:var(--dv-signal);font-size:.74rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;margin:0}
+.legal-page h1{margin:22px 0 10px!important;font-size:clamp(2.1rem,6vw,3.6rem)!important;line-height:1.06!important;letter-spacing:-.035em!important;color:#f6f4ec}
+.legal-page h1 em.dv-a{font-style:normal;color:var(--dv-sun)}
+.legal-page h1+p{margin:26px 0 8px!important;padding:26px 30px!important;border:1px solid var(--dv-line);border-radius:26px;background:rgba(255,255,255,.03);color:#b9cbc3;font-size:1.04rem;line-height:1.75}
+.legal-page h2{margin:36px 0 0!important;padding:6px 0 6px 22px;border-left:1px solid rgba(255,255,255,.14);font-size:1.3rem!important;color:#fff;letter-spacing:-.01em}
+.legal-page h2~p,.legal-page h2~ul,.legal-page h2~ol{margin:0!important;padding:8px 0 8px 22px;border-left:1px solid rgba(255,255,255,.14);color:var(--dv-muted);line-height:1.75;font-size:1rem}
+.legal-page h2~ul,.legal-page h2~ol{list-style:none}
+.legal-page h2~ul li,.legal-page h2~ol li{position:relative;padding:5px 0 5px 22px}
+.legal-page h2~ul li::before{content:"\203A";position:absolute;left:0;color:#6f857d}
+.legal-page .panel a[href="/"],.legal-page .panel a[href="index.html"],.legal-page .panel a[href="/index.html"]{display:inline-flex;align-items:center;gap:8px;margin-top:22px;padding:11px 18px;border:1px solid var(--dv-line);border-radius:14px;background:rgba(255,255,255,.04);color:#fff;font-weight:700;text-decoration:none}
+
+/* a propos: tit mwens gwo */
+.about-hero h1{font-size:clamp(2.2rem,6vw,4rem)!important;line-height:1.05!important;letter-spacing:-.035em!important}
+.about-hero p{font-size:1.02rem!important;line-height:1.7!important}
+@media(max-width:760px){.about-hero h1{font-size:2.1rem!important}.legal-page h1+p{padding:20px!important}}

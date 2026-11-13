@@ -132,6 +132,7 @@ select.in option{background:#0a1a13;color:var(--text)}
 .seg button{padding:10px 16px;border-radius:10px;border:0;background:none;color:var(--muted);font:inherit;font-weight:700;cursor:pointer}
 .seg button.on{background:rgba(255,255,255,.08);color:var(--text)}
 </style>
+<script src="js/dv-country-select.js?v=3"></script>
 </head>
 <body>
 <header class="mtop"><a class="brand" href="index.html"><img class="logo" src="icons/doberto-vcf-192.png?v=20260904-1" width="34" height="34" alt="" decoding="async">DOBERTO VCF</a><a class="mhome" href="index.html">Accueil</a></header>
@@ -405,20 +406,24 @@ document.addEventListener('click',function(){mm.hidden=true;mb.setAttribute('ari
       return r.json().catch(function(){return {}}).then(function(d){return {ok:r.ok,d:d}})});
   }
   function loadCountries(){
-    return fetch('js/countries.js',{cache:'force-cache'}).then(function(r){return r.text()}).then(function(t){
-      try{var l=new Function(t+'\n;return typeof COUNTRIES!=="undefined"?COUNTRIES:null;')();return Array.isArray(l)&&l.length?l:null}catch(_){return null}
-    }).catch(function(){return null});
+    return new Promise(function(res){
+      function ok(){return typeof COUNTRIES!=='undefined'&&Array.isArray(COUNTRIES)&&COUNTRIES.length?COUNTRIES:null}
+      if(ok())return res(ok());
+      var s=document.createElement('script');s.src='js/countries.js?v=20261113';
+      s.onload=function(){res(ok())};s.onerror=function(){res(null)};
+      document.head.appendChild(s);
+    });
   }
 
   function profileTab(){
     $('profSec').hidden=false; document.title='Mon profil — DOBERTO VCF';
     var list=[{name:'Ayiti (Haiti)',iso:'HT',dial:'509',len:8}], reg=null, busy=false, needLogin=false, sel=$('pfCountry');
-    function fillSel(){sel.innerHTML='';list.forEach(function(c,i){var o=document.createElement('option');o.value=String(i);o.textContent=c.iso+' +'+c.dial;sel.appendChild(o)})}
+    function fillSel(){sel.innerHTML='';list.forEach(function(c,i){var o=document.createElement('option');o.value=String(i);o.textContent=c.iso+' +'+c.dial;sel.appendChild(o)});if(window.dvCountrySelect)window.dvCountrySelect(sel,function(){return list})}
     function setCountry(r){
       var idx=-1,d=String(r.dial_code||'').replace(/\D/g,'');
       list.forEach(function(c,i){if(idx<0&&r.country_name&&c.name===r.country_name)idx=i});
       if(idx<0)list.forEach(function(c,i){if(idx<0&&c.dial===d)idx=i});
-      if(idx>=0)sel.value=String(idx);
+      if(idx>=0){sel.value=String(idx);sel.dispatchEvent(new Event('change'))}
     }
     fillSel();
     $('pfForm').addEventListener('submit',function(e){

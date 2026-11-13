@@ -20,3 +20,6 @@ public/index-test.html
 *.bak*
 *.conflict-copy
 node_modules/
+.env
+node_modules/
+*.bak*

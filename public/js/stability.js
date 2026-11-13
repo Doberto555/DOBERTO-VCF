@@ -203,6 +203,7 @@
 })();
 ;(()=>{
   'use strict';
+  if(/\/(terms|privacy|about|mesi|report)(\.html)?\/?$/.test(location.pathname)) return;
   if(window.__DOBERTO_COPY_CLEAN_V1__) return;
   window.__DOBERTO_COPY_CLEAN_V1__=true;
   const blocked=new Set(['SCRIPT','STYLE','CODE','PRE','TEXTAREA']);
@@ -240,6 +241,7 @@
   else start();
 })();
 ;(()=>{
+  if(/\/(terms|privacy|about|mesi|report)(\.html)?\/?$/.test(location.pathname))return;
   if(window.__dobertoCopyCleanV1)return;
   window.__dobertoCopyCleanV1=true;
   const blocked=new Set(['SCRIPT','STYLE','CODE','PRE','TEXTAREA']);

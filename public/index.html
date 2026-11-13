@@ -155,14 +155,44 @@ footer{border-top:1px solid var(--line);padding:60px 0 36px;margin-top:40px}
 @media(max-width:430px){.btn{width:100%}}
 @media(max-width:340px){.brand span{display:none}}
 </style>
+<style id="dvMobileCss">
+#dvMenuBtn{display:none}
+#dvMenu{display:none}
+@media(max-width:760px){
+  html{font-size:14.5px}
+  .nav .links,.nav .lang,.nav .nlogin,.nav .btn.sm{display:none!important}
+  #dvMenuBtn{display:inline-grid;place-items:center;width:42px;height:42px;margin-left:auto;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:#e8f5f0;cursor:pointer;padding:0}
+  h1{font-size:clamp(1.8rem,8vw,2.3rem)!important;line-height:1.12!important;letter-spacing:-.02em!important}
+  h1+p,h1~p{font-size:1rem!important;line-height:1.6!important}
+  .btn{min-height:48px!important;font-size:1rem!important;padding-top:0!important;padding-bottom:0!important}
+  #dvWhy{margin:40px auto!important}
+  #dvWhy h2{font-size:1.7rem!important}
+  #dvWhy .dv-lead{font-size:.98rem!important}
+  #dvMenu.open{display:flex;position:fixed;inset:0;z-index:99999;flex-direction:column;background:#02100c;padding:max(14px,env(safe-area-inset-top)) 22px 28px;overflow-y:auto}
+  #dvMenu .m-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px}
+  #dvMenu .m-brand{display:flex;align-items:center;gap:10px;color:#fff;font-weight:800;font-size:1.05rem;text-decoration:none}
+  #dvMenu .m-brand img{width:34px;height:34px;border-radius:10px}
+  #dvMenu .m-x{width:42px;height:42px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:#e8f5f0;font-size:1.2rem;cursor:pointer}
+  #dvMenu .m-link{display:flex;justify-content:space-between;align-items:center;padding:18px 2px;border-bottom:1px solid rgba(255,255,255,.08);color:#fff;font-size:1.35rem;font-weight:700;text-decoration:none}
+  #dvMenu .m-link:after{content:"\2192";color:#6f857d;font-weight:400}
+  #dvMenu .m-cta{display:flex;justify-content:center;align-items:center;min-height:52px;border-radius:14px;margin-top:14px;font-weight:700;font-size:1rem;text-decoration:none}
+  #dvMenu .m-cta.p{background:#f3f1e8;color:#06130f;margin-top:28px}
+  #dvMenu .m-cta.s{border:1px solid rgba(255,255,255,.14);color:#e8f5f0}
+  #dvMenu .m-lang{display:flex;align-items:center;justify-content:space-between;margin-top:30px}
+  #dvMenu .m-lang small{letter-spacing:.16em;font-weight:700;color:#7d918a;text-transform:uppercase;font-size:.75rem}
+  #dvMenu .m-lg{display:flex;gap:4px;padding:4px;border:1px solid rgba(255,255,255,.12);border-radius:12px}
+  #dvMenu .m-lg button{border:0;background:transparent;color:#9db3ab;font-weight:700;padding:9px 13px;border-radius:9px;cursor:pointer;font-size:.8rem}
+  #dvMenu .m-lg button.on{background:rgba(255,255,255,.1);color:#fff}
+}
+</style>
 </head>
 <body>
-<script src="js/stability.js?v=20261112-1"></script>
+<script src="js/stability.js?v=20261112-2"></script>
 
 <header class="nav"><div class="wrap">
   <a class="brand" href="/"><img src="icons/doberto-vcf-192.png?v=20260904-1" width="36" height="36" alt=""><span>DOBERTO VCF</span></a>
   <nav class="links" aria-label="Menu"><a href="#how" data-i="nHow"></a><a href="#why" data-i="nWhy"></a><a href="#faq" data-i="nFaq"></a></nav>
-  <span class="sp"></span>
+  <span class="sp"></span><button type="button" id="dvMenuBtn" aria-label="Menu" aria-expanded="false"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   <div class="lang" role="group" aria-label="Langue"><button type="button" data-l="ht">HT</button><button type="button" data-l="fr">FR</button><button type="button" data-l="en">EN</button></div>
   <a class="nlogin js-login" href="/api/auth/google/url?flow=login&amp;redirect=1" data-i="nLogin"></a>
   <a class="btn light sm js-start" href="register.html" data-i="nStart"></a>
@@ -544,6 +574,52 @@ function load(){
 $('refBtn').addEventListener('click',load);
 setInterval(function(){if(!document.hidden)load()},45000);
 apply();load();
+})();
+</script>
+<div id="dvMenu" role="dialog" aria-modal="true" aria-label="Menu"></div>
+<script>
+(function(){
+  var btn=document.getElementById('dvMenuBtn'),menu=document.getElementById('dvMenu');
+  if(!btn||!menu)return;
+  var LBL={ht:'Lang',fr:'Langue',en:'Language'};
+  function lang(){var l=String(document.documentElement.lang||'ht').slice(0,2).toLowerCase();return LBL[l]?l:'ht'}
+  function el(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e}
+  function visible(a){return a&&a.textContent.trim()&&!a.hidden&&a.style.display!=='none'}
+  function close(){menu.classList.remove('open');btn.setAttribute('aria-expanded','false');document.body.style.overflow=''}
+  function build(){
+    menu.textContent='';
+    var top=el('div','m-top'),brand=el('a','m-brand');brand.href='/';
+    var img=document.querySelector('.nav .brand img');
+    if(img){var im=el('img');im.src=img.getAttribute('src');im.alt='';brand.appendChild(im)}
+    brand.appendChild(el('span',null,'DOBERTO VCF'));
+    var x=el('button','m-x','\u2715');x.type='button';x.setAttribute('aria-label','Close');x.onclick=close;
+    top.appendChild(brand);top.appendChild(x);menu.appendChild(top);
+    document.querySelectorAll('.nav .links a').forEach(function(a){
+      if(!a.textContent.trim())return;
+      var l=el('a','m-link',a.textContent.trim());l.href=a.getAttribute('href')||'#';l.onclick=close;menu.appendChild(l);
+    });
+    var st=document.querySelector('.nav .js-start');
+    if(visible(st)){var c=el('a','m-cta p',st.textContent.trim());c.href=st.getAttribute('href')||'register.html';menu.appendChild(c)}
+    var lg=document.querySelector('.nav .js-login');
+    if(visible(lg)){var d=el('a','m-cta s',lg.textContent.trim());d.href=lg.getAttribute('href')||'#';menu.appendChild(d)}
+    var row=el('div','m-lang'),grp=el('div','m-lg'),cur=lang();
+    row.appendChild(el('small',null,LBL[cur]));
+    ['ht','fr','en'].forEach(function(code){
+      var b=el('button',code===cur?'on':'',code.toUpperCase());b.type='button';
+      b.onclick=function(){
+        var o=document.querySelector('.nav .lang [data-l="'+code+'"]');if(o)o.click();
+        setTimeout(build,80);
+      };
+      grp.appendChild(b);
+    });
+    row.appendChild(grp);menu.appendChild(row);
+  }
+  btn.onclick=function(){
+    if(menu.classList.contains('open')){close();return}
+    build();menu.classList.add('open');btn.setAttribute('aria-expanded','true');document.body.style.overflow='hidden';
+  };
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')close()});
+  window.addEventListener('resize',function(){if(window.innerWidth>760)close()});
 })();
 </script>
 </body>
