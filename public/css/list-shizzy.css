@@ -74,3 +74,27 @@ body.list-page .member-directory-panel{
   background:linear-gradient(145deg,var(--dv-card-a),var(--dv-card-b))!important;
   border:1px solid var(--dv-line)!important;
 }
+
+/* v5: menm palèt ak index.html (fon nwa-vèt, tèks mant, aksan lò) */
+body.list-page{
+  --dv-bg:#030f0a;
+  --dv-card-a:#071a13;
+  --dv-card-b:#05120d;
+  --dv-line:rgba(34,229,168,.14);
+  --dv-text:#effff8;
+  --dv-muted:#8fa89c;
+  --dv-gold:#f5c04a;
+  --dv-mint:#22e5a8;
+}
+html,body.list-page{background:var(--dv-bg)!important;background-image:none!important}
+body.list-page .page-shell,body.list-page main.container{background:transparent!important}
+body.list-page header.topbar{background:var(--dv-bg)!important;border-bottom:1px solid var(--dv-line)!important}
+body.list-page section.members-hero-v14.list-page-hero h1{color:var(--dv-text)!important}
+body.list-page section.members-hero-v14.list-page-hero h1 span:last-of-type{color:var(--dv-gold)!important}
+body.list-page section.members-hero-v14.list-page-hero p{color:var(--dv-muted)!important}
+body.list-page .member-directory-head h2,
+body.list-page .member-directory-panel td{color:var(--dv-text)!important}
+body.list-page .member-directory-panel{
+  background:linear-gradient(145deg,var(--dv-card-a),var(--dv-card-b))!important;
+  border:1px solid var(--dv-line)!important;
+}
