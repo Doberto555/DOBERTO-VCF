@@ -15,3 +15,9 @@ body.list-page .member-directory-panel th{color:#8890a6;font-size:11px;font-weig
 body.list-page .member-directory-panel td{color:#e7e9f2;border-bottom:1px solid #1e2130}
 body.list-page .dv-footer{color:#8890a6;border-top:1px solid #1e2130}
 @media (max-width:640px){body.list-page .members-hero-v14.list-page-hero{padding:28px 20px 24px;border-radius:20px}body.list-page .member-directory-panel{padding:20px 16px;border-radius:20px}}
+
+/* v2: fòse espas ak tit (genyen sou list-v19/v20) */
+body.list-page section.members-hero-v14.list-page-hero{padding:44px 40px 36px!important;margin:0 0 16px!important;max-width:none!important}
+body.list-page section.members-hero-v14.list-page-hero h1{font-size:clamp(26px,3.2vw,38px)!important;line-height:1.1!important;margin:0 0 12px!important}
+body.list-page section.members-hero-v14.list-page-hero p{font-size:14px!important;line-height:1.6!important}
+@media (max-width:640px){body.list-page section.members-hero-v14.list-page-hero{padding:28px 20px 24px!important}}
