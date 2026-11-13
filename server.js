@@ -574,14 +574,45 @@ async function getCountryCount() {
   return seen.size;
 }
 
+// ---------- getRegCounts : enskripsyon jodi a (depi minui fizo Ayiti) ak 7 dènye jou, cache 60s ----------
+let regCountsCache = { at: 0, value: null };
+function haitiMidnightISO() {
+  const p = tzParts(new Date());
+  const guess = Date.UTC(+p.year, +p.month - 1, +p.day);
+  let inst = guess;
+  for (let i = 0; i < 2; i++) {
+    const q = tzParts(new Date(inst));
+    const localAsUtc = Date.UTC(+q.year, +q.month - 1, +q.day, +q.hour, +q.minute, +q.second);
+    inst = inst - (localAsUtc - guess);
+  }
+  return new Date(inst).toISOString();
+}
+async function getRegCounts() {
+  if (regCountsCache.value !== null && Date.now() - regCountsCache.at < 60000) return regCountsCache.value;
+  const todayStart = haitiMidnightISO();
+  const weekStart = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+  const [t, w] = await Promise.all([
+    supabase.from('registrations').select('*', { count: 'exact', head: true }).gte('created_at', todayStart),
+    supabase.from('registrations').select('*', { count: 'exact', head: true }).gte('created_at', weekStart)
+  ]);
+  if (t.error) throw t.error;
+  if (w.error) throw w.error;
+  regCountsCache = { at: Date.now(), value: { today: t.count || 0, week: w.count || 0 } };
+  return regCountsCache.value;
+}
+
 app.get('/api/stats', publicReadLimiter, requireDatabase, async (req, res) => {
   const { count, error } = await supabase.from('registrations').select('*', { count: 'exact', head: true });
   if (error) return res.status(500).json({ code: 'server_error', error: 'Erè sèvè.' });
   let countries = null;
   try { countries = await getCountryCount(); } catch (e) { console.error('[stats] countries:', e.message); }
+  let today = null, week = null;
+  try { ({ today, week } = await getRegCounts()); } catch (e) { console.error('[stats] regcounts:', e.message); }
   res.json({
     total: count || 0,
     countries,
+    today,
+    week,
     namePrefix: NAME_PREFIX,
     emailNotificationsEnabled: emailNotificationsConfigured(),
     pushNotificationsEnabled: pushNotificationsConfigured()
