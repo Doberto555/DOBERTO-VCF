@@ -8,7 +8,7 @@
     if (!tok) return;
     fetch('/api/auth/session', { headers: { Authorization: 'Bearer ' + tok, Accept: 'application/json' }, cache: 'no-store' })
       .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (d) { if (d && d.registered && d.registration) location.replace('dashboard.html'); })
+      .then(function (d) { if (d && d.user) location.replace('dashboard.html'); })
       .catch(function () {});
   } catch (_) {}
 })();

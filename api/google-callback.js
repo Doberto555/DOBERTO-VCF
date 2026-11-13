@@ -65,6 +65,7 @@ module.exports = async (req, res) => {
       registration: registration || null
     });
   } catch (error) {
+    console.error('[DOBERTO VCF] google callback error:', error?.code || '', error?.message || error);
     setCookie(req, res, 'dv_oauth_nonce', '', { maxAge: 0, path: '/api/auth/google/callback' });
     const codeValue = error?.code === 'oauth_state_invalid' ? 'oauth_state_invalid' : 'google_oauth_error';
     return res.status(400).json({ code: codeValue, error: 'Koneksyon Google la pa t fini. Eseye ankò.' });

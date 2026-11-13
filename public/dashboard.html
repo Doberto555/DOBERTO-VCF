@@ -431,7 +431,7 @@ document.addEventListener('click',function(){mm.hidden=true;mb.setAttribute('ari
       busy=true; $('pfSave').disabled=true; say('pfMsg','Enregistrement…');
       post('/api/register',{name:name,dialCode:c.dial,countryName:c.name,phone:phone}).then(function(res){
         busy=false; $('pfSave').disabled=false;
-        if(res.ok){reg=res.d.registration||{name:name};$('pfConsentRow').hidden=true;say('pfMsg','Profil enregistré. Vous pouvez maintenant activer l’ajout automatique.')}
+        if(res.ok){reg=res.d.registration||{name:name};$('pfConsentRow').hidden=true;dvAfterSave();say('pfMsg','Profil enregistré. Vous pouvez maintenant activer l’ajout automatique.')}
         else say('pfMsg',res.d.error||'Enregistrement impossible. Réessayez.',true);
       }).catch(function(){busy=false;$('pfSave').disabled=false;say('pfMsg','Erreur réseau. Réessayez.',true)});
     });
@@ -523,5 +523,61 @@ document.addEventListener('click',function(){mm.hidden=true;mb.setAttribute('ari
   }).catch(function(){loginMode('Session expirée. Reconnectez-vous avec Google.')});
 })();
 </script>
-<script src="js/dashboard-sync-guide.js?v=1" defer></script><script src="js/dashboard-polish.js?v=2" defer></script><script src="js/dashboard-lang.js?v=1" defer></script><script src="js/dashboard-i18n.js?v=1" defer></script><script src="js/dashboard-delete.js?v=1" defer></script></body>
+<script src="js/dashboard-sync-guide.js?v=1" defer></script><script src="js/dashboard-polish.js?v=2" defer></script><script src="js/dashboard-lang.js?v=1" defer></script><script src="js/dashboard-i18n.js?v=1" defer></script><script src="js/dashboard-delete.js?v=1" defer></script>
+<script>
+(function(){
+  var FLAG='dv_sync_after_connect';
+  function tok(){try{return localStorage.getItem('dv_auth_token')||''}catch(_){return ''}}
+  function hdr(){return {Authorization:'Bearer '+tok(),Accept:'application/json'}}
+  function msg(t){var e=document.getElementById('pfMsg');if(e){e.textContent=t;e.hidden=false}}
+  function j(r){return r.json().catch(function(){return {}})}
+  function isOn(c){if(!c)return false;var s=String(c.status||'').toLowerCase();
+    if(s.indexOf('reauth')!==-1||s==='revoked'||s==='expired')return false;
+    return c.connected===true||s==='connected'||s==='active'}
+
+  function runSync(){
+    return fetch('/api/shizzy/sync',{method:'POST',headers:hdr(),cache:'no-store'}).then(j);
+  }
+
+  // Apre enskripsyon: konekte Google Contacts (si poko) oswa sinkronize (si deja konekte)
+  window.dvAfterSave=function(){
+    if(!tok())return;
+    fetch('/api/shizzy/status',{headers:hdr(),cache:'no-store'}).then(j).then(function(st){
+      if(st.configured===false)return;
+      if(isOn(st.connection)){
+        msg('Profil enregistré. Synchronisation en cours…');
+        return runSync().then(function(d){
+          msg(d&&d.error?d.error:'Profil enregistré. Contacts synchronisés.');
+        });
+      }
+      msg('Profil enregistré. Ouverture de Google…');
+      try{sessionStorage.setItem(FLAG,String(Date.now()))}catch(_){}
+      return fetch('/api/shizzy/connect',{method:'POST',headers:hdr(),cache:'no-store'}).then(j).then(function(d){
+        if(d&&/^https:\/\//i.test(d.url||'')){location.assign(d.url);return}
+        msg((d&&d.error)||'Connexion à Google Contacts impossible.');
+      });
+    }).catch(function(){});
+  };
+
+  // Retou soti nan Google/Shizzy: sinkronize otomatikman
+  function onReturn(){
+    var at=0;try{at=Number(sessionStorage.getItem(FLAG))||0}catch(_){}
+    if(!at||!tok())return;
+    if(Date.now()-at>30*60*1000){try{sessionStorage.removeItem(FLAG)}catch(_){}return}
+    fetch('/api/shizzy/status',{headers:hdr(),cache:'no-store'}).then(j).then(function(st){
+      if(!isOn(st.connection))return;
+      try{sessionStorage.removeItem(FLAG)}catch(_){}
+      runSync().then(function(){
+        try{localStorage.setItem('dv_last_sync',String(Date.now()))}catch(_){}
+        var b=document.createElement('div');
+        b.textContent='Google Contacts connecté. Synchronisation lancée.';
+        b.style.cssText='position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#0f3d2e;color:#7ef2c8;padding:12px 18px;border-radius:12px;z-index:9999;font:600 14px system-ui';
+        document.body.appendChild(b);setTimeout(function(){b.remove()},5000);
+      });
+    }).catch(function(){});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',onReturn);else onReturn();
+})();
+</script>
+</body>
 </html>

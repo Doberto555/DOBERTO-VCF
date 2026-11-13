@@ -416,7 +416,7 @@ app.get('/api/shizzy/status', publicReadLimiter,
 
 app.post('/api/shizzy/connect', shizzyActionLimiter, verifyUser, requireShizzy, async (req, res) => {
   try {
-    const data = await shizzy.createConnection(req.user.userId);
+    const data = await shizzy.createConnection(req.user.userId, { returnUrl: 'https://dobertovcf.online/list.html' });
     const url = pickConsentUrl(data, shizzy.baseUrl);
     if (!url) {
       // Sèlman non chan yo ak tip yo (pa valè), pou n konnen kijan Shizzy fòmate repons lan.

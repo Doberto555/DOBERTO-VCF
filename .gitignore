@@ -16,3 +16,7 @@ node_modules/
 *.bak*
 *.bak*
 public/index-test.html
+.env
+*.bak*
+*.conflict-copy
+node_modules/

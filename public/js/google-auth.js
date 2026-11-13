@@ -62,6 +62,8 @@
     if(returnTo&&returnTo.startsWith('/')){
       remove(sessionStorage,RETURN_TO_KEY);
       setTimeout(()=>location.assign(returnTo),40);
+    }else{
+      location.replace('dashboard.html');
     }
     return d;
   }
@@ -86,7 +88,7 @@
     resetLoginButton();
   }
 
-  function registrationCompleted(registration){session=session||{};session.registered=true;session.registration=registration||session.registration||null;set(localStorage,'dv_registered','1');render()}
+  function registrationCompleted(registration){session=session||{};session.registered=true;session.registration=registration||session.registration||null;set(localStorage,'dv_registered','1');render();setTimeout(()=>location.replace('dashboard.html'),1200)}
   function logout(){remove(localStorage,TOKEN_KEY);remove(localStorage,'dv_registered');session=null;render()}
 
   async function boot(){
@@ -108,7 +110,8 @@
     clearLegacyState();
     const params=new URLSearchParams(location.search);
     if(params.get('error')){notify(params.get('error_description')||params.get('error'),'error');clearOAuthQuery()}
-    if(params.get('code')&&params.get('state')){
+    if(params.get('code')&&params.get('state')&&get(sessionStorage,'dv_oauth_code')!==params.get('code')){
+      set(sessionStorage,'dv_oauth_code',params.get('code'));
       try{await finishLogin(params.get('code'),params.get('state'))}
       catch(e){notify(e?.message||'Koneksyon Google la pa t fini.','error');clearOAuthQuery()}
     }
