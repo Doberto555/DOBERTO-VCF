@@ -1,0 +1,297 @@
+/* DOBERTO VCF - register, style Shizzy (kat de kolon) */
+
+/* Header: kenbe logo + lang, retire lyen yo */
+.topbar .nav-links{display:none!important}
+
+/* Kat prensipal la */
+main.page-shell.registration-shell{
+  position:relative;
+  display:grid!important;
+  grid-template-columns:1fr 1fr;
+  grid-template-rows:auto 1fr;
+  gap:0!important;
+  max-width:1040px;
+  margin:28px auto 40px!important;
+  padding:0!important;
+  background:linear-gradient(145deg,#0e1018,#0a0c13)!important;
+  border:1px solid #1e2130;
+  border-radius:24px;
+  box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 120px rgba(34,229,168,.07);
+}
+main.registration-shell .registration-layout{display:contents!important}
+
+/* Kolon agoch: tit + avantaj */
+main.registration-shell .registration-intro{
+  grid-column:1;grid-row:1;
+  padding:44px 40px 12px!important;
+  background:none!important;border:0!important;
+}
+main.registration-shell .page-kicker{
+  display:block;margin-bottom:14px;
+  color:#22e5a8;font-size:11px;font-weight:800;
+  letter-spacing:.18em;text-transform:uppercase;
+}
+main.registration-shell #registrationHeadline{
+  margin:0 0 12px;font-size:clamp(26px,3.2vw,38px);
+  line-height:1.1;font-weight:800;color:#e7e9f2;
+}
+main.registration-shell #registrationLead{
+  margin:0;color:#8890a6;font-size:14px;line-height:1.6;max-width:420px;
+}
+main.registration-shell .registration-side{
+  grid-column:1;grid-row:2;
+  display:flex;flex-direction:column;gap:12px;
+  padding:12px 40px 40px!important;
+  background:none!important;border:0!important;
+}
+main.registration-shell .sync-tier-card{
+  background:rgba(255,255,255,.03)!important;
+  border:1px solid #1e2130!important;
+  border-radius:16px!important;
+  padding:16px 18px!important;
+  margin:0!important;
+}
+main.registration-shell .tier-label{
+  display:inline-block;margin-bottom:8px;padding:3px 9px;
+  border-radius:8px;background:rgba(34,229,168,.12);
+  color:#22e5a8;font-size:11px;font-weight:800;
+}
+main.registration-shell .sync-tier-card strong{display:block;color:#e7e9f2;font-size:15px}
+main.registration-shell .sync-tier-card p{margin:6px 0 0;color:#8890a6;font-size:13px;line-height:1.5}
+main.registration-shell .sync-tier-card a{display:inline-block;margin-top:8px;color:#22e5a8;font-size:13px;font-weight:700}
+main.registration-shell .privacy-note{
+  display:flex;gap:10px;align-items:flex-start;
+  padding:4px 6px!important;background:none!important;border:0!important;
+  color:#8890a6;font-size:12px;
+}
+main.registration-shell .privacy-note p{margin:0}
+
+/* Kolon adwat: logo + kont Google / fom */
+main.registration-shell .registration-main{
+  grid-column:2;grid-row:1 / span 2;
+  display:flex;flex-direction:column;justify-content:center;gap:16px;
+  padding:44px 40px!important;
+  background:none!important;box-shadow:none!important;
+  border:0!important;border-left:1px solid #1e2130!important;
+  border-radius:0!important;
+}
+main.registration-shell .registration-main::before{
+  content:"";display:block;width:54px;height:54px;margin:0 auto 4px;
+  background:url(../icons/doberto-vcf-mark.svg) center/contain no-repeat;
+  border-radius:14px;
+}
+/* Retire stepper la */
+main.registration-shell .flow-steps{display:none!important}
+
+main.registration-shell #googleAuthGate{
+  background:none!important;border:0!important;box-shadow:none!important;
+  padding:0!important;text-align:center;
+}
+main.registration-shell .google-auth-kicker{
+  display:block;margin-bottom:10px;color:#22e5a8;
+  font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;
+}
+main.registration-shell #googleAuthGate h2{margin:0 0 10px;font-size:28px;font-weight:800;color:#e7e9f2}
+main.registration-shell #googleAuthGate p{margin:0 auto 22px;max-width:340px;color:#8890a6;font-size:14px;line-height:1.6}
+main.registration-shell #googleLoginBtn{
+  display:flex!important;align-items:center;justify-content:center;gap:10px;
+  width:100%;height:52px;box-sizing:border-box;
+  background:#12141f!important;color:#e7e9f2!important;
+  border:1px solid #2a2f45!important;border-radius:14px!important;
+  font-weight:700;font-size:15px;text-decoration:none!important;
+  transition:border-color .15s ease,transform .15s ease;
+}
+main.registration-shell #googleLoginBtn:hover{border-color:#22e5a8!important;transform:translateY(-1px)}
+main.registration-shell #googleLoginBtn svg{width:20px;height:20px;flex:0 0 auto}
+main.registration-shell .already-member{text-align:center;font-size:13px;color:#8890a6}
+main.registration-shell .already-member a{color:#22e5a8;font-weight:700}
+
+/* Mobil: yon sel kolon, fom lan an premye */
+@media (max-width:860px){
+  main.page-shell.registration-shell{grid-template-columns:1fr;margin:16px 12px 32px!important}
+  main.registration-shell .registration-main{
+    grid-column:1;grid-row:auto;order:-1;
+    border-left:0!important;border-bottom:1px solid #1e2130!important;padding:32px 22px!important;
+  }
+  main.registration-shell .registration-intro{grid-column:1;grid-row:auto;order:1;padding:28px 22px 8px!important}
+  main.registration-shell .registration-side{grid-column:1;grid-row:auto;order:2;padding:8px 22px 28px!important}
+}
+
+/* ---- FIX: fòse sa lòt CSS yo ap ekraze ---- */
+main.registration-shell #googleLoginBtn,
+main.registration-shell #googleLoginBtn span,
+main.registration-shell #googleLoginBtn *:not(svg):not(path){
+  color:#e7e9f2!important;
+  -webkit-text-fill-color:#e7e9f2!important;
+  opacity:1!important;
+  visibility:visible!important;
+  text-indent:0!important;
+  font-size:15px!important;
+  font-weight:700!important;
+  text-shadow:none!important;
+}
+main.registration-shell #googleLoginBtn span{display:inline!important}
+main.registration-shell #googleLoginBtn{
+  background:#12141f!important;
+  border:1px solid #2a2f45!important;
+}
+
+main.registration-shell .already-member,
+main.registration-shell .already-member a,
+main.registration-shell #alreadyRegisteredLink{
+  color:#22e5a8!important;
+  -webkit-text-fill-color:#22e5a8!important;
+  font-weight:700!important;
+  font-size:13px!important;
+  text-decoration:none!important;
+  opacity:1!important;
+}
+main.registration-shell #alreadyRegisteredLink:hover{text-decoration:underline!important}
+
+/* Logo nan bwat vèt (menm style ak header la) */
+main.registration-shell .registration-main::before{
+  width:60px!important;height:60px!important;margin:0 auto 8px!important;
+  background-color:#0f2a24!important;
+  background-image:url(../icons/doberto-vcf-mark.svg?v=20260904-1)!important;
+  background-repeat:no-repeat!important;
+  background-position:center!important;
+  background-size:62%!important;
+  border:1px solid rgba(34,229,168,.35)!important;
+  border-radius:18px!important;
+  box-shadow:0 8px 30px rgba(34,229,168,.18);
+}
+
+/* ---- Koulè menm jan ak index.html (vèt fonse + krèm + lò) ---- */
+html, body, body.site-v10{
+  background:#03130e!important;
+  background-image:radial-gradient(120% 80% at 50% -10%, #0b2a20 0%, #03130e 60%)!important;
+  color:#effff8!important;
+}
+.topbar{background:transparent!important;border-bottom:1px solid #12372c!important}
+
+main.page-shell.registration-shell{
+  background:linear-gradient(145deg,#08201a,#04150f)!important;
+  border:1px solid #14392e!important;
+  box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 120px rgba(245,194,73,.06)!important;
+}
+main.registration-shell .registration-main{border-left:1px solid #14392e!important}
+main.registration-shell .sync-tier-card{
+  background:rgba(255,255,255,.025)!important;
+  border:1px solid #14392e!important;
+}
+main.registration-shell #registrationHeadline,
+main.registration-shell #googleAuthGate h2,
+main.registration-shell .sync-tier-card strong{color:#effff8!important}
+main.registration-shell #registrationLead,
+main.registration-shell .sync-tier-card p,
+main.registration-shell #googleAuthGate p,
+main.registration-shell .privacy-note{color:#8fa99f!important}
+
+/* Aksan lò (menm jan ak "plus de vues sur vos statuts") */
+main.registration-shell .page-kicker,
+main.registration-shell .google-auth-kicker{color:#f5c249!important}
+main.registration-shell .tier-label{
+  background:rgba(245,194,73,.12)!important;color:#f5c249!important;
+}
+
+/* Bouton Google krèm tankou "Commencer gratuitement" */
+main.registration-shell #googleLoginBtn{
+  background:#effff8!important;
+  border:1px solid #effff8!important;
+}
+main.registration-shell #googleLoginBtn,
+main.registration-shell #googleLoginBtn span,
+main.registration-shell #googleLoginBtn *:not(svg):not(path){
+  color:#04150f!important;
+  -webkit-text-fill-color:#04150f!important;
+}
+main.registration-shell #googleLoginBtn:hover{
+  border-color:#f5c249!important;
+  box-shadow:0 10px 30px rgba(245,194,73,.18);
+}
+
+/* Logo bwat */
+main.registration-shell .registration-main::before{
+  background-color:#0b2a20!important;
+  border-color:rgba(34,229,168,.35)!important;
+}
+
+/* ---- v4: vrè koulè index la (--dv-*) ---- */
+html, body, body.site-v10{
+  background:#020705!important;
+  background-image:radial-gradient(120% 80% at 50% -10%, #0c1712 0%, #07100c 45%, #020705 100%)!important;
+  color:#f4fbf8!important;
+}
+.topbar{border-bottom:1px solid rgba(25,229,155,.12)!important}
+
+main.page-shell.registration-shell{
+  background:linear-gradient(145deg,#0c1712,#07100c)!important;
+  border:1px solid rgba(25,229,155,.14)!important;
+  box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 120px rgba(25,229,155,.05)!important;
+}
+main.registration-shell .registration-main{border-left:1px solid rgba(25,229,155,.14)!important}
+main.registration-shell .sync-tier-card{
+  background:#101d17!important;
+  border:1px solid rgba(25,229,155,.12)!important;
+}
+main.registration-shell #registrationHeadline,
+main.registration-shell #googleAuthGate h2,
+main.registration-shell .sync-tier-card strong{color:#f4fbf8!important}
+main.registration-shell #registrationLead,
+main.registration-shell .sync-tier-card p,
+main.registration-shell #googleAuthGate p,
+main.registration-shell .privacy-note{color:#9aa9a1!important}
+
+/* Vèt brand */
+main.registration-shell .page-kicker,
+main.registration-shell .google-auth-kicker,
+main.registration-shell .sync-tier-card a,
+main.registration-shell .already-member,
+main.registration-shell .already-member a,
+main.registration-shell #alreadyRegisteredLink{
+  color:#19e59b!important;
+  -webkit-text-fill-color:#19e59b!important;
+}
+main.registration-shell .tier-label{
+  background:rgba(25,229,155,.12)!important;color:#19e59b!important;
+}
+
+/* Bouton Google krèm tankou "Commencer gratuitement" */
+main.registration-shell #googleLoginBtn{
+  background:#f4fbf8!important;border:1px solid #f4fbf8!important;
+}
+main.registration-shell #googleLoginBtn,
+main.registration-shell #googleLoginBtn span,
+main.registration-shell #googleLoginBtn *:not(svg):not(path){
+  color:#04100c!important;-webkit-text-fill-color:#04100c!important;
+}
+main.registration-shell #googleLoginBtn:hover{
+  border-color:#19e59b!important;
+  box-shadow:0 10px 30px rgba(25,229,155,.2)!important;
+}
+
+/* Logo bwat */
+main.registration-shell .registration-main::before{
+  background-color:#101d17!important;
+  border-color:rgba(25,229,155,.35)!important;
+}
+
+/* ---- v5: aksan lò tankou index (#f1c96b) ---- */
+main.registration-shell .page-kicker,
+main.registration-shell .google-auth-kicker{
+  color:#f1c96b!important;
+  -webkit-text-fill-color:#f1c96b!important;
+}
+main.registration-shell .tier-label{
+  background:rgba(241,201,107,.12)!important;
+  color:#f1c96b!important;
+}
+main.registration-shell #googleLoginBtn:hover{
+  border-color:#f1c96b!important;
+  box-shadow:0 10px 30px rgba(241,201,107,.2)!important;
+}
+main.registration-shell .registration-main::before{
+  border-color:rgba(241,201,107,.35)!important;
+  box-shadow:0 8px 30px rgba(241,201,107,.12)!important;
+}
+main.registration-shell .registration-intro .page-kicker::before{background:#f1c96b!important}
