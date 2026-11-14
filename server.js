@@ -102,6 +102,14 @@ app.use((req, res, next) => {
 });
 
 app.use(maintenance.gate);
+// ---------- VIP: peman Tranzak (raw body pou webhook, anvan express.json) ----------
+require('./lib/vip-pay').register(app, express, {
+  supabase: () => supabase,
+  verifyUser: (req, res, next) => verifyUser(req, res, next),
+  requireDatabase: (req, res, next) => requireDatabase(req, res, next),
+  limiter: (req, res, next) => shizzyActionLimiter(req, res, next)
+});
+
 app.use(express.json({ limit: '256kb', strict: true }));
 app.use(express.static(path.join(__dirname, 'public'), {
   etag: true,
