@@ -110,6 +110,16 @@ require('./lib/vip-pay').register(app, express, {
   limiter: (req, res, next) => shizzyActionLimiter(req, res, next)
 });
 
+// ---------- VIP manyèl: MonCash/NatCash ak validasyon admin ----------
+require('./lib/vip-manual').register(app, express, {
+  supabase: () => supabase,
+  verifyUser: (req, res, next) => verifyUser(req, res, next),
+  verifyAdmin: (req, res, next) => verifyAdmin(req, res, next),
+  requireDatabase: (req, res, next) => requireDatabase(req, res, next),
+  limiter: (req, res, next) => shizzyActionLimiter(req, res, next),
+  adminLimiter: (req, res, next) => adminActionLimiter(req, res, next)
+});
+
 app.use(express.json({ limit: '256kb', strict: true }));
 app.use(express.static(path.join(__dirname, 'public'), {
   etag: true,
