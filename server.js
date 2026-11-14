@@ -14,6 +14,7 @@ const registerSecureHandler = require('./api/register-secure');
 const registrationUpdateHandler = require('./api/registration-update');
 const adminLoginSecureHandler = require('./api/admin-login-secure');
 const { createShizzyConnect, toPartnerContact, ShizzyError, pickConsentUrl, describeShape } = require('./lib/shizzy-connect');
+const { isVip, prefixFor, safeRow } = require('./lib/vip');
 const maintenance = require('./lib/maintenance');
 
 const app = express();
@@ -389,7 +390,7 @@ async function fetchRegistrationsForSync(limit) {
   for (let from = 0; rows.length < limit; from += pageSize) {
     const take = Math.min(pageSize, limit - rows.length);
     const { data, error } = await supabase.from('registrations')
-      .select('id, name, dial_code, phone, user_id')
+      .select('id, name, dial_code, phone, user_id, vip_until')
       .order('created_at', { ascending: true }).order('id', { ascending: true })
       .range(from, from + take - 1);
     if (error) throw error;
@@ -398,6 +399,18 @@ async function fetchRegistrationsForSync(limit) {
   }
   return rows;
 }
+
+app.get('/api/vip/status', publicReadLimiter, verifyUser, requireDatabase, async (req, res) => {
+  try {
+    const { data, error } = await supabase.from('registrations').select('vip_until').eq('user_id', req.user.userId).maybeSingle();
+    if (error) throw error;
+    res.setHeader('Cache-Control', 'no-store');
+    res.json({ ok: true, vip: isVip(data), vipUntil: (data && data.vip_until) || null });
+  } catch (err) {
+    console.error('[DOBERTO VCF] vip status:', err && err.message);
+    res.status(500).json({ ok: false });
+  }
+});
 
 app.get('/api/shizzy/status', publicReadLimiter,
   (req, res, next) => (shizzy.configured ? next() : res.json({ ok: true, configured: false })),
@@ -443,7 +456,7 @@ app.post('/api/shizzy/sync', shizzyActionLimiter, verifyUser, requireDatabase, r
     const rows = await fetchRegistrationsForSync(SHIZZY_BATCH_SIZE);
     const contacts = rows
       .filter((row) => row.user_id !== userId)
-      .map((row) => toPartnerContact(row, NAME_PREFIX))
+      .map((row) => toPartnerContact(safeRow(row), prefixFor(row, NAME_PREFIX)))
       .filter(Boolean);
     if (!contacts.length) {
       return res.status(422).json({ code: 'no_contacts', error: 'Pa gen kontak valid pou sinkronize.' });
@@ -523,7 +536,7 @@ async function runShizzyAutoSync() {
         if (!shizzyConnIsOn(conn)) { stats.skipped++; continue; }
         const contacts = rows
           .filter((r) => r.user_id !== userId)
-          .map((r) => toPartnerContact(r, NAME_PREFIX))
+          .map((r) => toPartnerContact(safeRow(r), prefixFor(r, NAME_PREFIX)))
           .filter(Boolean);
         if (!contacts.length) { stats.skipped++; continue; }
         await shizzy.putContacts(userId, contacts, 'replace');
@@ -761,7 +774,19 @@ app.get('/api/public-list', publicReadLimiter, requireDatabase, async (req, res)
   res.json({ page, pageSize, total: count || 0, list, namePrefix: NAME_PREFIX, filters: { search, country } });
 });
 
-app.get('/api/ads/public', publicReadLimiter, (req,res) => {
+app.get('/api/ads/public', publicReadLimiter, async (req,res) => {
+  res.setHeader('Vary','Authorization');
+  const session = optionalUserSession(req);
+  if (session && supabase) {
+    res.setHeader('Cache-Control','private, no-store');
+    try {
+      const { data } = await supabase.from('registrations').select('vip_until').eq('user_id', session.userId).maybeSingle();
+      if (isVip(data)) return res.json({ok:true,ads:{enabled:false}});
+    } catch (e) {
+      console.error('[DOBERTO VCF] ads vip check:', e && e.message);
+    }
+    return res.json({ok:true,ads:readAdSettings()});
+  }
   res.setHeader('Cache-Control','public, max-age=20, stale-while-revalidate=40');
   res.json({ok:true,ads:readAdSettings()});
 });

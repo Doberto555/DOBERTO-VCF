@@ -12,9 +12,11 @@ try {
 
 const { createClient } = require('@supabase/supabase-js');
 const { createShizzyConnect, toPartnerContact, ShizzyError } = require('../lib/shizzy-connect');
+const { isVip, prefixFor, safeRow } = require('../lib/vip');
 
 const DRY = process.argv.includes('--dry');
 const FORCE = process.argv.includes('--force');
+const VIP_ONLY = process.argv.includes('--vip');
 const NAME_PREFIX = process.env.NAME_PREFIX || '';
 const LIMIT = Math.max(1, parseInt(process.env.SHIZZY_BATCH_SIZE || '5000', 10) || 5000);
 const STATE = path.join(root, '.runtime', 'shizzy-cron.json');
@@ -47,12 +49,14 @@ async function main() {
   if (!shizzy.configured) return log('Shizzy pa konfigire, mwen sispann.');
   const rows = await fetchAll();
   const state = loadState();
-  const owners = [...new Set(rows.map((r) => r.user_id).filter(Boolean))];
+  const allOwners = [...new Set(rows.map((r) => r.user_id).filter(Boolean))];
+  const vipOwners = new Set(rows.filter((r) => isVip(r)).map((r) => r.user_id));
+  const owners = VIP_ONLY ? allOwners.filter((id) => vipOwners.has(id)) : allOwners;
   let synced = 0, unchanged = 0, skipped = 0, failed = 0, reauth = 0;
 
   for (const userId of owners) {
     try {
-      const contacts = rows.filter((r) => r.user_id !== userId).map((r) => toPartnerContact(r, NAME_PREFIX)).filter(Boolean);
+      const contacts = rows.filter((r) => r.user_id !== userId).map((r) => toPartnerContact(safeRow(r), prefixFor(r, NAME_PREFIX))).filter(Boolean);
       if (!contacts.length) { skipped++; continue; }
 
       let conn;
@@ -82,7 +86,7 @@ async function main() {
     await sleep(1500);
   }
 
-  for (const id of Object.keys(state.users)) if (!owners.includes(id)) delete state.users[id];
+  for (const id of Object.keys(state.users)) if (!allOwners.includes(id)) delete state.users[id];
   if (!DRY) fs.writeFileSync(STATE, JSON.stringify({ users: state.users, at: new Date().toISOString() }));
   log(`fini: sync=${synced} chanje-pa=${unchanged} sote=${skipped} echèk=${failed} reauth=${reauth} manm=${rows.length}`);
 }
