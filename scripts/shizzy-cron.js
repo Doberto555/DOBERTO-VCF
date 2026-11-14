@@ -36,38 +36,55 @@ async function fetchAll() {
   return rows.slice(0, LIMIT);
 }
 
+function loadState() {
+  try {
+    const s = JSON.parse(fs.readFileSync(STATE, 'utf8'));
+    return { users: (s && s.users) || {} };
+  } catch (_) { return { users: {} }; }
+}
+
 async function main() {
   if (!shizzy.configured) return log('Shizzy pa konfigire, mwen sispann.');
   const rows = await fetchAll();
-  const sig = crypto.createHash('md5').update(rows.map((r) => r.id).join(',')).digest('hex');
-  let last = '';
-  try { last = JSON.parse(fs.readFileSync(STATE, 'utf8')).sig; } catch (_) {}
-  if (!FORCE && !DRY && sig === last) return log('Pa gen nouvo enskripsyon, pa gen sync.', rows.length, 'manm');
-
+  const state = loadState();
   const owners = [...new Set(rows.map((r) => r.user_id).filter(Boolean))];
-  let synced = 0, skipped = 0, failed = 0, reauth = 0;
+  let synced = 0, unchanged = 0, skipped = 0, failed = 0, reauth = 0;
+
   for (const userId of owners) {
     try {
-      try {
-        await shizzy.getConnection(userId);
-      } catch (err) {
-        if (err instanceof ShizzyError && err.status === 404) { skipped++; continue; }
-        throw err;
-      }
       const contacts = rows.filter((r) => r.user_id !== userId).map((r) => toPartnerContact(r, NAME_PREFIX)).filter(Boolean);
       if (!contacts.length) { skipped++; continue; }
+
+      let conn;
+      try {
+        conn = await shizzy.getConnection(userId);
+      } catch (err) {
+        if (err instanceof ShizzyError && err.status === 404) { delete state.users[userId]; skipped++; await sleep(300); continue; }
+        throw err;
+      }
+      const st = String((conn && conn.status) || '').toLowerCase();
+      if (st.indexOf('reauth') !== -1 || st === 'revoked' || st === 'expired') {
+        delete state.users[userId]; reauth++; log('reauth nesesè pou', userId); await sleep(300); continue;
+      }
+
+      const key = crypto.createHash('md5').update(JSON.stringify(contacts)).digest('hex') + '|' + String((conn && conn.createdAt) || '');
+      if (!FORCE && state.users[userId] === key) { unchanged++; await sleep(300); continue; }
+
       if (DRY) { log('[dry] ta voye', contacts.length, 'kontak bay', userId); synced++; continue; }
       await shizzy.putContacts(userId, contacts, 'replace');
+      state.users[userId] = key;
       synced++;
     } catch (err) {
-      if (err && err.code === 'shizzy_reauth_required') { reauth++; log('reauth nesesè pou', userId); await sleep(1500); continue; }
+      if (err && err.code === 'shizzy_reauth_required') { delete state.users[userId]; reauth++; log('reauth nesesè pou', userId); await sleep(1500); continue; }
       failed++;
-      log('erè pou', userId, err && err.code || '', err && err.message || err);
+      log('erè pou', userId, (err && err.code) || '', (err && err.message) || err);
     }
     await sleep(1500);
   }
-  if (!DRY && failed === 0) fs.writeFileSync(STATE, JSON.stringify({ sig, at: new Date().toISOString() }));
-  log(`fini: sync=${synced} sote=${skipped} echèk=${failed} reauth=${reauth} manm=${rows.length}`);
+
+  for (const id of Object.keys(state.users)) if (!owners.includes(id)) delete state.users[id];
+  if (!DRY) fs.writeFileSync(STATE, JSON.stringify({ users: state.users, at: new Date().toISOString() }));
+  log(`fini: sync=${synced} chanje-pa=${unchanged} sote=${skipped} echèk=${failed} reauth=${reauth} manm=${rows.length}`);
 }
 
 main().catch((e) => { console.error(new Date().toISOString(), 'erè grav:', e); process.exit(1); });
