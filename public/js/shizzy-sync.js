@@ -20,8 +20,9 @@
       lastSync: '✓ Dènye sync fini',
       disconnect: 'Dekonekte',
       confirmDisconnect: 'Ou sèten ou vle dekonekte Google Contacts epi netwaye kontak yo?',
-      stNone: 'PA KONEKTE', stOn: 'KONEKTE', stReauth: 'RKONEKTE',
+      stNone: 'PA KONEKTE', stOn: 'KONEKTE', stReauth: 'REKONEKTE',
       reauth: 'Aksè Google la ekspire. Konekte ankò.',
+      reconnect: 'Rekonekte Google Contacts',
       redirecting: 'Ap louvri Google...',
       syncing: 'Sync ap kouri... sa ka pran kèk minit.',
       done: 'Sync fini', created: 'ajoute', updated: 'mete ajou', failed: 'echwe',
@@ -43,6 +44,7 @@
       confirmDisconnect: 'Déconnecter Google Contacts et nettoyer les contacts ?',
       stNone: 'NON CONNECTÉ', stOn: 'CONNECTÉ', stReauth: 'RECONNEXION',
       reauth: 'L\'accès Google a expiré. Reconnectez-vous.',
+      reconnect: 'Reconnecter Google Contacts',
       redirecting: 'Ouverture de Google...',
       syncing: 'Synchronisation en cours... cela peut prendre quelques minutes.',
       done: 'Synchronisation terminée', created: 'ajoutés', updated: 'mis à jour', failed: 'échecs',
@@ -64,6 +66,7 @@
       confirmDisconnect: 'Disconnect Google Contacts and clean up the contacts?',
       stNone: 'NOT CONNECTED', stOn: 'CONNECTED', stReauth: 'RECONNECT',
       reauth: 'Google access expired. Please reconnect.',
+      reconnect: 'Reconnect Google Contacts',
       redirecting: 'Opening Google...',
       syncing: 'Sync running... this can take a few minutes.',
       done: 'Sync finished', created: 'added', updated: 'updated', failed: 'failed',
@@ -161,7 +164,7 @@
     els.kicker.textContent = t('kicker');
     els.title.textContent = t('title');
     els.desc.textContent = t('desc');
-    els.connect.textContent = state === 'reauth' || current === 'reauth' ? t('connect') : t('connect');
+    els.connect.textContent = state === 'reauth' || current === 'reauth' ? t('reconnect') : t('connect');
     els.sync.textContent = current === 'on' ? t('resync') : t('sync');
     els.disconnect.textContent = t('disconnect');
     els.state.textContent = current === 'on' ? t('stOn') : (current === 'reauth' ? t('stReauth') : t('stNone'));
