@@ -246,6 +246,7 @@ select.in option{background:#0a1a13;color:var(--text)}
     <small class="ac-k">SESSION</small>
     <p class="sub" style="margin:0">Déconnectez cet appareil. Vous pourrez vous reconnecter avec Google à tout moment.</p>
     <button class="sy-btn" id="acLogout" type="button" style="margin-top:14px">Se déconnecter de cet appareil</button>
+    <button class="sy-btn" id="acLogoutAll" type="button" style="margin-top:10px;color:#ff8f8f;border-color:rgba(255,120,120,.35)">Déconnecter tous les appareils</button>
   </div>
   <div class="card ac-card">
     <small class="ac-k">OFFRE DE PARTAGE</small>
@@ -515,6 +516,14 @@ document.addEventListener('click',function(){mm.hidden=true;mb.setAttribute('ari
     $('acLogout').textContent='Se connecter avec Google'; $('acLogout').setAttribute('data-login','1');
     if(msg)say(msg,true);
   }
+  var all=$('acLogoutAll');
+  if(all)all.addEventListener('click',function(){
+    if(!tok())return;
+    if(!confirm('Déconnecter tous les appareils ? Vous devrez vous reconnecter avec Google.'))return;
+    fetch('/api/auth/logout-all',{method:'POST',credentials:'include',headers:{Accept:'application/json',Authorization:'Bearer '+tok()}})
+      .then(function(r){if(!r.ok)throw r.status;wipe();location.replace('index.html')})
+      .catch(function(){say('Échec. Réessayez.',true)});
+  });
   $('acLogout').addEventListener('click',function(){
     if(this.getAttribute('data-login')){location.assign('register.html?stay=1');return}
     if(!confirm('Se déconnecter de cet appareil ?'))return;
