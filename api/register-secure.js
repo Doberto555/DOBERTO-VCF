@@ -1,6 +1,6 @@
 require('../lib/runtime-secrets');
 const { createClient } = require('@supabase/supabase-js');
-const { verifyUser, noStore } = require('../lib/security');
+const { verifyUser, noStore, cookie } = require('../lib/security');
 
 const SUPABASE_URL = String(process.env.SUPABASE_URL || '').trim();
 const SERVICE_KEY = String(process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
@@ -91,6 +91,13 @@ module.exports = async (req, res) => {
       }
       throw insertError;
     }
+
+    // Promotion: si manm nan te vini ak yon lyen (?ref= nan cookie), konte l. Pa janm kraze enskripsyon an.
+    try {
+      const promo = require('../lib/promo');
+      const refCode = cookie(req, promo.REF_COOKIE);
+      if (refCode) await promo.recordReferral(supabase, { code: refCode, userId: user.userId });
+    } catch (e) { console.error('[DOBERTO VCF] referral:', e.message); }
 
     try { require('../lib/welcome-email').sendWelcome(email, name).catch((e) => console.error('welcome-email:', e.message)); } catch (e) { console.error('welcome-email:', e.message); }
     return res.status(200).json({ ok: true, registration: inserted });

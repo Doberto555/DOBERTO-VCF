@@ -182,6 +182,15 @@ Pou pase live:
 
 Routes: `POST /api/vip/checkout` (body `{ "method": "moncash" | "natcash" }`), `GET /api/vip/payment/:ref`, `POST /api/vip/webhook` (siyati HMAC-SHA256 sou raw body, header `X-Tranzak-Signature`).
 
+## Promotion (referal): 350 enskripsyon = 30 USD + VIP a vi
+
+Onglet **Promotion** nan dashboard la (`dashboard.html?tab=promotion`): chak manm gen yon lyen `https://dobertovcf.online/register.html?ref=KOD`. Lè yon moun antre ak lyen an, `?ref=` sere nan yon cookie 30 jou (`dv_ref`); lè moun nan fini enskripsyon an (`api/register-secure.js`, nouvo manm sèlman), referal la konte kòm **valide**. Pa gen referal si moun nan enskri ak pwòp kòd li.
+
+- Lè manm nan rive nan objektif la (`PROMO_TARGET`, default 350), li anrejistre kont peman li (NatCash, MonCash, Cash App oswa PayPal) epi mande rekonpans lan.
+- Admin lan (panèl **Promotion**) wè demann yo, ka wè referal chak moun epi rejte referal fo, answit **Marke peye** (apre w voye lajan an alamen): sa bay VIP a vi (`vip_until` = 2099).
+- Yon manm pa ka gen de rekonpans aktif. Admin pa ka make peye si referal valide yo desann anba objektif la.
+- Env: `PROMO_TARGET`, `PROMO_REWARD_USD` (default 30). Kouri `supabase-promotion.sql` nan Supabase yon sèl fwa.
+
 ## Retire (nov. 2026)
 
 Pa gen ankò: download VCF (itilizatè ak admin), kontwòl limit download, kanpay unlock, group/chanèl WhatsApp, migrasyon group, anons kominote, paj `community.html`. Sinkronizasyon Shizzy a ranplase yo. Ekspò CSV admin nan rete (`/api/admin/export-csv`).

@@ -112,6 +112,17 @@ require('./lib/vip-pay').register(app, express, {
   adminLimiter: (req, res, next) => adminActionLimiter(req, res, next)
 });
 
+// ---------- Promotion (referal): dwe anrejistre ANVAN express.static pou kapte ?ref= ----------
+require('./lib/promo').register(app, express, {
+  supabase: () => supabase,
+  verifyUser: (req, res, next) => verifyUser(req, res, next),
+  requireDatabase: (req, res, next) => requireDatabase(req, res, next),
+  limiter: (req, res, next) => accountLimiter(req, res, next),
+  readLimiter: (req, res, next) => publicReadLimiter(req, res, next),
+  verifyAdmin: (req, res, next) => verifyAdmin(req, res, next),
+  adminLimiter: (req, res, next) => adminActionLimiter(req, res, next)
+});
+
 app.use(express.json({ limit: '256kb', strict: true }));
 app.use(express.static(path.join(__dirname, 'public'), {
   etag: true,
