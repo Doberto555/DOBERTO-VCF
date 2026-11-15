@@ -25,6 +25,7 @@ app.set('trust proxy', 1);
 const PORT = parseInt(process.env.PORT || '3000', 10);
 const SITE_URL = String(process.env.SITE_URL || 'https://doberto-vcf-509.vercel.app').replace(/\/$/, '');
 const JWT_SECRET = String(process.env.JWT_SECRET || '').trim();
+const sessionRevoke = require('./lib/revoked');
 const ADMIN_PASSWORD = String(process.env.ADMIN_PASSWORD || '').trim();
 const DEFAULT_MIN_TO_UNLOCK = 200;
 const MAX_IN_FILE = Math.max(DEFAULT_MIN_TO_UNLOCK, parseInt(process.env.MAX_IN_FILE || '50000', 10));
@@ -262,6 +263,7 @@ function verifyUser(req, res, next) {
       algorithms: ['HS256'], issuer: 'doberto-vcf', audience: 'doberto-vcf-user'
     });
     if (payload.purpose !== 'user_session' || !payload.userId) throw new Error('bad session');
+    if (sessionRevoke.isRevoked(payload)) throw new Error('revoked');
     req.user = payload;
     next();
   } catch (_) {
@@ -279,6 +281,7 @@ function optionalUserSession(req) {
       algorithms: ['HS256'], issuer: 'doberto-vcf', audience: 'doberto-vcf-user'
     });
     if (payload.purpose !== 'user_session' || !payload.userId) return null;
+    if (sessionRevoke.isRevoked(payload)) return null;
     return payload;
   } catch (_) {
     return null;
@@ -373,6 +376,16 @@ app.get('/api/auth/session', publicReadLimiter, requireDatabase, verifyUser, asy
 
 // Manm nan modifye non/nimewo li (ak dezyèm nimewo opsyonèl) depi dashboard la
 app.put('/api/registration', registerLimiter, requireDatabase, registrationUpdateHandler);
+
+sessionRevoke.load(supabase);
+app.post('/api/auth/logout-all', registerLimiter, requireDatabase, verifyUser, async (req, res) => {
+  const cut = Math.floor(Date.now() / 1000);
+  const { error } = await supabase.from('app_users')
+    .update({ sessions_valid_after: new Date(cut * 1000).toISOString() }).eq('id', req.user.userId);
+  if (error) return res.status(500).json({ error: 'Nou pa ka dekonekte apareyi yo.' });
+  sessionRevoke.set(req.user.userId, cut);
+  res.json({ ok: true });
+});
 
 function removedGoogleContacts(req, res) {
   res.setHeader('Cache-Control', 'no-store');
