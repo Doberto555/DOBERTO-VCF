@@ -2,7 +2,7 @@
 .dvx-dock,.dvx-back,.dvx-sheet{display:none}
 @media (max-width:860px){
   .tabbar,#more{display:none!important}
-  body.dvx-on{padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))!important}
+  body.dvx-on{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))!important}
   .dvx-dock{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));position:fixed;left:0;right:0;bottom:0;z-index:900;padding:4px 6px calc(4px + env(safe-area-inset-bottom,0px));background:rgba(8,10,14,.96);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-top:1px solid rgba(255,255,255,.08)}
   .dvx-tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:44px;padding:2px 2px;border:0;background:none;color:#8b8f98;font-family:inherit;font-size:10px;font-weight:500;line-height:1.15;text-align:center;text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
   .dvx-tab svg,.dvx-item svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none}
