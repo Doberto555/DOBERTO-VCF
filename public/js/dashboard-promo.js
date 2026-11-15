@@ -149,7 +149,8 @@
     '.pm-list{display:grid;gap:8px;margin-top:6px}' +
     '.pm-item{display:flex;justify-content:space-between;gap:10px;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px}' +
     '.pm-item em{font-style:normal;font-size:12px;font-weight:800}' +
-    '.pm-empty{border:1px dashed var(--line);border-radius:14px;padding:16px;color:var(--muted);text-align:center}';
+    '.pm-empty{border:1px dashed var(--line);border-radius:14px;padding:16px;color:var(--muted);text-align:center}' +
+    '.pm-skel{border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.04);height:260px;animation:pmPulse 1.1s ease-in-out infinite alternate}.pm-skel.s{height:150px}@keyframes pmPulse{from{opacity:.45}to{opacity:1}}';
   document.head.appendChild(css);
 
   function el(tag, text, cls, attrs) {
@@ -338,6 +339,7 @@
 
   function load(done) {
     if (!tok()) { root.textContent = ''; root.appendChild(el('div', t.needLogin, 'pm-empty')); return; }
+    if (!root.firstChild) { root.appendChild(el('div', '', 'pm-skel')); root.appendChild(el('div', '', 'pm-skel s')); }
     api('GET', '/api/promo/status').then(function (r) {
       if (!r.ok || !r.d || !r.d.ok) {
         root.textContent = ''; root.appendChild(el('div', errText(r.d), 'pm-empty')); return;
