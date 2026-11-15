@@ -167,6 +167,21 @@ Routes backend (tout mande login itilizatè):
 
 UI a se `public/js/shizzy-sync.js` (paj `list.html`). Apre `.env` mete, rekòmanse PM2: `pm2 restart ecosystem.config.cjs`.
 
+## Peman VIP via Tranzak (mode live)
+
+Kòd la (`lib/vip-pay.js`) itilize API Tranzak: `https://api.tranzak.co/api/gateway/v1`. URL la pa chanje ant test ak live; sèlman kle a chanje.
+
+Pou pase live:
+
+1. Dashboard Tranzak: verifye idantite ou, answit Developer > API Keys: kreye yon kle live (`tk_live_...`).
+2. Mete nan `.env` sou VPS la (PA JANM sou GitHub): `TRANZAK_API_KEY`, `TRANZAK_WEBHOOK_SECRET` (`whsec_...`), epi opsyonèl `VIP_PRICE_HTG` (default 350) ak `VIP_DAYS` (default 30).
+3. Anrejistre webhook la nan Tranzak: `https://dobertovcf.online/api/vip/webhook` (HTTPS ak non domèn, pa IP).
+4. Kouri `supabase-vip-payments.sql` nan Supabase SQL Editor (yon sèl fwa, san danje pou re-kouri).
+5. `pm2 restart DOBERTO-VCF`. Nan log yo ou dwe wè `Tranzak mode: live | webhook secret: ok`.
+6. Fè yon ti peman reyèl (350 HTG) epi verifye: peman an pase, webhook la rive, `vip_until` mete a jou yon sèl fwa.
+
+Routes: `POST /api/vip/checkout` (body `{ "method": "moncash" | "natcash" }`), `GET /api/vip/payment/:ref`, `POST /api/vip/webhook` (siyati HMAC-SHA256 sou raw body, header `X-Tranzak-Signature`).
+
 ## Retire (nov. 2026)
 
 Pa gen ankò: download VCF (itilizatè ak admin), kontwòl limit download, kanpay unlock, group/chanèl WhatsApp, migrasyon group, anons kominote, paj `community.html`. Sinkronizasyon Shizzy a ranplase yo. Ekspò CSV admin nan rete (`/api/admin/export-csv`).
