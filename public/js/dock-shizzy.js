@@ -16,12 +16,13 @@
     shield: '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',
     file: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>',
     info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
-    home: '<path d="M3 11l9-8 9 8M5 10v10h14V10"/>'
+    home: '<path d="M3 11l9-8 9 8M5 10v10h14V10"/>',
+    card: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h3"/>'
   };
   const T = {
-    ht: { overview: 'Apèsi', profile: 'Pwofil mwen', sync: 'Ajout otomatik', promotion: 'Pwomosyon', more: 'Plis', members: 'Manm yo', reports: 'Rapò', account: 'Kont', privacy: 'Konfidansyalite', terms: 'Kondisyon', about: 'Sou nou', home: 'Akèy' },
-    fr: { overview: 'Aperçu', profile: 'Mon profil', sync: 'Ajout automatique', promotion: 'Promotion', more: 'Plus', members: 'Membres', reports: 'Signalement', account: 'Compte', privacy: 'Confidentialité', terms: 'Conditions', about: 'À propos', home: 'Accueil' },
-    en: { overview: 'Overview', profile: 'My profile', sync: 'Auto-add', promotion: 'Promotion', more: 'More', members: 'Members', reports: 'Report', account: 'Account', privacy: 'Privacy', terms: 'Terms', about: 'About', home: 'Home' }
+    ht: { overview: 'Apèsi', profile: 'Pwofil mwen', sync: 'Ajout otomatik', promotion: 'Pwomosyon', premium: 'Premium', more: 'Plis', members: 'Manm yo', reports: 'Rapò', account: 'Kont', privacy: 'Konfidansyalite', terms: 'Kondisyon', about: 'Sou nou', home: 'Akèy' },
+    fr: { overview: 'Aperçu', profile: 'Mon profil', sync: 'Ajout automatique', promotion: 'Promotion', premium: 'Premium', more: 'Plus', members: 'Membres', reports: 'Signalement', account: 'Compte', privacy: 'Confidentialité', terms: 'Conditions', about: 'À propos', home: 'Accueil' },
+    en: { overview: 'Overview', profile: 'My profile', sync: 'Auto-add', promotion: 'Promotion', premium: 'Premium', more: 'More', members: 'Members', reports: 'Report', account: 'Account', privacy: 'Privacy', terms: 'Terms', about: 'About', home: 'Home' }
   };
   const DOCK = [
     { k: 'overview', href: 'dashboard.html', tab: '', i: 'grid' },
@@ -30,6 +31,7 @@
     { k: 'promotion', href: 'dashboard.html?tab=promotion', tab: 'promotion', i: 'gift' }
   ];
   const SHEET = [
+    { k: 'premium', href: 'dashboard.html?tab=premium', tab: 'premium', i: 'card' },
     { k: 'members', href: 'list.html', i: 'users' },
     { k: 'reports', href: 'dashboard.html?tab=reports', tab: 'reports', i: 'flag' },
     { k: 'account', href: 'dashboard.html?tab=account', tab: 'account', i: 'gear' },

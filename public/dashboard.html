@@ -147,6 +147,7 @@ select.in option{background:#0a1a13;color:var(--text)}
     <a href="list.html">Membres</a>
     <a href="dashboard.html?tab=sync" id="navSync">Ajout automatique</a>
     <a href="dashboard.html?tab=promotion" id="navPromo">Promotion</a>
+    <a href="dashboard.html?tab=premium" id="navPremium">Premium</a>
     <small>Gérer mon compte</small>
     <a href="dashboard.html?tab=reports" id="navReports">Signalement</a>
     <a href="dashboard.html?tab=account" id="navAccount">Compte</a>
@@ -259,7 +260,7 @@ select.in option{background:#0a1a13;color:var(--text)}
 </main>
 
 
-<div class="more" id="more" hidden><a href="dashboard.html?tab=sync">Ajout automatique</a><a href="dashboard.html?tab=promotion">Promotion</a><a href="dashboard.html?tab=account">Compte</a><a href="privacy.html">Confidentialité</a><a href="terms.html">Conditions</a><a href="about.html">À propos</a><a href="index.html">Accueil</a></div>
+<div class="more" id="more" hidden><a href="dashboard.html?tab=sync">Ajout automatique</a><a href="dashboard.html?tab=promotion">Promotion</a><a href="dashboard.html?tab=premium">Premium</a><a href="dashboard.html?tab=account">Compte</a><a href="privacy.html">Confidentialité</a><a href="terms.html">Conditions</a><a href="about.html">À propos</a><a href="index.html">Accueil</a></div>
 <div class="tabbar" role="navigation" aria-label="Navigation principale"><a class="tab on" href="dashboard.html"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg><span>Aperçu</span></a><a class="tab" data-tab="profile" href="dashboard.html?tab=profile"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>Mon profil</span></a><a class="tab" href="list.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 20v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1M9.5 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M21 20v-1a4 4 0 0 0-3-3.9M16 4.1a3.5 3.5 0 0 1 0 6.8"/></svg><span>Membres</span></a><a class="tab" data-tab="reports" href="dashboard.html?tab=reports"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg><span>Signalement</span></a><button class="tab" id="moreBtn" type="button" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>Plus</span></button></div>
 <script>
 function $(id){return document.getElementById(id)}
@@ -545,7 +546,7 @@ document.addEventListener('click',function(){mm.hidden=true;mb.setAttribute('ari
   }).catch(function(){loginMode('Session expirée. Reconnectez-vous avec Google.')});
 })();
 </script>
-<script src="js/dashboard-sync-guide.js?v=1" defer></script><script src="js/dashboard-polish.js?v=2" defer></script><script src="js/dashboard-lang.js?v=1" defer></script><script src="js/dashboard-i18n.js?v=1" defer></script><script src="js/dashboard-delete.js?v=1" defer></script><script src="js/dashboard-promo.js?v=3" defer></script>
+<script src="js/dashboard-sync-guide.js?v=1" defer></script><script src="js/dashboard-polish.js?v=2" defer></script><script src="js/dashboard-lang.js?v=1" defer></script><script src="js/dashboard-i18n.js?v=1" defer></script><script src="js/dashboard-delete.js?v=1" defer></script><script src="js/dashboard-promo.js?v=3" defer></script><script src="js/dashboard-premium.js?v=1" defer></script>
 <script>
 (function(){
   var FLAG='dv_sync_after_connect';
