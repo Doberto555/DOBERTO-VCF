@@ -105,30 +105,31 @@
   var css = document.createElement('style');
   css.textContent =
     '.pv{max-width:760px;display:grid;gap:16px}' +
-    '.pv .card{padding:22px}' +
-    '.pv-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}' +
+    '.pv .card{padding:18px}' +
+    '.pv-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.pv-top>div{flex:1;min-width:0}' +
     '.pv-kick{font-size:11px;font-weight:800;letter-spacing:.14em;color:var(--sun)}' +
-    '.pv h2{font-size:clamp(26px,6vw,38px);letter-spacing:-.02em;margin:10px 0 8px}' +
-    '.pv h3{font-size:19px;margin:0 0 14px}' +
+    '.pv h2{font-size:24px!important;line-height:1.15;letter-spacing:-.02em;margin:8px 0 8px}' +
+    '.pv h3{font-size:18px;margin:0 0 12px}' +
+    '.pv p{font-size:15px;line-height:1.5}' +
     '.pv p{color:var(--muted)}' +
-    '.pv-badge{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:99px;padding:8px 14px;font-weight:700;font-size:14px;color:#cfe3d8;white-space:nowrap}' +
+    '.pv-badge{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:99px;padding:7px 12px;font-weight:700;font-size:13px;color:#cfe3d8;white-space:nowrap;flex:none}' +
     '.pv-badge.on{color:var(--sun);border-color:rgba(245,196,81,.45)}' +
     '.pv-price{margin-top:16px;border:1px solid var(--line);border-radius:16px;padding:16px;background:rgba(0,0,0,.25)}' +
-    '.pv-price b{font-size:34px;letter-spacing:-.02em}.pv-price span{color:var(--muted);margin-left:8px}' +
-    '.pv-price small{display:block;margin-top:8px;color:var(--sun);font-weight:700;font-size:14px}' +
-    '.pv-adv{display:grid;grid-template-columns:1fr 1fr;gap:12px}' +
-    '@media(max-width:520px){.pv-adv{grid-template-columns:1fr}}' +
+    '.pv-price b{font-size:28px;letter-spacing:-.02em}.pv-price b span{font-size:14px;font-weight:500;color:var(--muted);margin-left:8px;letter-spacing:0}' +
+    '.pv-price small{display:block;margin-top:8px;color:var(--sun);font-weight:700;font-size:13px}' +
+    '.pv-adv{display:grid;grid-template-columns:1fr 1fr;gap:10px}' +
+    '@media(max-width:340px){.pv-adv{grid-template-columns:1fr}}' +
     '.pv-a{border:1px solid var(--line);border-radius:16px;padding:14px}' +
-    '.pv-a b{display:block;font-size:15px;margin-bottom:6px}.pv-a span{color:var(--muted);font-size:14px;line-height:1.45}' +
+    '.pv-a b{display:block;font-size:14px;margin-bottom:6px}.pv-a span{color:var(--muted);font-size:13px;line-height:1.45}' +
     '.pv-m{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;box-sizing:border-box;text-align:left;margin-top:12px;padding:16px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.02);color:inherit;font:inherit;cursor:pointer}' +
     '.pv-m.on{border-color:rgba(245,196,81,.6);background:rgba(245,196,81,.07)}' +
-    '.pv-m b{display:block;font-size:19px}.pv-m em{display:block;font-style:normal;margin-top:10px;font-weight:800}' +
+    '.pv-m b{display:block;font-size:17px}.pv-m em{display:block;font-style:normal;margin-top:10px;font-weight:800}' +
     '.pv-m small{display:block;color:var(--muted);font-size:13px;margin-top:10px}' +
     '.pv-m .dot{flex:none;width:28px;height:28px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;font-weight:900;color:#1a1403}' +
     '.pv-m.on .dot{background:#f5c542;border-color:#f5c542}' +
     '.pv-warn{margin-top:14px;border:1px solid rgba(245,196,81,.3);border-radius:16px;padding:16px;background:rgba(245,196,81,.04)}' +
     '.pv-warn b{display:block;color:var(--sun);margin-bottom:6px}.pv-warn span{color:var(--muted);font-size:14px}' +
-    '.pv-go{width:100%;margin-top:14px;padding:16px;border:0;border-radius:14px;font:inherit;font-weight:800;font-size:16px;color:#1a1403;background:linear-gradient(90deg,#fdf0b5,#fdd44a);cursor:pointer}' +
+    '.pv-go{width:100%;margin-top:14px;padding:16px;border:0;border-radius:14px;font:inherit;font-weight:800;font-size:15px;color:#1a1403;background:linear-gradient(90deg,#fdf0b5,#fdd44a);cursor:pointer}' +
     '.pv-go:disabled{opacity:.55;cursor:not-allowed}' +
     '.pv-note{text-align:center;color:var(--muted);font-size:13px;margin-top:12px}' +
     '.pv-msg{margin-top:12px;padding:12px 14px;border-radius:12px;border:1px solid rgba(54,231,167,.3);color:var(--signal);font-size:14px}' +
