@@ -107,7 +107,7 @@ require('./lib/vip-pay').register(app, express, {
   supabase: () => supabase,
   verifyUser: (req, res, next) => verifyUser(req, res, next),
   requireDatabase: (req, res, next) => requireDatabase(req, res, next),
-  limiter: (req, res, next) => shizzyActionLimiter(req, res, next),
+  limiter: (req, res, next) => vipPayLimiter(req, res, next),
   verifyAdmin: (req, res, next) => verifyAdmin(req, res, next),
   adminLimiter: (req, res, next) => adminActionLimiter(req, res, next)
 });
@@ -131,6 +131,7 @@ const adminActionLimiter = rateLimit({ ...limiterDefaults, windowMs: 60 * 60 * 1
 const pushSendLimiter = rateLimit({ ...limiterDefaults, windowMs: 60 * 60 * 1000, limit: 12 });
 const publicReadLimiter = rateLimit({ ...limiterDefaults, windowMs: 60 * 1000, limit: 300 });
 const shizzyActionLimiter = rateLimit({ ...limiterDefaults, windowMs: 60 * 60 * 1000, limit: 12 });
+const vipPayLimiter = rateLimit({ ...limiterDefaults, windowMs: 60 * 60 * 1000, limit: 200 });
 const accountLimiter = rateLimit({ ...limiterDefaults, windowMs: 60 * 60 * 1000, limit: 10 });
 const reportLimiter = rateLimit({ ...limiterDefaults, windowMs: 60 * 60 * 1000, limit: 8 });
 
