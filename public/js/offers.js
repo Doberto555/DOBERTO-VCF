@@ -4,7 +4,7 @@
   if (window.__dvOffers) return;
   window.__dvOffers = true;
 
-  var PAY_OPEN = false;   // mete true lè Tranzak Live mache
+  var PAY_OPEN = true;    // Tranzak Live mache (kle tk_live_ + webhook ok sou VPS)
   var PRICE = '350';      // sèlman pou afichaj; vrè pri a sòti nan sèvè a (VIP_PRICE_HTG)
   var REF_KEY = 'dv_vip_ref';
   var VIP = 'V.I.P \uD83D\uDC51';
