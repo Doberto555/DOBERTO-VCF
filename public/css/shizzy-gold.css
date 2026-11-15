@@ -1,0 +1,14 @@
+/* DOBERTO VCF - jòn Shizzy (#f2c66d, echantiyone sou screenshot Shizzy). Ajoute sèlman: ranplase varyab koulè jòn yo. */
+:root{--sun:#f2c66d;--gold:#f2c66d;--warn:#f2c66d}
+#dvWhy{--gold:#f2c66d}
+.hl,.eyebrow,.kick,.live-gold{color:#f2c66d}
+.eyebrow::before{background:#f2c66d}
+.dvx-tab.on,.dvx-item.on{color:#f2c66d!important}
+.pv-m.on .dot{background:#f2c66d!important;border-color:#f2c66d!important}
+.pv-m.on{border-color:rgba(242,198,109,.6)!important;background:rgba(242,198,109,.07)!important}
+.pv-kick,.pv-badge.on,.pv-warn b,.pv-price small{color:#f2c66d!important}
+.pv-go,.pm-btn.main{background:linear-gradient(180deg,#f8dc9a 0%,#f2c66d 100%)!important;color:#1a1403!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 8px 24px -8px rgba(242,198,109,.55)}
+.checks li::before,.trust::before{color:#f2c66d}
+.mrow.first .av{background:#f2c66d}
+.tag,.bdg{color:#f2c66d}
+.avatar,.dvx-av{background:radial-gradient(circle at 30% 25%,#f8dc9a,#e8b955)!important}
