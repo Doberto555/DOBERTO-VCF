@@ -225,7 +225,7 @@
         return;
       }
       state.busy = false;
-      setMsg('err', 'err', x.status === 401 ? 'login' : j.code);
+      setMsg('err', 'err', x.status === 401 ? 'login' : (j.code || (x.status === 429 ? 'too_many' : 'default')));
       paint();
     }).catch(function () {
       state.busy = false; setMsg('err', 'err', 'default'); paint();

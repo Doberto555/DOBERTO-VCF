@@ -568,7 +568,7 @@ function apply(){
   document.querySelectorAll('[data-h]').forEach(function(e){e.innerHTML=t(e.getAttribute('data-h'))});
   document.querySelectorAll('.lang button').forEach(function(b){b.className=b.getAttribute('data-l')===lang?'on':''});
   if(logged){
-    document.querySelectorAll('.js-login,.js-start').forEach(function(a){if(a.closest('footer')){a.style.display='none';return}a.setAttribute('href','dashboard.html');a.textContent=t('dash')});
+    document.querySelectorAll('.js-login,.js-start').forEach(function(a){if(a.closest('footer')||a.classList.contains('js-login')){a.style.display='none';return}a.setAttribute('href','dashboard.html');a.textContent=t('dash')});
     document.querySelectorAll('.nav .nlogin').forEach(function(a){a.style.display='none'});
     var hv=document.getElementById('have');if(hv)hv.hidden=true;
   }
@@ -639,6 +639,6 @@ apply();load();
 </script>
 <script src="/js/ad-runtime-v34.js?v=20261114-1" defer></script>
 <script src="js/hero-card.js?v=1" defer></script>
-<script src="js/offers.js?v=2" defer></script>
+<script src="js/offers.js?v=5" defer></script>
 </body>
 </html>
