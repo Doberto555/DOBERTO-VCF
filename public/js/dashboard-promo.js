@@ -249,6 +249,12 @@
     }
     right.appendChild(lk);
 
+    // FAQ (ouvri/fèmen)
+    var fq = el('details', '', 'card');
+    fq.appendChild(el('summary', t.faqTitle || 'Quelles inscriptions sont acceptées ?', '', { style: 'font-weight:700;cursor:pointer;font-size:16px' }));
+    fq.appendChild(el('p', t.faqBody || 'Seules les inscriptions faites avec votre lien, avec e-mail confirmé et validées par notre équipe comptent. Tous les pays sont acceptés.', '', { style: 'color:var(--muted);font-size:14px;margin-top:10px' }));
+    right.appendChild(fq);
+
     // Kijan pou resevwa rekonpans lan
     var how = el('div', '', 'card');
     how.appendChild(el('h3', t.howTitle));
