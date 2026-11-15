@@ -1,0 +1,53 @@
+/* DOBERTO VCF - reflè pro style Shizzy: kat ki gen glow koulè nan kwen anlè dwat (jòn / vèt / vyolèt / ble),
+   limyè dous anlè gòch, ikòn lis. Ajoute sèlman; retire <link> la pou tounen. Koulè sou screenshot Shizzy. */
+:root{--glow-a:rgba(244,157,0,.20);--glow-b:rgba(16,217,160,.17);--glow-c:rgba(139,92,246,.18);--glow-d:rgba(56,140,248,.18)}
+
+.card,.me{
+  --tint:rgba(242,198,109,.10);
+  border:1px solid rgba(255,255,255,.075)!important;
+  border-radius:26px!important;
+  background:
+    radial-gradient(130% 85% at 100% 0%,var(--tint),transparent 62%),
+    radial-gradient(110% 60% at 0% 0%,rgba(255,255,255,.045),transparent 58%),
+    linear-gradient(180deg,#0f1217,#0b0e12)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),inset 0 0 0 1px rgba(255,255,255,.012),0 26px 56px -30px rgba(0,0,0,.85)!important;
+}
+.card::before{display:none!important}
+.card::after{display:none!important}
+
+/* kat stat yo: chak gen tent pa l */
+.stats>.card:nth-child(1),.sgrid>.card:nth-child(1){--tint:var(--glow-a)}
+.stats>.card:nth-child(2),.sgrid>.card:nth-child(2){--tint:var(--glow-b)}
+.stats>.card:nth-child(3),.sgrid>.card:nth-child(3){--tint:var(--glow-c)}
+.stats>.card:nth-child(4),.sgrid>.card:nth-child(4){--tint:var(--glow-d)}
+
+/* ikòn ki briye */
+.ic{box-shadow:inset 0 1px 0 rgba(255,255,255,.38),inset 0 -2px 6px rgba(0,0,0,.18),0 10px 24px -8px var(--tint,rgba(0,0,0,.5))!important}
+.stats>.card:nth-child(1) .ic{box-shadow:inset 0 1px 0 rgba(255,255,255,.38),inset 0 -2px 6px rgba(0,0,0,.18),0 10px 26px -8px rgba(249,115,22,.7)!important}
+.stats>.card:nth-child(2) .ic{box-shadow:inset 0 1px 0 rgba(255,255,255,.38),inset 0 -2px 6px rgba(0,0,0,.18),0 10px 26px -8px rgba(16,217,160,.7)!important}
+.stats>.card:nth-child(3) .ic{box-shadow:inset 0 1px 0 rgba(255,255,255,.38),inset 0 -2px 6px rgba(0,0,0,.18),0 10px 26px -8px rgba(124,58,237,.7)!important}
+.stats>.card:nth-child(4) .ic{box-shadow:inset 0 1px 0 rgba(255,255,255,.38),inset 0 -2px 6px rgba(0,0,0,.18),0 10px 26px -8px rgba(37,99,235,.7)!important}
+
+/* tèks stat: etikèt majiskil + chif gra */
+.stat span{color:#9aa3b2!important;font-size:12px!important;font-weight:700!important;letter-spacing:.14em;text-transform:uppercase}
+.stat strong{color:#fff;font-size:30px!important}
+.stat em{color:#7d8696!important;font-size:13px!important;margin-top:6px!important}
+
+/* pastil delta ak flèch */
+.delta{display:inline-flex!important;align-items:center;gap:5px;padding:4px 10px!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.delta::before{content:"↗";font-size:12px}
+.delta.down::before{content:"↘"}
+
+/* fon paj: glow dous jòn (tankou Shizzy) */
+body{background:radial-gradient(900px 380px at 12% -8%,rgba(242,198,109,.07),transparent),radial-gradient(900px 420px at 88% -6%,rgba(54,231,167,.08),transparent),#07090c!important}
+.side{background:linear-gradient(180deg,rgba(255,255,255,.02),transparent)}
+.mtop,.dvx-dock{backdrop-filter:blur(18px) saturate(140%)}
+.dvx-dock{box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 -14px 34px -22px rgba(0,0,0,.9)}
+
+/* kat Premium/Promotion yo: glow jòn gòch (tankou "Offre de partage") */
+.pv>.card:first-child,.pm .pm-hero{--tint:rgba(242,198,109,.16)}
+.pm .pm-hero{background:radial-gradient(120% 90% at 0% 0%,rgba(242,198,109,.16),transparent 62%),linear-gradient(180deg,#14130f,#0d0f12)!important;border-color:rgba(242,198,109,.22)!important}
+/* delta pa eritye stil etikèt la */
+.stat span.delta{color:#5eead4!important;letter-spacing:0!important;text-transform:none!important;font-size:12px!important;font-weight:800!important}
+.stat span.delta.down{color:#ff8f8f!important}
+@media(max-width:860px){body{align-content:start}}
