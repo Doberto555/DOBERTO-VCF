@@ -1,0 +1,75 @@
+/* DOBERTO VCF - polish style Shizzy: tèks pi piti + reflè (highlight anlè, glow dous, bouton ki briye).
+   Fichye ajoute sèlman: li chaje dènye epi pa efase anyen nan CSS ki deja la. Retire <link> la pou tounen. */
+
+/* ---------- Gwosè (Shizzy ~ 15px kò, tit 22-26px sou telefòn) ---------- */
+body{font-size:15px;line-height:1.55}
+h2{font-size:clamp(24px,3.4vw,38px)!important;line-height:1.12!important;letter-spacing:-.025em!important}
+.sub,.lead{font-size:15px!important;line-height:1.6}
+.step h3,.fc h3{font-size:18px!important;margin:16px 0 8px!important}
+.step p,.fc p,details p{font-size:14.5px}
+.stat strong{font-size:32px!important}
+.stat small{font-size:11px!important}
+.lhead b{font-size:16px!important}
+summary{font-size:15px;padding:17px 0!important}
+.eyebrow{font-size:11px!important;margin-bottom:14px!important}
+.btn{font-size:15px}
+.nav .brand{font-size:16px}
+@media(min-width:761px){
+  h1[data-h="hTitle"],h1{font-size:clamp(2.1rem,3.7vw,3.3rem)!important;line-height:1.08!important}
+  section{padding:68px 0!important}
+}
+@media(max-width:760px){
+  html{font-size:14px!important}
+  h1,h1[data-h="hTitle"]{font-size:clamp(1.55rem,7vw,1.85rem)!important;line-height:1.14!important}
+  h2,#dvWhy h2{font-size:clamp(1.35rem,6vw,1.6rem)!important}
+  h1+p,h1~p,#dvWhy .dv-lead{font-size:.95rem!important}
+  section{padding:48px 0!important}
+  .card{padding:20px!important;border-radius:20px!important}
+  .btn{min-height:46px!important;font-size:.95rem!important;border-radius:14px!important}
+  .final{padding:56px 18px!important;border-radius:24px!important}
+  .stat strong{font-size:28px!important}
+}
+
+/* ---------- Reflè: kat ak highlight anlè + gradyan ---------- */
+.card,.mock,details,.wr,.ic,#dvWhy .dv-card,.hero-card{
+  background-image:linear-gradient(165deg,rgba(255,255,255,.055) 0%,rgba(255,255,255,.012) 38%,rgba(255,255,255,0) 100%);
+  border-color:rgba(255,255,255,.09)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),inset 0 -1px 0 rgba(0,0,0,.35),0 18px 44px -18px rgba(0,0,0,.65);
+}
+.card,.mock,#dvWhy .dv-card{position:relative;overflow:hidden}
+.card::before,.mock::before,#dvWhy .dv-card::before{
+  content:"";position:absolute;left:12%;right:12%;top:0;height:1px;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);
+}
+.card::after,.mock::after{
+  content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+  background:radial-gradient(420px 120px at 50% -20%,rgba(54,231,167,.09),transparent 70%);
+}
+.card>*,.mock>*{position:relative;z-index:1}
+.mrow.first,#dvWhy .dv-card.ok{
+  background-image:linear-gradient(165deg,rgba(245,196,81,.10),rgba(245,196,81,.02));
+  box-shadow:inset 0 1px 0 rgba(245,196,81,.25),0 0 34px -10px rgba(245,196,81,.35);
+}
+.ic{box-shadow:inset 0 1px 0 rgba(245,196,81,.25),0 0 22px -8px rgba(245,196,81,.4)}
+.live,.lang,.tag{box-shadow:inset 0 1px 0 rgba(255,255,255,.07)}
+
+/* ---------- Bouton prensipal ki briye ---------- */
+.btn.light{
+  background:linear-gradient(180deg,#ffffff 0%,#d4f5e6 100%)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 8px 26px -8px rgba(54,231,167,.55);
+  position:relative;overflow:hidden;transition:transform .15s ease,box-shadow .2s ease;
+}
+.btn.light::after{
+  content:"";position:absolute;top:0;bottom:0;width:60%;left:-80%;pointer-events:none;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.75),transparent);
+  transform:skewX(-18deg);transition:left .6s ease;
+}
+.btn.light:hover::after{left:130%}
+.btn.light:active{transform:scale(.98)}
+.btn.ghost{background-image:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.01));box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+
+/* ---------- Nav + fon ---------- */
+.nav{background:rgba(4,16,11,.72)!important;backdrop-filter:blur(18px) saturate(140%);box-shadow:0 1px 0 rgba(255,255,255,.04),0 12px 30px -20px rgba(0,0,0,.8)}
+body{background:radial-gradient(900px 420px at 80% -6%,rgba(54,231,167,.12),transparent),radial-gradient(700px 360px at 5% 8%,rgba(245,196,81,.05),transparent),var(--ink,#04100b)!important;background-attachment:fixed}
+.final{box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 0 90px -30px rgba(245,196,81,.25)}
+@media(prefers-reduced-motion:reduce){.btn.light::after{display:none}}
