@@ -134,6 +134,9 @@ select.in option{background:#0a1a13;color:var(--text)}
 </style>
 <script src="js/dv-country-select.js?v=3"></script>
 <link rel="stylesheet" href="css/dock-shizzy.css?v=4">
+<script>(function(){try{var t=new URLSearchParams(location.search).get('tab');if(/^(profile|reports|sync|account|promotion|premium)$/.test(t)){var c=document.documentElement.classList;c.add('dv-tab');if(t==='promotion'||t==='premium')c.add('dv-late')}}catch(_){}})()</script>
+<style>html.dv-tab main>h1,html.dv-tab main>.sub,html.dv-tab main>.stats,html.dv-tab main>.grid,html.dv-tab main>.actions{display:none!important}
+@supports selector(:has(a)){html.dv-late main::before{content:"";display:block;height:260px;max-width:760px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.04);animation:dvLate 1.1s ease-in-out infinite alternate}html.dv-late main:has(>#promoSec,>#premiumSec)::before{display:none}@keyframes dvLate{from{opacity:.45}to{opacity:1}}}</style>
 </head>
 <body>
 <header class="mtop"><a class="brand" href="index.html"><img class="logo" src="icons/doberto-vcf-192.png?v=20260904-1" width="34" height="34" alt="" decoding="async">DOBERTO VCF</a><a class="mhome" href="index.html">Accueil</a></header>
@@ -546,7 +549,7 @@ document.addEventListener('click',function(){mm.hidden=true;mb.setAttribute('ari
   }).catch(function(){loginMode('Session expirée. Reconnectez-vous avec Google.')});
 })();
 </script>
-<script src="js/dashboard-sync-guide.js?v=1" defer></script><script src="js/dashboard-polish.js?v=2" defer></script><script src="js/dashboard-lang.js?v=1" defer></script><script src="js/dashboard-i18n.js?v=1" defer></script><script src="js/dashboard-delete.js?v=1" defer></script><script src="js/dashboard-promo.js?v=3" defer></script><script src="js/dashboard-premium.js?v=2" defer></script>
+<script src="js/dashboard-sync-guide.js?v=1" defer></script><script src="js/dashboard-polish.js?v=2" defer></script><script src="js/dashboard-lang.js?v=1" defer></script><script src="js/dashboard-i18n.js?v=1" defer></script><script src="js/dashboard-delete.js?v=1" defer></script><script src="js/dashboard-promo.js?v=3" defer></script><script src="js/dashboard-premium.js?v=3" defer></script>
 <script>
 (function(){
   var FLAG='dv_sync_after_connect';
