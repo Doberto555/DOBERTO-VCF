@@ -1,0 +1,33 @@
+/* DOBERTO VCF - section Offres */
+.dvo{--dvo-gold:#f5c451;--dvo-ink:var(--ink,#04100b);--dvo-text:var(--text,#eafff5);--dvo-muted:var(--muted,#8aa196);--dvo-line:var(--line,rgba(143,255,203,.1));--dvo-sig:var(--signal,#36e7a7)}
+.dvo .dvo-eyebrow{display:flex;align-items:center;gap:12px;color:var(--dvo-gold);font-weight:800;font-size:12px;letter-spacing:.2em;text-transform:uppercase}
+.dvo .dvo-eyebrow:before{content:"";width:36px;height:1px;background:var(--dvo-gold)}
+.dvo .dvo-title{font-size:clamp(1.9rem,4.4vw,3.4rem);line-height:1.08;letter-spacing:-.03em;margin:16px 0 0;font-weight:800;color:var(--dvo-text);max-width:16em}
+.dvo .dvo-hl{color:var(--dvo-gold)}
+.dvo .dvo-sub{color:var(--dvo-muted);font-size:1.05rem;line-height:1.7;max-width:36em;margin:16px 0 0}
+.dvo .dvo-banner{margin:22px 0 0;padding:12px 16px;border-radius:14px;border:1px solid var(--dvo-line);font-size:14px;line-height:1.5;max-width:920px}
+.dvo .dvo-banner.ok{border-color:rgba(54,231,167,.4);background:rgba(54,231,167,.08);color:var(--dvo-sig)}
+.dvo .dvo-banner.err{border-color:rgba(255,122,122,.4);background:rgba(255,122,122,.08);color:#ffb4b4}
+.dvo .dvo-banner.info{background:rgba(255,255,255,.03);color:var(--dvo-text)}
+.dvo .dvo-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:34px;max-width:920px}
+.dvo .dvo-card{display:flex;flex-direction:column;border:1px solid var(--dvo-line);border-radius:26px;padding:28px;background:rgba(255,255,255,.02)}
+.dvo .dvo-gold{border-color:rgba(245,196,81,.35);background:rgba(245,196,81,.04)}
+.dvo .dvo-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.dvo .dvo-name{margin:0;font-size:1.7rem;font-weight:800;color:var(--dvo-text)}
+.dvo .dvo-name span{color:var(--dvo-gold)}
+.dvo .dvo-badge{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:7px 11px;border-radius:9px;border:1px solid var(--dvo-line);color:var(--dvo-muted);white-space:nowrap}
+.dvo .dvo-gold .dvo-badge{border-color:rgba(245,196,81,.4);color:var(--dvo-gold);background:rgba(245,196,81,.07)}
+.dvo .dvo-desc{color:var(--dvo-muted);line-height:1.6;margin:14px 0 18px}
+.dvo .dvo-list{list-style:none;margin:0 0 22px;padding:0;display:grid;gap:12px;flex:1}
+.dvo .dvo-list li{position:relative;padding-left:28px;color:var(--dvo-text);line-height:1.5;font-size:.97rem}
+.dvo .dvo-list li:before{content:"\2713";position:absolute;left:0;top:0;color:var(--dvo-muted);font-weight:800}
+.dvo .dvo-gold .dvo-list li:before{color:var(--dvo-gold)}
+.dvo .dvo-until{font-size:13px;color:var(--dvo-sig);margin:0 0 12px;font-weight:700}
+.dvo .dvo-actions{display:grid;gap:10px}
+.dvo .dvo-btn{display:flex;align-items:center;justify-content:center;min-height:50px;padding:0 20px;border-radius:15px;font:inherit;font-weight:800;font-size:1rem;cursor:pointer;text-decoration:none;border:1px solid var(--dvo-line);color:var(--dvo-text);background:rgba(255,255,255,.04);transition:transform .15s}
+.dvo .dvo-btn:hover{transform:translateY(-1px)}
+.dvo .dvo-btn.light{background:var(--dvo-text);color:var(--dvo-ink);border-color:transparent}
+.dvo .dvo-btn[disabled]{opacity:.55;cursor:not-allowed;transform:none}
+.dvo .dvo-pick{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.dvo .dvo-cancel{background:none;border:0;color:var(--dvo-muted);font:inherit;font-size:13px;cursor:pointer;text-align:center;padding:4px}
+@media(max-width:760px){.dvo .dvo-grid{grid-template-columns:1fr}.dvo .dvo-card{padding:22px}.dvo .dvo-name{font-size:1.45rem}.dvo .dvo-pick{grid-template-columns:1fr}}
