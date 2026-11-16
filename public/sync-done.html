@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ht">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>DOBERTO VCF</title>
+<style>
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:#07110e;color:#eafff6;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.box{width:100%;max-width:380px;text-align:center;background:#0d1f19;border:1px solid rgba(54,231,167,.25);border-radius:24px;padding:32px 24px}
+.ok{width:64px;height:64px;margin:0 auto 16px;border-radius:50%;background:rgba(54,231,167,.14);color:#36e7a7;font-size:34px;line-height:64px}
+h1{margin:0 0 8px;font-size:22px}
+p{margin:0 0 22px;color:#9bb8ac;line-height:1.5}
+a.btn{display:block;padding:14px;border-radius:14px;background:#eafff6;color:#07110e;font-weight:700;text-decoration:none}
+a.alt{display:block;margin-top:14px;color:#9bb8ac;font-size:14px}
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="ok">✓</div>
+  <h1>Google Contacts konekte</h1>
+  <p>Retounen nan app DOBERTO VCF pou kontinye.</p>
+  <a class="btn" id="open" href="com.dobertovcf.app://sync-done">Retounen nan app la</a>
+  <a class="alt" href="/list.html">Kontinye sou sit la</a>
+</div>
+<script>
+(function(){
+  var ua=navigator.userAgent||'';
+  if(!/Android/i.test(ua))return;
+  var intent='intent://sync-done#Intent;scheme=com.dobertovcf.app;package=com.dobertovcf.app;end';
+  var b=document.getElementById('open');
+  b.setAttribute('href',intent);
+  setTimeout(function(){try{location.href=intent}catch(e){}},300);
+})();
+</script>
+</body>
+</html>

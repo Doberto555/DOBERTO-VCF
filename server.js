@@ -468,7 +468,15 @@ app.get('/api/shizzy/status', publicReadLimiter,
 
 app.post('/api/shizzy/connect', shizzyActionLimiter, verifyUser, requireShizzy, async (req, res) => {
   try {
-    const data = await shizzy.createConnection(req.user.userId, { returnUrl: 'https://dobertovcf.online/list.html' });
+    // App Android: retounen sou /sync-done.html (ki rele app la). Si Shizzy refize URL sa a, tounen sou list.html.
+    const fromApp = !!(req.body && req.body.app === true);
+    let data;
+    try {
+      data = await shizzy.createConnection(req.user.userId, { returnUrl: 'https://dobertovcf.online/' + (fromApp ? 'sync-done.html' : 'list.html') });
+    } catch (e) {
+      if (!fromApp) throw e;
+      data = await shizzy.createConnection(req.user.userId, { returnUrl: 'https://dobertovcf.online/list.html' });
+    }
     const url = pickConsentUrl(data, shizzy.baseUrl);
     if (!url) {
       // Sèlman non chan yo ak tip yo (pa valè), pou n konnen kijan Shizzy fòmate repons lan.
