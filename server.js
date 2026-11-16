@@ -148,6 +148,7 @@ const shizzyActionLimiter = rateLimit({ ...limiterDefaults, windowMs: 60 * 60 * 
 const vipPayLimiter = rateLimit({ ...limiterDefaults, windowMs: 60 * 60 * 1000, limit: 200 });
 const accountLimiter = rateLimit({ ...limiterDefaults, windowMs: 60 * 60 * 1000, limit: 10 });
 const reportLimiter = rateLimit({ ...limiterDefaults, windowMs: 60 * 60 * 1000, limit: 8 });
+const clientErrorLimiter = rateLimit({ ...limiterDefaults, windowMs: 60 * 60 * 1000, limit: 60 });
 
 // ---------- Itilitè ----------
 function normalizeAdSettings(input = {}) {
@@ -777,6 +778,23 @@ const REPORT_REASONS = ['fake', 'spam', 'harassment', 'privacy', 'bug', 'other']
 const REPORT_STATUSES = ['new', 'reviewed', 'resolved'];
 const oneLine = (v, n) => String(v == null ? '' : v).replace(/\s+/g, ' ').trim().slice(0, n);
 const multiLine = (v, n) => String(v == null ? '' : v).replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g, ' ').trim().slice(0, n);
+
+app.post('/api/client-error', clientErrorLimiter, (req, res) => {
+  try {
+    const b = req.body || {};
+    const clean = (v, n) => String(v == null ? '' : v).replace(/[\u0000-\u001f\u007f]/g, ' ').slice(0, n);
+    const line = JSON.stringify({
+      t: new Date().toISOString(),
+      msg: clean(b.msg, 300), src: clean(b.src, 120), ln: Number(b.ln) || 0,
+      build: clean(b.build, 10), view: clean(b.view, 30),
+      ua: clean(req.headers['user-agent'], 160)
+    });
+    const dir = require('path').join(__dirname, 'logs');
+    require('fs').mkdirSync(dir, { recursive: true });
+    require('fs').appendFile(require('path').join(dir, 'client-errors.log'), line + '\n', () => {});
+  } catch (e) {}
+  res.status(204).end();
+});
 
 app.post('/api/report', reportLimiter, requireDatabase, async (req, res) => {
   try {
