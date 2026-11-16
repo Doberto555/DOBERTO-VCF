@@ -228,6 +228,8 @@ footer{border-top:1px solid var(--line);padding:60px 0 36px;margin-top:40px}
       <a class="btn light arrow js-start" href="register.html" data-i="ctaA"></a>
       <a class="btn ghost" href="#how" data-i="ctaB"></a>
     </div>
+    <div class="cta" style="margin-top:12px"><a class="btn ghost" id="apkBtn" href="/download/doberto-vcf.apk" download></a></div>
+    <p class="trust" id="apkNote" style="margin-top:8px"></p>
     <p class="trust" data-i="hTrust"></p>
     <p class="have" id="have"><span data-i="haveQ"></span> <a class="js-login" href="/api/auth/google/url?flow=login&amp;redirect=1" data-i="nLogin"></a></p>
   </div>
@@ -645,6 +647,27 @@ apply();load();
 </script>
 <script src="/js/ad-runtime-v34.js?v=20261114-1" defer></script>
 <script src="js/hero-card.js?v=1" defer></script>
+<script>
+(function(){
+  var T={
+    ht:{b:'Telechaje app Android',n:'Apre telechajman an, louvri fichye a epi pèmèt enstale ak "sous enkoni" si telefòn lan mande.'},
+    fr:{b:'Télécharger l\'app Android',n:'Après le téléchargement, ouvre le fichier et autorise l\'installation depuis "sources inconnues" si le téléphone le demande.'},
+    en:{b:'Download the Android app',n:'After downloading, open the file and allow installing from "unknown sources" if your phone asks.'}
+  };
+  function lang(){
+    var l='';try{l=localStorage.getItem('doberto_lang')||''}catch(_){}
+    var s=document.getElementById('langSelect');if(s&&T[s.value])l=s.value;
+    l=l||document.documentElement.lang||'ht';return T[l]?l:'ht';
+  }
+  function paint(){
+    var t=T[lang()],b=document.getElementById('apkBtn'),n=document.getElementById('apkNote');
+    if(b)b.textContent=t.b;if(n)n.textContent=t.n;
+  }
+  var s=document.getElementById('langSelect');
+  if(s)s.addEventListener('change',function(){setTimeout(paint,0)});
+  paint();window.addEventListener('load',paint);
+})();
+</script>
 <script src="js/offers.js?v=5" defer></script>
 <script src="js/tuto-video.js?v=2" defer></script>
 </body>
