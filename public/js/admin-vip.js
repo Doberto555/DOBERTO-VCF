@@ -63,6 +63,7 @@
       tile('Jodi a', htg(s.today)),
       tile('7 dènye jou', htg(s.last7)),
       tile('30 dènye jou', htg(s.last30)),
+      (s.totalUsd ? tile('Stripe (USD)', '$' + Number(s.totalUsd).toFixed(2), '#f2c66d') : ''),
       tile('Moun ki peye', String(s.payers || 0)),
       tile('Peman reyisi', String(s.paidCount || 0)),
       tile('VIP aktif kounye a', String(s.activeVip || 0))
@@ -76,7 +77,7 @@
       make('strong', p.name || 'Moun enkoni (kont efase)'),
       make('span', STATUS[p.status] || p.status, 'font-size:12px;font-weight:800;color:' + (STATUS_COLOR[p.status] || 'inherit'))
     );
-    const amount = make('div', htg(p.amount) + ' · ' + (p.days || 0) + ' jou', 'margin:6px 0 2px;font-weight:700');
+    const amount = make('div', (String(p.currency).toUpperCase() === 'USD' ? '$' + Number(p.amount).toFixed(2) + ' USD (Stripe)' : htg(p.amount)) + ' · ' + (p.days || 0) + ' jou', 'margin:6px 0 2px;font-weight:700');
     wrap.append(top, amount);
     const line = (txt, css) => wrap.append(make('div', txt, 'opacity:.7;font-size:13px;line-height:1.5;word-break:break-word' + (css ? ';' + css : '')));
     if (p.email) line(p.email);

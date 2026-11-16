@@ -6,6 +6,7 @@
   if (!main) return;
 
   var PRICE = '350'; // afichaj sèlman; vrè pri a sòti nan sèvè a (VIP_PRICE_HTG)
+  var PRICE_USD = 2.7; // afichaj sèlman; vrè pri a = VIP_PRICE_USD sou sèvè a
   var DAYS = '30';
   var REF_KEY = 'dv_vip_ref';
   var VIP = 'V.I.P 👑';
@@ -25,7 +26,7 @@
       ],
       payKicker: 'PAIEMENT', payTitle: 'Sélectionnez un moyen de paiement',
       payLead: 'Chaque paiement donne ' + DAYS + ' jours d’accès. Le forfait ne se renouvelle pas automatiquement.',
-      htg: 'Paiement en gourdes haïtiennes',
+      htg: 'Paiement en gourdes haïtiennes', card: 'Carte bancaire (Visa, Mastercard) · USD',
       checkTitle: 'Vérifiez avant de payer',
       checkBody: 'Avant de payer, vérifiez le moyen choisi, le total et les frais affichés.',
       go: 'Continuer vers le paiement', renew: 'Renouveler Premium',
@@ -51,7 +52,7 @@
       ],
       payKicker: 'PEMAN', payTitle: 'Chwazi yon mwayen peman',
       payLead: 'Chak peman bay ' + DAYS + ' jou aksè. Fòfè a pa renouvle otomatikman.',
-      htg: 'Peman an goud ayisyen',
+      htg: 'Peman an goud ayisyen', card: 'Kat labank (Visa, Mastercard) · USD',
       checkTitle: 'Verifye anvan ou peye',
       checkBody: 'Anvan ou peye, verifye mwayen ou chwazi a, total la ak frè yo ki afiche.',
       go: 'Kontinye nan peman', renew: 'Renouvle Premium',
@@ -77,7 +78,7 @@
       ],
       payKicker: 'PAYMENT', payTitle: 'Select a payment method',
       payLead: 'Each payment gives ' + DAYS + ' days of access. The plan does not renew automatically.',
-      htg: 'Payment in Haitian gourdes',
+      htg: 'Payment in Haitian gourdes', card: 'Bank card (Visa, Mastercard) · USD',
       checkTitle: 'Check before you pay',
       checkBody: 'Before paying, check the chosen method, the total and the fees shown.',
       go: 'Continue to payment', renew: 'Renew Premium',
@@ -177,9 +178,11 @@
     // 3) peman
     var pay = el('div', '', 'card');
     add(pay, el('span', t.payKicker, 'pv-kick'), el('h2', t.payTitle), el('p', t.payLead));
-    [['moncash', 'MonCash'], ['natcash', 'NatCash']].forEach(function (m) {
+    [['moncash', 'MonCash'], ['natcash', 'NatCash'], ['stripe', 'Stripe']].forEach(function (m) {
       var b = el('button', '', 'pv-m' + (state.method === m[0] ? ' on' : ''), { type: 'button', 'aria-pressed': state.method === m[0] ? 'true' : 'false' });
-      var info = el('div'); add(info, el('b', m[1]), el('em', PRICE + ' GDES'), el('small', t.htg));
+      var isCard = m[0] === 'stripe';
+      var amt = isCard ? (L === 'en' ? '$' + PRICE_USD.toFixed(2) : PRICE_USD.toFixed(2).replace('.', ',') + ' $US') : PRICE + ' GDES';
+      var info = el('div'); add(info, el('b', m[1]), el('em', amt), el('small', isCard ? t.card : t.htg));
       add(b, info, el('span', state.method === m[0] ? '✓' : '', 'dot'));
       b.addEventListener('click', function () { if (state.busy) return; state.method = m[0]; render(); });
       pay.appendChild(b);
