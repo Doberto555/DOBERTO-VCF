@@ -566,6 +566,7 @@ function syncNumberOk(r) {
   if (n.startsWith('509')) return n.length === 11;
   if (n.startsWith('243')) return n.length === 12;
   if (n.startsWith('234')) return n.length === 13;
+  if (n.startsWith('27')) return n.length === 11;
   if (n.startsWith('1')) return n.length === 11;
   return true;
 }
