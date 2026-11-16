@@ -123,7 +123,7 @@
     '.pv-a{border:1px solid var(--line);border-radius:16px;padding:14px}' +
     '.pv-a b{display:block;font-size:14px;margin-bottom:6px}.pv-a span{color:var(--muted);font-size:13px;line-height:1.45}' +
     '.pv-m{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;box-sizing:border-box;text-align:left;margin-top:12px;padding:16px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.02);color:inherit;font:inherit;cursor:pointer}' +
-    '.pv-m .lg{flex:none;width:44px;height:44px;border-radius:12px;object-fit:contain;background:#fff;padding:4px;box-sizing:border-box}.pv-m .lgw{display:flex;align-items:center;gap:14px;min-width:0}' +
+    '.pv-m .lg{flex:none;width:44px;height:44px;border-radius:12px;object-fit:contain;background:#fff;padding:4px;box-sizing:border-box}.pv-m .lgfb{display:grid;place-items:center;background:#e6002d;color:#fff;font-weight:900;font-size:15px}.pv-m .lgw{display:flex;align-items:center;gap:14px;min-width:0}' +
     '.pv-m.on{border-color:rgba(245,196,81,.6);background:rgba(245,196,81,.07)}' +
     '.pv-m b{display:block;font-size:17px}.pv-m em{display:block;font-style:normal;margin-top:10px;font-weight:800}' +
     '.pv-m small{display:block;color:var(--muted);font-size:13px;margin-top:10px}' +
@@ -185,8 +185,13 @@
       var amt = isCard ? (L === 'en' ? '$' + PRICE_USD.toFixed(2) : PRICE_USD.toFixed(2).replace('.', ',') + ' $US') : PRICE + ' GDES';
       var info = el('div'); add(info, el('b', m[1]), el('em', amt), el('small', isCard ? t.card : t.htg));
       var lw = el('div', '', 'lgw'), im = document.createElement('img');
-      im.className = 'lg'; im.alt = m[1]; im.width = 44; im.height = 44; im.src = m[0] === 'natcash' ? '/icons/natcash.svg' : '/icons/pay/' + m[0] + '.png';
-      im.onerror = function () { if (/\.png$/.test(im.src)) { im.onerror = function () { im.remove(); }; im.src = im.src.replace(/\.png$/, '.svg'); } else im.remove(); };
+      var SRC = { moncash: ['https://cdn.aptoide.com/imgs/d/6/f/d6fb107b85364c2fc2e2376995f3aed3_icon.jpg', 'https://kominotek.com/wp-content/uploads/2024/04/moncash.png', '/icons/pay/moncash.png'], natcash: ['/icons/natcash.svg'], stripe: ['/icons/pay/stripe.png', '/icons/pay/stripe.svg'] }[m[0]] || [], si = 0;
+      im.className = 'lg'; im.alt = m[1]; im.width = 44; im.height = 44; im.referrerPolicy = 'no-referrer'; im.src = SRC[0] || '';
+      im.onerror = function () {
+        si++;
+        if (si < SRC.length) { im.src = SRC[si]; return; }
+        if (m[0] === 'moncash') { var fb = el('span', 'MC', 'lg lgfb'); if (im.parentNode) im.parentNode.replaceChild(fb, im); } else im.remove();
+      };
       add(lw, im, info);
       add(b, lw, el('span', state.method === m[0] ? '✓' : '', 'dot'));
       b.addEventListener('click', function () { if (state.busy) return; state.method = m[0]; render(); });
