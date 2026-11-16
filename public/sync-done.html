@@ -27,6 +27,7 @@ a.alt{display:block;margin-top:14px;color:#9bb8ac;font-size:14px}
 </div>
 <script>
 (function(){
+  try{if(sessionStorage.getItem('dv_sync_after_connect')){location.replace('dashboard.html');return}}catch(_){}
   var ua=navigator.userAgent||'';
   if(!/Android/i.test(ua))return;
   var intent='intent://sync-done#Intent;scheme=com.dobertovcf.app;package=com.dobertovcf.app;end';
