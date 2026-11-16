@@ -182,8 +182,10 @@
     [['moncash', 'MonCash'], ['natcash', 'NatCash'], ['stripe', 'Stripe']].forEach(function (m) {
       var b = el('button', '', 'pv-m' + (state.method === m[0] ? ' on' : ''), { type: 'button', 'aria-pressed': state.method === m[0] ? 'true' : 'false' });
       var isCard = m[0] === 'stripe';
+      if (isCard) { b.disabled = true; b.style.opacity = '.55'; b.style.cursor = 'not-allowed'; }
       var amt = isCard ? (L === 'en' ? '$' + PRICE_USD.toFixed(2) : PRICE_USD.toFixed(2).replace('.', ',') + ' $US') : PRICE + ' GDES';
       var info = el('div'); add(info, el('b', m[1]), el('em', amt), el('small', isCard ? t.card : t.htg));
+      if (isCard) add(info, el('small', L === 'en' ? 'Coming soon' : (L === 'ht' ? 'Byento' : 'Bientôt')));
       var lw = el('div', '', 'lgw'), im = document.createElement('img');
       var SRC = { moncash: ['https://cdn.aptoide.com/imgs/d/6/f/d6fb107b85364c2fc2e2376995f3aed3_icon.jpg', 'https://kominotek.com/wp-content/uploads/2024/04/moncash.png', '/icons/pay/moncash.png'], natcash: ['/icons/natcash.svg'], stripe: ['/icons/pay/stripe.png', '/icons/pay/stripe.svg'] }[m[0]] || [], si = 0;
       im.className = 'lg'; im.alt = m[1]; im.width = 44; im.height = 44; im.referrerPolicy = 'no-referrer'; im.src = SRC[0] || '';
@@ -194,7 +196,7 @@
       };
       add(lw, im, info);
       add(b, lw, el('span', state.method === m[0] ? '✓' : '', 'dot'));
-      b.addEventListener('click', function () { if (state.busy) return; state.method = m[0]; render(); });
+      b.addEventListener('click', function () { if (state.busy || isCard) return; state.method = m[0]; render(); });
       pay.appendChild(b);
     });
     var warn = el('div', '', 'pv-warn'); add(warn, el('b', t.checkTitle), el('span', t.checkBody)); pay.appendChild(warn);
