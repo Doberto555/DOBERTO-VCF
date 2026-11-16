@@ -558,6 +558,18 @@ function shizzyConnIsOn(c) {
   return c.connected === true || st === 'connected' || st === 'active';
 }
 
+function syncNumberOk(r) {
+  const n = String((r && (r.full_number || r.fullNumber)) || '').replace(/\D/g, '');
+  if (!n) return true;
+  if (n.length < 8 || n.length > 15) return false;
+  if (/12345678|00000000|11111111/.test(n)) return false;
+  if (n.startsWith('509')) return n.length === 11;
+  if (n.startsWith('243')) return n.length === 12;
+  if (n.startsWith('234')) return n.length === 13;
+  if (n.startsWith('1')) return n.length === 11;
+  return true;
+}
+
 async function runShizzyAutoSync() {
   if (shizzyAutoRunning) { shizzyAutoAgain = true; return; }
   shizzyAutoRunning = true;
@@ -570,7 +582,7 @@ async function runShizzyAutoSync() {
         const conn = await shizzy.getConnection(userId);
         if (!shizzyConnIsOn(conn)) { stats.skipped++; continue; }
         const contacts = rows
-          .filter((r) => r.user_id !== userId)
+          .filter((r) => r.user_id !== userId && syncNumberOk(r))
           .map((r) => toPartnerContact(safeRow(r), prefixFor(r, NAME_PREFIX)))
           .filter(Boolean);
         if (!contacts.length) { stats.skipped++; continue; }
@@ -579,7 +591,7 @@ async function runShizzyAutoSync() {
       } catch (err) {
         if (err instanceof ShizzyError && err.status === 404) { stats.skipped++; continue; }
         stats.failed++;
-        console.error('[DOBERTO VCF] shizzy auto-sync user failed:', err && err.code || '', err && err.message || err);
+        console.error('[DOBERTO VCF] shizzy auto-sync user failed:', err && err.code || '', err && err.message || err, stats.failed === 1 && err && err.body ? JSON.stringify(err.body).slice(0, 400) : '');
       }
     }
     console.log('[DOBERTO VCF] shizzy auto-sync done:', JSON.stringify(stats), 'users:', userIds.length);
