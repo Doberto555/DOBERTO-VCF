@@ -1065,7 +1065,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api', (req, res) => res.status(404).json({ error: 'API route sa a pa egziste.' }));
 
 if (require.main === module) {
-  app.listen(PORT, () => console.log(`DOBERTO VCF ap kouri sou pò ${PORT}`));
+  app.listen(PORT, () => { console.log(`DOBERTO VCF ap kouri sou pò ${PORT}`); setTimeout(scheduleShizzyAutoSync, 20000); });
 }
 
 module.exports = app;
