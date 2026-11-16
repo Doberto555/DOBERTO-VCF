@@ -470,10 +470,12 @@ app.post('/api/shizzy/connect', shizzyActionLimiter, verifyUser, requireShizzy, 
   try {
     // App Android: retounen sou /sync-done.html (ki rele app la). Si Shizzy refize URL sa a, tounen sou list.html.
     const fromApp = !!(req.body && req.body.app === true);
+    console.log('[DOBERTO VCF] shizzy connect fromApp=' + fromApp);
     let data;
     try {
       data = await shizzy.createConnection(req.user.userId, { returnUrl: 'https://dobertovcf.online/' + (fromApp ? 'sync-done.html' : 'list.html') });
     } catch (e) {
+      console.error('[DOBERTO VCF] shizzy sync-done refize, fallback list.html:', e && e.message);
       if (!fromApp) throw e;
       data = await shizzy.createConnection(req.user.userId, { returnUrl: 'https://dobertovcf.online/list.html' });
     }
