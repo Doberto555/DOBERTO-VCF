@@ -10,6 +10,7 @@ const { createClient } = require('@supabase/supabase-js');
 const adminSystemHealthHandler = require('./api/admin-system-health');
 const googleLoginUrlHandler = require('./api/google-login-url');
 const googleCallbackHandler = require('./api/google-callback');
+const googleNativeHandler = require('./api/google-native');
 const registerSecureHandler = require('./api/register-secure');
 const registrationUpdateHandler = require('./api/registration-update');
 const adminLoginSecureHandler = require('./api/admin-login-secure');
@@ -351,6 +352,7 @@ async function sendOneSignalPush({ title, message, url = '/', campaignName = 'do
 
 // ---------- Google Sign-In only ----------
 app.get('/api/auth/google/url', publicReadLimiter, (req, res) => googleLoginUrlHandler(req, res));
+app.post('/api/auth/google/native', registerLimiter, requireDatabase, (req, res) => googleNativeHandler(req, res));
 app.post('/api/auth/google/callback', registerLimiter, requireDatabase, (req, res) => googleCallbackHandler(req, res));
 
 app.get('/api/auth/session', publicReadLimiter, requireDatabase, verifyUser, async (req, res) => {
