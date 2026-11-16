@@ -4,15 +4,23 @@
   var ID = '56xR__cYnMg';
   var URL_ = 'https://youtube.com/shorts/' + ID;
   var host = document.getElementById('dvTuto');
-  if (!host) return;
   var T = {
-    ht: { k: 'TUTO VIDEYO', h: 'Gade kijan pou enskri', p: 'Yon videyo kout ki montre w etap pa etap kijan pou w kreye kont ou epi antre nan rezo a.', play: 'Jwe videyo a', open: 'Louvri sou YouTube', reg: 'Enskri kounye a' },
-    fr: { k: 'TUTO VIDÉO', h: 'Voir comment s’inscrire', p: 'Une courte vidéo qui montre étape par étape comment créer votre compte et rejoindre le réseau.', play: 'Lire la vidéo', open: 'Ouvrir sur YouTube', reg: 'S’inscrire maintenant' },
-    en: { k: 'VIDEO TUTORIAL', h: 'See how to sign up', p: 'A short video showing step by step how to create your account and join the network.', play: 'Play video', open: 'Open on YouTube', reg: 'Sign up now' }
+    ht: { k: 'TUTO VIDEYO', h: 'Gade kijan pou enskri', p: 'Yon videyo kout ki montre w etap pa etap kijan pou w kreye kont ou epi antre nan rezo a.', play: 'Jwe videyo a', open: 'Louvri sou YouTube', reg: 'Enskri kounye a', link: '▶ Gade videyo tuto a' },
+    fr: { k: 'TUTO VIDÉO', h: 'Voir comment s’inscrire', p: 'Une courte vidéo qui montre étape par étape comment créer votre compte et rejoindre le réseau.', play: 'Lire la vidéo', open: 'Ouvrir sur YouTube', reg: 'S’inscrire maintenant', link: '▶ Voir la vidéo tuto' },
+    en: { k: 'VIDEO TUTORIAL', h: 'See how to sign up', p: 'A short video showing step by step how to create your account and join the network.', play: 'Play video', open: 'Open on YouTube', reg: 'Sign up now', link: '▶ Watch the tutorial video' }
   };
-  function lang() { try { var l = localStorage.getItem('doberto_lang'); return T[l] ? l : 'ht'; } catch (_) { return 'ht'; } }
+  // Lang aktif la pran nan bouton HT/FR/EN paj la (menm sous ak rès sit la); localStorage sèlman si pa gen bouton.
+  function lang() {
+    var h = (document.documentElement.lang || '').slice(0, 2).toLowerCase();
+    if (T[h]) return h;
+    var b = document.querySelector('.lang button.on'), l = b && b.getAttribute('data-l');
+    if (T[l]) return l;
+    try { l = localStorage.getItem('doberto_lang'); if (T[l]) return l; } catch (_) {}
+    return 'ht';
+  }
   var t = T[lang()];
 
+  if (!host) { linkOnly(); return; }
   var css = document.createElement('style');
   css.textContent =
     '.tuto{display:grid;grid-template-columns:1fr auto;gap:28px;align-items:center;margin-top:16px;padding:26px!important}' +
@@ -40,10 +48,11 @@
   }
   var card = el('div', 'card tuto');
   var info = el('div');
-  info.appendChild(el('span', 'tk', t.k)); info.appendChild(el('h3', '', t.h)); info.appendChild(el('p', '', t.p));
+  var eK = el('span', 'tk', t.k), eH = el('h3', '', t.h), eP = el('p', '', t.p);
+  info.appendChild(eK); info.appendChild(eH); info.appendChild(eP);
   var acts = el('div', 'ta');
-  acts.appendChild(el('a', 'p', t.reg, { href: 'register.html' }));
-  acts.appendChild(el('a', 'g', t.open, { href: URL_, target: '_blank', rel: 'noopener noreferrer' }));
+  var aReg = el('a', 'p', t.reg, { href: 'register.html' }), aOpen = el('a', 'g', t.open, { href: URL_, target: '_blank', rel: 'noopener noreferrer' });
+  acts.appendChild(aReg); acts.appendChild(aOpen);
   info.appendChild(acts);
 
   var tv = el('div', 'tv');
@@ -54,11 +63,32 @@
   btn.addEventListener('click', function () {
     var f = el('iframe', '', '', {
       src: 'https://www.youtube-nocookie.com/embed/' + ID + '?autoplay=1&playsinline=1&rel=0',
-      title: t.h, allow: 'autoplay; encrypted-media; picture-in-picture; fullscreen', allowfullscreen: '', referrerpolicy: 'strict-origin-when-cross-origin'
+      title: tv.getAttribute('data-title') || t.h, allow: 'autoplay; encrypted-media; picture-in-picture; fullscreen', allowfullscreen: '', referrerpolicy: 'strict-origin-when-cross-origin'
     });
     tv.textContent = ''; tv.appendChild(f);
   });
   tv.appendChild(btn);
   add(card, info, tv); host.appendChild(card);
+  // Mete tèks yo ajou san rekreye iframe a (videyo a pa kanpe si moun nan chanje lang)
+  function relabel() {
+    t = T[lang()];
+    eK.textContent = t.k; eH.textContent = t.h; eP.textContent = t.p;
+    aReg.textContent = t.reg; aOpen.textContent = t.open;
+    btn.setAttribute('aria-label', t.play);
+    tv.setAttribute('data-title', t.h);
+    var f = tv.querySelector('iframe'); if (f) f.setAttribute('title', t.h);
+    document.querySelectorAll('.dv-tuto-link').forEach(function (a) { a.textContent = t.link; });
+  }
+  document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('.lang button')) setTimeout(relabel, 0); });
+  try { document.querySelectorAll('.lang').forEach(function (g) { new MutationObserver(relabel).observe(g, { subtree: true, attributes: true, attributeFilter: ['class'] }); }); } catch (_) {}
+  window.addEventListener('storage', relabel);
+  relabel();
+  try { new MutationObserver(relabel).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] }); } catch (_) {}
+  function linkOnly() {
+    function r() { t = T[lang()]; document.querySelectorAll('.dv-tuto-link').forEach(function (a) { a.textContent = t.link; }); }
+    try { new MutationObserver(r).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] }); } catch (_) {}
+    document.addEventListener('change', function () { setTimeout(r, 50); });
+    r();
+  }
   function add(p) { for (var i = 1; i < arguments.length; i++) p.appendChild(arguments[i]); }
 })();
