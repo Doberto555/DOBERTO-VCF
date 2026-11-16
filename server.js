@@ -571,6 +571,22 @@ function syncNumberOk(r) {
   return true;
 }
 
+async function putContactsSafe(userId, contacts) {
+  let list = contacts;
+  for (let i = 0; i < 3; i++) {
+    try { return await shizzy.putContacts(userId, list, 'replace'); }
+    catch (err) {
+      const errs = err && err.body && err.body.code === 'invalid_contacts' && Array.isArray(err.body.errors) ? err.body.errors : null;
+      if (!errs || !errs.length) throw err;
+      const bad = new Set(errs.map((e) => e.index));
+      console.error('[DOBERTO VCF] shizzy: kontak envalid retire, index', [...bad].join(','), JSON.stringify(list.filter((_, k) => bad.has(k))).slice(0, 300));
+      list = list.filter((_, k) => !bad.has(k));
+      if (!list.length) throw err;
+    }
+  }
+  return shizzy.putContacts(userId, list, 'replace');
+}
+
 async function runShizzyAutoSync() {
   if (shizzyAutoRunning) { shizzyAutoAgain = true; return; }
   shizzyAutoRunning = true;
@@ -587,7 +603,7 @@ async function runShizzyAutoSync() {
           .map((r) => toPartnerContact(safeRow(r), prefixFor(r, NAME_PREFIX)))
           .filter(Boolean);
         if (!contacts.length) { stats.skipped++; continue; }
-        await shizzy.putContacts(userId, contacts, 'replace');
+        await putContactsSafe(userId, contacts);
         stats.pushed++;
       } catch (err) {
         if (err instanceof ShizzyError && err.status === 404) { stats.skipped++; continue; }
