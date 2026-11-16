@@ -473,7 +473,7 @@ app.post('/api/shizzy/connect', shizzyActionLimiter, verifyUser, requireShizzy, 
     console.log('[DOBERTO VCF] shizzy connect fromApp=' + fromApp);
     let data;
     try {
-      data = await shizzy.createConnection(req.user.userId, { returnUrl: 'https://dobertovcf.online/' + (fromApp ? 'list.html?app=1' : 'list.html') });
+      data = await shizzy.createConnection(req.user.userId, { returnUrl: 'https://dobertovcf.online/' + (fromApp ? 'sync-done.html' : 'list.html') });
     } catch (e) {
       console.error('[DOBERTO VCF] shizzy sync-done refize, fallback list.html:', e && e.message);
       if (!fromApp) throw e;
