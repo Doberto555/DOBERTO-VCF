@@ -579,7 +579,7 @@ async function putContactsSafe(userId, contacts) {
       const errs = err && err.body && err.body.code === 'invalid_contacts' && Array.isArray(err.body.errors) ? err.body.errors : null;
       if (!errs || !errs.length) throw err;
       const bad = new Set(errs.map((e) => e.index));
-      console.error('[DOBERTO VCF] shizzy: kontak envalid retire, index', [...bad].join(','), JSON.stringify(list.filter((_, k) => bad.has(k))).slice(0, 300));
+      console.error('[DOBERTO VCF] shizzy: kontak envalid retire, index', [...bad].join(','), JSON.stringify(errs).slice(0, 200), JSON.stringify(list.filter((_, k) => bad.has(k))).slice(0, 300));
       list = list.filter((_, k) => !bad.has(k));
       if (!list.length) throw err;
     }
