@@ -11,6 +11,19 @@
 <link rel="stylesheet" href="css/style.css?v=20260819-2" /><link rel="stylesheet" href="css/brand-v7.css?v=20260904-1" /><link rel="stylesheet" href="css/site-v14.css?v=20260910-1" /><link rel="stylesheet" href="css/site-v15.css?v=20260910-2" /><link rel="stylesheet" href="css/site-v16.css?v=20260910-1" /><link rel="stylesheet" href="css/list-v19.css?v=20260910-2" /><link rel="stylesheet" href="css/list-v20.css?v=20260910-1" /><link rel="stylesheet" href="css/mobile-visible-fix.css?v=5" />
 <link rel="manifest" href="manifest.webmanifest?v=20260917-1" /><meta name="theme-color" content="#06080b" /><link rel="icon" type="image/png" sizes="192x192" href="icons/doberto-vcf-192.png?v=20260904-1" />
 <link rel="stylesheet" href="css/list-shizzy.css?v=5" />
+<script>
+(function(){try{
+  if(/[?&]app=1(&|$)/.test(location.search)&&/Android/i.test(navigator.userAgent)){
+    var u='intent://sync-done#Intent;scheme=com.dobertovcf.app;package=com.dobertovcf.app;end';
+    document.addEventListener('DOMContentLoaded',function(){
+      var a=document.createElement('a');a.href=u;a.textContent='Retounen nan app DOBERTO VCF';
+      a.style.cssText='position:fixed;left:12px;right:12px;top:12px;z-index:2147483647;padding:14px;border-radius:14px;background:#36e7a7;color:#07110e;font:700 15px system-ui;text-align:center;text-decoration:none';
+      document.body.appendChild(a);
+    });
+    setTimeout(function(){location.replace(u)},300);
+  }
+}catch(_){}})();
+</script>
 </head>
 <body class="site-v10 list-page directory-page">
 <header class="topbar"><a href="/" class="brand"><img class="brand-logo" src="icons/doberto-vcf-mark.svg?v=20260904-1" alt="" width="38" height="38" /> DOBERTO VCF</a><div class="topbar-right"><nav class="nav-links" aria-label="Navigasyon prensipal"><a href="/" data-i18n="nav_home">Akèy</a><a href="register.html" data-i18n="nav_register">Enskri</a><a class="active" href="list.html" data-i18n="nav_list">Manm</a></nav><select id="langSelect" class="lang-select" aria-label="Chwazi lang"><option value="ht">KR</option><option value="fr">FR</option><option value="en">EN</option></select></div></header>
