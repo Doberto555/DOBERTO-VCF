@@ -582,7 +582,7 @@ document.addEventListener('click',function(){mm.hidden=true;mb.setAttribute('ari
       try{sessionStorage.setItem(FLAG,String(Date.now()))}catch(_){}
       return fetch('/api/shizzy/connect',{method:'POST',headers:hdr(),cache:'no-store'}).then(j).then(function(d){
         if(d&&/^https:\/\//i.test(d.url||'')){location.assign(d.url);return}
-        msg((d&&d.error)||'Connexion à Google Contacts impossible.');
+        try{sessionStorage.removeItem(FLAG)}catch(_){}msg(/returnUrl/i.test((d&&d.error)||'')?'Profil enregistré. Connexion à Google Contacts temporairement indisponible.':((d&&d.error)||'Connexion à Google Contacts impossible.'));
       });
     }).catch(function(){});
   };
